@@ -137,13 +137,9 @@ class Server {
   }
 
   startServer() {
-    conn
-      .sync({ alter: false })
-      .then(() => {
-        this.app.listen(3000, () => {
-        });
-      })
-      .catch((err) => console.log(err));
+    this.app.listen(3000, () => {
+      console.log("Server is running on port 3000");
+    });
   }
 }
 
