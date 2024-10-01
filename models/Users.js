@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../db/conn");
 
-const Usuarios = db.define("Usuarios", {
+const Usuarios = db.define("Users", {
   name: {
     allowNull: false,
     type: DataTypes.STRING,
@@ -75,6 +75,22 @@ const Usuarios = db.define("Usuarios", {
   early_access: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  supervisorId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: "Users",
+      key: 'id'
+    }
+  },
+  coordenadorId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: "Users",
+      key: 'id'
+    }
   }
 });
 

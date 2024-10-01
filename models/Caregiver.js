@@ -48,6 +48,7 @@ const Caregiver = db.define("Caregiver", {
 User.hasMany(Caregiver, {
   as: "Caregivers",
   foreignKey: "visitadorId",
+  onDelete: 'CASCADE',
   scope: { role: "visitador" },
 });
 Caregiver.belongsTo(User, { as: "visitador", foreignKey: "visitadorId", onDelete: 'SET NULL' });

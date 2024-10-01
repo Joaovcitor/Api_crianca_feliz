@@ -4,7 +4,6 @@ require("dotenv").config();
 let sequelize;
 
 if (process.env.NODE_ENV === 'test') {
-  // Configuração para o ambiente de teste
   require("dotenv").config({ path: '.env.test' });
   sequelize = new Sequelize({
     dialect: "sqlite",
@@ -12,7 +11,6 @@ if (process.env.NODE_ENV === 'test') {
     logging: false, // Desativa logs de SQL para testes
   });
 } else {
-  // Configuração para o ambiente de produção
   sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
@@ -29,7 +27,6 @@ if (process.env.NODE_ENV === 'test') {
   );
 }
 
-// Autentica e tenta deletar a tabela 'usuarios_backup'
 async function initDB() {
   try {
     await sequelize.authenticate();
