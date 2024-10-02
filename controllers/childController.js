@@ -3,6 +3,7 @@ const Child = require("../models/Child");
 
 module.exports = class Children {
   static async store(req, res) {
+    const idVisitadorLogado = req.session.userId;
     try {
       const children = {
         caregiverId: req.body.caregiverId,
@@ -16,10 +17,10 @@ module.exports = class Children {
 
       const id = req.params.id;
 
-      const caregiver = await Caregiver.findOne({ raw: true, where: { id } });
+      const caregiver = await Caregiver.findOne({ where: { id: id, visitadorId: idVisitadorLogado } });
 
       if (!caregiver) {
-        return res.status(404).send("Cuidador não encontrado!");
+        return res.status(404).json({ errors: "Cuidador não encontrado!" });
       }
 
       await Child.create(children);
