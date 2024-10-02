@@ -43,7 +43,7 @@ module.exports = class Children {
       typeof sexo !== "string" ||
       typeof nis !== "string"
     ) {
-      return res.status(401).json({ error: "preencha todos os campos" });
+      return res.status(400).json({ error: "preencha todos os campos" });
     }
 
     if (
@@ -62,13 +62,13 @@ module.exports = class Children {
 
       if (!childEdited) {
         res
-          .status(401)
+          .status(404)
           .json({ error: "Houve um problema ao buscar pela criança!" });
       }
 
       await Child.update({ name, born, sexo, nis }, { where: { id: id } });
 
-      res.status(200).json({ sucess: "Criança atualizada com sucesso!" });
+      res.status(200).json({ success: "Criança atualizada com sucesso!" });
     } catch (e) {
       console.log(e);
       res
