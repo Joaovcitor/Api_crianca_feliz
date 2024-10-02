@@ -1,4 +1,6 @@
-require("dotenv").config();
+require("dotenv").config({
+  path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env'
+});
 
 module.exports = {
   development: {
@@ -11,15 +13,16 @@ module.exports = {
   test: {
     username: process.env.DB_USER || "root",
     password: process.env.DB_PASSWORD || null,
-    database: "database_test", // Alterar conforme necessário
+    database: "database_test",
     host: process.env.DB_HOST || "localhost",
     dialect: "sqlite",
+    storage: ":memory"
   },
   production: {
     username: process.env.DB_USER || "root",
     password: process.env.DB_PASSWORD || null,
-    database: "database_production", // Alterar conforme necessário
+    database: "database_production",
     host: process.env.DB_HOST || "localhost",
-    dialect: "mysql",
+    dialect: "mariadb",
   },
 };
