@@ -4,7 +4,7 @@ const Child = require("./Child");
 const User = require("./Users");
 
 const PlanoDeVisita = db.define(
-  "PlanoDeVisita",
+  "PlanosDeVisitas",
   {
     objetivo: {
       type: DataTypes.TEXT,

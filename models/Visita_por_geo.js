@@ -4,7 +4,7 @@ const User = require("./Users");
 const Child = require("./Child");
 const PlanosDeVisita = require("./plain")
 
-const Visita = db.define("Visita", {
+const Visita = db.define("VisitasPorGeolocalizacao", {
   latitude: {
     type: DataTypes.DOUBLE,
     allowNull: true,

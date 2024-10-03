@@ -191,7 +191,8 @@ module.exports = class planoDeVisita {
           .json({ error: "Ocorreu um erro ao editar o plano!" });
       }
 
-      res.status(200).json({ sucess: "Plano editado com sucesso!", visita_realizada_geo });
+      res.status(200).json({ success: "Plano editado com sucesso!", visita_realizada_geo });
+
     } catch (e) {
       console.log(e);
       res.status(500).json({

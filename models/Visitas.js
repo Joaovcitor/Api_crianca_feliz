@@ -3,7 +3,7 @@ const db = require('../db/conn');
 const User = require('./Users');
 const Child = require('./Child');
 
-const Tabelas_de_visita = db.define("Tabelas_de_visita", {
+const Tabelas_de_visita = db.define("TabelasDeVisitas", {
   dateOfvisit: {
     type: DataTypes.DATE,
     allowNull: true

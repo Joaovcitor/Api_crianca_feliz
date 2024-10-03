@@ -27,20 +27,4 @@ if (process.env.NODE_ENV === 'test') {
   );
 }
 
-// async function initDB() {
-//   try {
-//     await sequelize.authenticate();
-//     console.log("Connection has been established successfully.");
-
-//     // Deletar a tabela 'usuarios_backup', se existir
-//     await sequelize.getQueryInterface().dropTable('usuarios_backup');
-//     console.log("Tabela 'usuarios_backup' deletada com sucesso");
-
-//   } catch (err) {
-//     console.error("Unable to connect to the database or drop table:", err);
-//   }
-// }
-
-// initDB();
-
 module.exports = sequelize;
