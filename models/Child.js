@@ -3,7 +3,7 @@ const db = require("../db/conn");
 const Caregiver = require("./Caregiver");
 const User = require("./Users");
 
-const Child = db.define("Child", {
+const Child = db.define("Children", {
   nis: {
     type: DataTypes.STRING,
     required: false,
@@ -26,21 +26,29 @@ const Child = db.define("Child", {
   },
   isBpc: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false
-  }
+    defaultValue: false,
+  },
 });
 
 Caregiver.hasMany(Child, {
   as: "Children",
   foreignKey: "caregiverId",
 });
-Child.belongsTo(Caregiver, { as: "Caregiver", foreignKey: "caregiverId", onDelete: 'SET NULL' });
+Child.belongsTo(Caregiver, {
+  as: "Caregiver",
+  foreignKey: "caregiverId",
+  onDelete: "SET NULL",
+});
 
 User.hasMany(Child, {
   as: "Children",
   foreignKey: "visitadorId",
   scope: { role: "visitador" },
 });
-Child.belongsTo(User, { as: "visitador", foreignKey: "visitadorId", onDelete: 'SET NULL' });
+Child.belongsTo(User, {
+  as: "visitador",
+  foreignKey: "visitadorId",
+  onDelete: "SET NULL",
+});
 
 module.exports = Child;
