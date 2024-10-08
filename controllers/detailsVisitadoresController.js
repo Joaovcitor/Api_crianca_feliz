@@ -51,16 +51,10 @@ module.exports = class DetailsVisitadoresController {
       const mappedChildren = await mapChildrens(Child, visitador, Visitador, Caregiver);
       const mappedCaregivers = await mapCaregivers(caregivers);
 
-      let inicioMes = "";
-      let fimMes = "";
+      let { inicioMes = "", fimMes = "" } = req.body
       let planos = [];
       let visitas = [];
       let visitasNaoFinalizadas = [];
-
-      if (req.query.inicioMes && req.query.fimMes) {
-        inicioMes = req.query.inicioMes;
-        fimMes = req.query.fimMes;
-      }
 
       planos = await mapPesquisa(id, inicioMes, fimMes, PlanoDeVisita);
       visitas = await mapVisitasFeitas(id, inicioMes, fimMes, Visita);
