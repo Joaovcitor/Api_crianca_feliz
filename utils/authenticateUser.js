@@ -48,7 +48,7 @@ const authenticateUser = async (model, req, res) => {
     req.session.save(() => {
       return res.status(200).json({
         token,
-        user: { name: user.name, email, role: user.role },
+        user: { name: user.name, email, role: user.role, id: user.id },
       });
     });
   } catch (error) {

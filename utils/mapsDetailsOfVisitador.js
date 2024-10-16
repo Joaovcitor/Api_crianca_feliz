@@ -5,7 +5,7 @@ const { Op } = require("sequelize");
 async function mapChildrens(Model, visitadorId, VisitadorModel, CaregiverModel) {
   const children = await Model.findAll({
     where: { VisitadorId: visitadorId.id },
-    include: [{ model: VisitadorModel, as: "visitador" }, {model: CaregiverModel, as: "Caregiver"}],
+    include: [{ model: VisitadorModel, as: "visitador" }, { model: CaregiverModel, as: "Caregiver" }],
   });
 
   const mappedChildren = children.map((child) => {
@@ -32,10 +32,10 @@ async function mapPlanos(planos) {
       }),
       visita_realizada: plano.dia_de_visita_realizado
         ? plano.dia_de_visita_realizado.toLocaleString("pt-BR", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })
         : "Visita não realizada",
     };
   });

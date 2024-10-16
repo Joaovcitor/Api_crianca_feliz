@@ -48,26 +48,37 @@ module.exports = class DetailsVisitadoresController {
         include: [{ model: Visitador, as: "visitador" }],
       });
 
-      const mappedChildren = await mapChildrens(Child, visitador, Visitador, Caregiver);
-      const mappedCaregivers = await mapCaregivers(caregivers);
-
-      let { inicioMes = "", fimMes = "" } = req.body
-      let planos = [];
-      let visitas = [];
-      let visitasNaoFinalizadas = [];
-
-      planos = await mapPesquisa(id, inicioMes, fimMes, PlanoDeVisita);
-      visitas = await mapVisitasFeitas(id, inicioMes, fimMes, Visita);
-      visitasNaoFinalizadas = await mapVisitasPendentesDeSeremFinalizadas(id, inicioMes, fimMes, Visita)
-      const dataFormatadaDosPlanos = await mapPlanos(planos);
-      res.status(200).json({
-        planos: dataFormatadaDosPlanos,
-        child: mappedChildren,
-        caregiver: mappedCaregivers,
-        visitador,
-        visitas,
-        visitasNaoFinalizadas
+      const child = await Child.findAll({
+        where: { visitadorId: visitador.id },
+        include: [{ model: Visitador, as: "visitador" }],
       });
+
+      const visitasFeitas = await Visita.findAll({ where: { visitadorId: id, visita_marcada_finalizada: true } })
+      const visitasMarcadas = await Visita.findAll({ where: { visitadorId: id, visita_marcada_finalizada: false } })
+      const planos = await PlanoDeVisita.findAll({ where: { visitadorId: id } });
+
+      res.status(200).json({ planos, child, visitador, caregivers, visitasFeitas, visitasMarcadas })
+
+      // const mappedChildren = await mapChildrens(Child, visitador, Visitador, Caregiver);
+      // const mappedCaregivers = await mapCaregivers(caregivers);
+
+      // let { inicioMes = "", fimMes = "" } = req.body
+      // let planos = [];
+      // let visitas = [];
+      // let visitasNaoFinalizadas = [];
+
+      // const planos = await mapPesquisa(id, inicioMes, fimMes, PlanoDeVisita);
+      // const visitas = await mapVisitasFeitas(id, inicioMes, fimMes, Visita);
+      // const visitasNaoFinalizadas = await mapVisitasPendentesDeSeremFinalizadas(id, inicioMes, fimMes, Visita)
+      // const dataFormatadaDosPlanos = await mapPlanos(planos);
+      // res.status(200).json({
+      //   planos: dataFormatadaDosPlanos,
+      //   child: mappedChildren,
+      //   caregiver: mappedCaregivers,
+      //   visitador,
+      //   visitas,
+      //   visitasNaoFinalizadas
+      // });
     } catch (e) {
       console.log(e);
     }

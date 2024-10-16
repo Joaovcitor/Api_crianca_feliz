@@ -64,7 +64,7 @@ module.exports = class VisitaController {
         return res.status(401).json({ errors: "Você possui 4 visitas marcadas para essa criança, termine as outras!" })
       }
 
-      await Visita.create({ childId: idChild, visitadorId: session, data_que_vai_ser_realizada: data_que_vai_ser_realizada, planoId: planoId, finalizou: false });
+      await Visita.create({ childId: idChild, pendente_de_validacao: true, visitadorId: session, data_que_vai_ser_realizada: data_que_vai_ser_realizada, planoId: planoId, finalizou: false });
       res.status(200).json({ success: "Visita marcada com sucesso!" })
     } catch (e) {
       console.log(e);
@@ -184,10 +184,10 @@ module.exports = class VisitaController {
         { pendente_de_validacao: false },
         { where: { id: id } }
       );
-      res.status(200).json({ success: "Visita invalidada com sucesso!" });
+      res.status(200).json({ success: "Visita validada com sucesso!" });
     } catch (e) {
       console.log(e);
-      res.status(500).json({ errors: "Ocorreu um erro invalidar visita" });
+      res.status(500).json({ errors: "Ocorreu um erro validar visita" });
     }
   }
 

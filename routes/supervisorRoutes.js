@@ -4,6 +4,8 @@ const router = express.Router();
 const supervisorController = require("../controllers/supervisorController");
 const VisitadorController = require("../controllers/visitadoresController");
 const detalhesVisitadores = require("../controllers/detailsVisitadoresController");
+const childController = require("../controllers/childController")
+const caregiverController = require("../controllers/caregiverController")
 const authRequired = require("../middlewares/authRequired");
 const checkUserType = require("../utils/checkUserType");
 const authenticateJWT = require("../middlewares/authenticateJWT");
@@ -11,12 +13,6 @@ const validateCreateUser = require("../middlewares/validateCreateUser")
 
 router.use(checkUserType(["supervisor"]));
 
-router.get(
-  "/validar-beneficiario",
-  authenticateJWT,
-  authRequired,
-  supervisorController.showBeneficiarios
-);
 
 router.get(
   "/info-dos-meus-visitadores",
@@ -25,11 +21,25 @@ router.get(
   detalhesVisitadores.index
 );
 
-router.put(
-  "/validar-beneficiario",
+router.get(
+  "/beneficiarios-pendentes",
   authenticateJWT,
   authRequired,
-  supervisorController.postBeneficiariosValidar
+  caregiverController.showBeneficiarios
+);
+
+router.put(
+  "/validar-cuidador",
+  authenticateJWT,
+  authRequired,
+  caregiverController.validarCaregiver
+);
+
+router.put(
+  "/validar-crianca",
+  authenticateJWT,
+  authRequired,
+  childController.validarChild
 );
 
 router.post(

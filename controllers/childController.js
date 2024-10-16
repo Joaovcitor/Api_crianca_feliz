@@ -102,6 +102,24 @@ module.exports = class Children {
     }
   }
 
+  static async validarChild(req, res) {
+    const { idChild } = req.body;
+
+    try {
+      const child = await Child.findOne({ where: { id: idChild } })
+
+      if (!child) {
+        return res.status(400).json({ errors: "Criança não foi achada! Verifique o ID" });
+      }
+
+      await Child.update({ isPending: false }, { where: { id: idChild } });
+      res.status(200).json({ success: "Criança validada com sucesso" });
+    } catch (e) {
+      console.log(e)
+      res.status(500).json({ errors: "Ocorreu um erro desconhecido ao validar a criança!" })
+    }
+  }
+
   static async index(req, res) {
     const session = req.session.userId;
 

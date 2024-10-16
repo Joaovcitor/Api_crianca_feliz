@@ -55,7 +55,7 @@ class Server {
           path: require("path").join(require("os").tmpdir(), "sessions"),
         }),
         cookie: {
-          secure: false,
+          secure: process.env.NODE_ENV === "production", // Mude para false em desenvolvimento
           maxAge: 28800000,
           httpOnly: true,
         },
