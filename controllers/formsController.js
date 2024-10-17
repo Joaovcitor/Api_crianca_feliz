@@ -4,7 +4,7 @@ const Etapa1 = require("../models/Form5_0a3m");
 
 module.exports = class FormulariosController {
   static async renderForms(req, res) {
-      res.render("forms");
+    res.render("forms");
   }
 
   static async showFormulario5(req, res) {
@@ -18,13 +18,13 @@ module.exports = class FormulariosController {
     const meses = idade.months;
     const anos = idade.years;
 
-    if (anos === 1 && meses <= 6) {
-      return res.render("formularios5/etapa5", { child });
-    } else if (anos === 1 && meses <= 11 && anos <= 2) {
-      return res.render("formularios5/etapa6", { child });
-    } else if (anos === 2 || anos === 3) {
-      return res.render("formularios5/etapa7", { child });
-    }
+    // if (anos === 1 && meses <= 6) {
+    //   return res.render("formularios5/etapa5", { child });
+    // } else if (anos === 1 && meses <= 11 && anos <= 2) {
+    //   return res.render("formularios5/etapa6", { child });
+    // } else if (anos === 2 || anos === 3) {
+    //   return res.render("formularios5/etapa7", { child });
+    // }
 
     if (meses <= 3) {
       return res.render("formularios5/etapa1", { child });
