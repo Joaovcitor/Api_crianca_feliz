@@ -84,7 +84,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
-          model: "Users", // Alterar para o nome da tabela
+          model: "Users",
           key: 'id'
         }
       },

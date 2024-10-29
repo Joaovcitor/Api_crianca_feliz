@@ -2,14 +2,6 @@ const Visitador = require("../models/Users");
 const Supervisor = require("../models/Users");
 const Caregiver = require("../models/Caregiver");
 const Child = require("../models/Child");
-const {
-  mapChildrens,
-  mapPlanos,
-  mapPesquisa,
-  mapCaregivers,
-  mapVisitasFeitas,
-  mapVisitasPendentesDeSeremFinalizadas
-} = require("../utils/mapsDetailsOfVisitador");
 const { relatorios } = require("../services/relatorioService");
 const PlanoDeVisita = require("../models/plain");
 const Visita = require("../models/Visita_por_geo");
@@ -30,6 +22,26 @@ module.exports = class DetailsVisitadoresController {
     } catch (e) {
       console.log(e);
       res.status(500).json({ errorInternal: "Ocorreu um erro desconhecido" });
+    }
+  }
+
+  static async RelatoriosGerais(req, res) {
+    const idCoordenadorSession = req.session.userId;
+
+    try {
+      const [visitador, supervisor, visitas, childrens, caregivers, planos] = await Promise.all([
+        Visitador.findAll({ where: { role: "visitador" } }),
+        Supervisor.findAll({ where: { role: "supervisor" } }),
+        Visita.findAll(),
+        Child.findAll(),
+        Caregiver.findAll(),
+        PlanoDeVisita.findAll()
+      ]);
+
+      res.status(200).json({ visitador, supervisor, visitas, childrens, caregivers, planos })
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({ errors: "Ocorreu um erro desconhecido ao buscar relatórios" })
     }
   }
 
@@ -59,26 +71,6 @@ module.exports = class DetailsVisitadoresController {
 
       res.status(200).json({ planos, child, visitador, caregivers, visitasFeitas, visitasMarcadas })
 
-      // const mappedChildren = await mapChildrens(Child, visitador, Visitador, Caregiver);
-      // const mappedCaregivers = await mapCaregivers(caregivers);
-
-      // let { inicioMes = "", fimMes = "" } = req.body
-      // let planos = [];
-      // let visitas = [];
-      // let visitasNaoFinalizadas = [];
-
-      // const planos = await mapPesquisa(id, inicioMes, fimMes, PlanoDeVisita);
-      // const visitas = await mapVisitasFeitas(id, inicioMes, fimMes, Visita);
-      // const visitasNaoFinalizadas = await mapVisitasPendentesDeSeremFinalizadas(id, inicioMes, fimMes, Visita)
-      // const dataFormatadaDosPlanos = await mapPlanos(planos);
-      // res.status(200).json({
-      //   planos: dataFormatadaDosPlanos,
-      //   child: mappedChildren,
-      //   caregiver: mappedCaregivers,
-      //   visitador,
-      //   visitas,
-      //   visitasNaoFinalizadas
-      // });
     } catch (e) {
       console.log(e);
     }

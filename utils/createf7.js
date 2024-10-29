@@ -37,7 +37,7 @@ async function criarForm7Faixa4(Model, req, res, VisitadorId) {
   VisitadorId = req.session.userId;
 
   if (!id) {
-    return res.status(401).json({ errors: ["Criança invalida!"] });
+    return res.status(400).json({ errors: ["Criança invalida!"] });
   }
 
   const dados = {
@@ -53,7 +53,7 @@ async function criarForm7Faixa4(Model, req, res, VisitadorId) {
   };
 
   try {
-    await Model.create(dados);
+    return await Model.create(dados);
   } catch (e) {
     console.warn(e);
     res

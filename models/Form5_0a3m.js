@@ -1,11 +1,10 @@
-const { DataTypes } = require("sequelize");
+const { Model, DataTypes, Sequelize } = require("sequelize");
 const db = require("../db/conn");
 const Child = require("./Child");
 const User = require("./Users");
-// const { FOREIGNKEYS } = require("sequelize/lib/query-types");
+class Etapa1 extends Model { }
 
-const Etapa1 = db.define(
-  "Etapa1",
+Etapa1.init(
   {
     q1: {
       type: DataTypes.ENUM(
@@ -87,17 +86,28 @@ const Etapa1 = db.define(
       ),
       allowNull: false,
     },
-    q11: {
-      type: DataTypes.ENUM(
-        "Consegue fazer sozinho",
-        "Consegue fazer com Ajuda",
-        "Ainda não consegue fazer"
-      ),
+    childId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "Child",
+        key: "id"
+      }
     },
+    visitadorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Users",
+        key: "id"
+      }
+    }
   },
-  { tableName: "Etapa1" }
-);
+  {
+    sequelize: db,
+    modelName: "Etapa1"
+  }
+)
 
 Child.hasMany(Etapa1, {
   as: "Etapa1s",
@@ -111,7 +121,7 @@ Etapa1.belongsTo(Child, {
 
 
 User.hasMany(Etapa1, {
-  as: "Etapa1s", 
+  as: "Etapa1s",
   foreignKey: "visitadorId",
   scope: { role: "visitador" },
 });

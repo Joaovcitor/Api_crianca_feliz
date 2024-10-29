@@ -9,8 +9,6 @@ module.exports = class pdfController {
       const inicioMes = req.query.inicioMes;
       const fimMes = req.query.fimMes;
 
-      console.log(inicioMes, fimMes);
-
       const inicioMesFormatado = new Date(inicioMes);
       const fimMesFormatado = new Date(fimMes);
 
