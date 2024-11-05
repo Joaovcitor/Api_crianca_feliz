@@ -37,6 +37,7 @@ class Server {
 
     this.app.use(cors(corsOptions));
     this.app.use(helmet());
+    this.app.set('trust proxy', 1);
 
     this.app.use(
       express.urlencoded({
@@ -55,7 +56,7 @@ class Server {
           path: require("path").join(require("os").tmpdir(), "sessions"),
         }),
         cookie: {
-          secure: process.env.NODE_ENV === "production", // Mude para false em desenvolvimento
+          secure: true,
           maxAge: 28800000,
           httpOnly: true,
           sameSite: "none"
