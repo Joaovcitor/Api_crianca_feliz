@@ -58,6 +58,7 @@ class Server {
           secure: process.env.NODE_ENV === "production", // Mude para false em desenvolvimento
           maxAge: 28800000,
           httpOnly: true,
+          sameSite: "none"
         },
       })
     );

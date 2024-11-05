@@ -40,7 +40,7 @@ const authenticateUser = async (model, req, res) => {
       { expiresIn: "8h" }
     );
 
-    res.cookie("jwt", token, { httpOnly: true, secure: true });
+    res.cookie("jwt", token, { httpOnly: true, secure: true, sameSite: 'none' });
 
     req.session.userId = user.id;
     req.session.userRole = user.role;
