@@ -19,10 +19,10 @@ module.exports = {
     storage: ":memory"
   },
   production: {
-    username: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || null,
-    database: "database_production",
-    host: process.env.DB_HOST || "localhost",
+    username: process.env.PROD_DB_USER || "root",
+    password: process.env.PROD_DB_PASSWORD || null,
+    database: "pcf_prod",
+    host: process.env.PROD_DB_HOST || "localhost",
     dialect: "mariadb",
   },
 };
