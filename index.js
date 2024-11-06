@@ -16,6 +16,7 @@ class Server {
       "http://localhost:3001",
       "http://localhost:3000",
       "https://pcfprefeitura.logicmasters.com.br",
+      "https://pcfv2.netlify.app",
     ];
 
     this.configureMiddlewares();
@@ -37,7 +38,7 @@ class Server {
 
     this.app.use(cors(corsOptions));
     this.app.use(helmet());
-    this.app.set('trust proxy', 1);
+    this.app.set("trust proxy", 1);
 
     this.app.use(
       express.urlencoded({
@@ -52,14 +53,14 @@ class Server {
         resave: false,
         saveUninitialized: false,
         store: new FileStore({
-          logFn: function () { },
+          logFn: function () {},
           path: require("path").join(require("os").tmpdir(), "sessions"),
         }),
         cookie: {
           secure: true,
           maxAge: 28800000,
           httpOnly: true,
-          sameSite: "none"
+          sameSite: "none",
         },
       })
     );
