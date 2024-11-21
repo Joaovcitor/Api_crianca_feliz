@@ -53,14 +53,15 @@ class Server {
         resave: false,
         saveUninitialized: false,
         store: new FileStore({
-          logFn: function () {},
+          logFn: function () { },
           path: require("path").join(require("os").tmpdir(), "sessions"),
         }),
         cookie: {
           secure: true,
           maxAge: 28800000,
           httpOnly: true,
-          sameSite: "none",
+          sameSite: "lax",
+          domain: ".logicmasters.com.br"
         },
       })
     );
