@@ -17,6 +17,7 @@ class Server {
       "http://localhost:3000",
       "https://pcfprefeitura.logicmasters.com.br",
       "https://pcfv2.netlify.app",
+      "https://pcf.logicmasters.com.br",
     ];
 
     this.configureMiddlewares();
