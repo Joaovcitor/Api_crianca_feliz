@@ -15,7 +15,7 @@ class Server {
       "https://criancafeliz.logicmasters.com.br",
       "http://localhost:3001",
       "http://localhost:3000",
-      "https://pcfprefeitura.logicmasters.com.br",
+      "https://pcfprefeiturav2.logicmasters.com.br",
       "https://pcfv2.netlify.app",
       "https://pcf.logicmasters.com.br",
     ];
