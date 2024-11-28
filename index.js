@@ -62,6 +62,7 @@ class Server {
           maxAge: 28800000,
           httpOnly: true,
           sameSite: "None",
+          domain: ".logicmasters.com.br"
         },
       })
     );
