@@ -40,7 +40,7 @@ const authenticateUser = async (model, req, res) => {
       { expiresIn: "8h" }
     );
 
-    res.cookie("jwt", token, { httpOnly: true, secure: true, sameSite: 'none', });
+    res.cookie("jwt", token, { httpOnly: true, secure: true, sameSite: 'None', });
     return res.status(200).json({
       token,
       user: { name: user.name, email, role: user.role, id: user.id },

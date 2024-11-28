@@ -61,7 +61,7 @@ class Server {
           secure: true,
           maxAge: 28800000,
           httpOnly: true,
-          sameSite: "none",
+          sameSite: "None",
         },
       })
     );
