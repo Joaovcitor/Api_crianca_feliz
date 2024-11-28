@@ -4,6 +4,6 @@ const router = express.Router();
 const pdfController = require("../controllers/pdfController");
 const authRequired = require("../middlewares/authRequired");
 
-router.post("/gerar", authRequired, pdfController.storePdfPlanos);
+router.post("/gerar", pdfController.storePdfPlanos);
 
 module.exports = router;

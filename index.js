@@ -61,8 +61,7 @@ class Server {
           secure: true,
           maxAge: 28800000,
           httpOnly: true,
-          sameSite: "lax",
-          domain: ".logicmasters.com.br"
+          sameSite: "Lax",
         },
       })
     );
@@ -72,15 +71,17 @@ class Server {
     this.app.use(express.json());
     this.app.use(cookieParser());
 
-    this.app.use((req, res, next) => {
-      if (req.session.userId) {
-        res.locals.session = req.session;
-      }
-      next();
-    });
+    // this.app.use((req, res, next) => {
+    //   if (req.user.userId) {
+    //     res.locals.session = req.session;
+    //   }
+    //   next();
+    // });
   }
 
   configureRoutes() {
+    const express = require("express");
+
     const caregiverRouter = require("./routes/caregiverRoutes");
     const childRouter = require("./routes/childrenRoutes");
     const homeRouter = require("./routes/homeRoute");
@@ -111,34 +112,36 @@ class Server {
     const f7etapa7Routers = require("./routes/form7Etapa7Routes");
 
     const notificacoesRouter = require("./routes/notificacoesRoutes");
+    const apiBase = express.Router();
+    apiBase.use("/", homeRouter);
+    apiBase.use("/cuidador", caregiverRouter);
+    apiBase.use("/crianca", childRouter);
+    apiBase.use("/formularios", formRouter);
+    apiBase.use("/familias", familiaRouter);
+    apiBase.use("/login", authRoute);
+    apiBase.use("/supervisor", supervisorRouter);
+    apiBase.use("/visitadores", visitadoresDosSupervisores);
+    apiBase.use("/detalhes", detalhesVisitadorRoute);
+    apiBase.use("/planos", PlanoDeVisitaRouter);
+    apiBase.use("/coordenador", coordenadorRoutes);
+    apiBase.use("/visitasporgeolo", visitasGeoRoutes);
+    apiBase.use("/tabelas", tabelaDeVisitasRoutes);
+    apiBase.use("/pdf", pdfRouters);
+    apiBase.use("/form5-etapa2", etapa2Routers);
+    apiBase.use("/form5-etapa3", etapa3Routers);
+    apiBase.use("/form5-etapa4", etapa4Routers);
+    apiBase.use("/form5-etapa5", etapa5Routers);
+    apiBase.use("/form5-etapa6", etapa6Routers);
+    apiBase.use("/form5-etapa7", etapa7Routers);
+    apiBase.use("/form7-etapa2", f7etapa2Routers);
+    apiBase.use("/form7-etapa3", f7etapa3Routers);
+    apiBase.use("/form7-etapa4", f7etapa4Routers);
+    apiBase.use("/form7-etapa5", f7etapa5Routers);
+    apiBase.use("/form7-etapa6", f7etapa6Routers);
+    apiBase.use("/form7-etapa7", f7etapa7Routers);
+    apiBase.use("/notificacoes", notificacoesRouter);
 
-    this.app.use("/", homeRouter);
-    this.app.use("/cuidador", caregiverRouter);
-    this.app.use("/crianca", childRouter);
-    this.app.use("/formularios", formRouter);
-    this.app.use("/familias", familiaRouter);
-    this.app.use("/login", authRoute);
-    this.app.use("/supervisor", supervisorRouter);
-    this.app.use("/visitadores", visitadoresDosSupervisores);
-    this.app.use("/detalhes", detalhesVisitadorRoute);
-    this.app.use("/planos", PlanoDeVisitaRouter);
-    this.app.use("/coordenador", coordenadorRoutes);
-    this.app.use("/visitasporgeolo", visitasGeoRoutes);
-    this.app.use("/tabelas", tabelaDeVisitasRoutes);
-    this.app.use("/pdf", pdfRouters);
-    this.app.use("/form5-etapa2", etapa2Routers);
-    this.app.use("/form5-etapa3", etapa3Routers);
-    this.app.use("/form5-etapa4", etapa4Routers);
-    this.app.use("/form5-etapa5", etapa5Routers);
-    this.app.use("/form5-etapa6", etapa6Routers);
-    this.app.use("/form5-etapa7", etapa7Routers);
-    this.app.use("/form7-etapa2", f7etapa2Routers);
-    this.app.use("/form7-etapa3", f7etapa3Routers);
-    this.app.use("/form7-etapa4", f7etapa4Routers);
-    this.app.use("/form7-etapa5", f7etapa5Routers);
-    this.app.use("/form7-etapa6", f7etapa6Routers);
-    this.app.use("/form7-etapa7", f7etapa7Routers);
-    this.app.use("/notificacoes", notificacoesRouter);
+    this.app.use("/apiv1", apiBase)
   }
 
   startServer() {

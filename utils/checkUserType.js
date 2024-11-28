@@ -1,7 +1,7 @@
 const checkUserType = (allowedUserTypes) => {
   return (req, res, next) => {
     const userType = req.session.userRole;
-    const user = req.session.userId;
+    const user = req.user.userId;
 
     if (!allowedUserTypes.includes(userType)) {
       if (user) {

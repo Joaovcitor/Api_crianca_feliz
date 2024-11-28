@@ -9,7 +9,7 @@ const Visita = require("../models/Visita_por_geo");
 module.exports = class DetailsVisitadoresController {
   static async index(req, res) {
     try {
-      const supervisorId = req.session.userId;
+      const supervisorId = req.user.userId;
 
       const visitador = await Visitador.findAll({
         where: { supervisorId: supervisorId, role: "visitador" },
@@ -26,7 +26,7 @@ module.exports = class DetailsVisitadoresController {
   }
 
   static async RelatoriosGerais(req, res) {
-    const idCoordenadorSession = req.session.userId;
+    const idCoordenadorSession = req.user.userId;
 
     try {
       const [visitador, supervisor, visitas, childrens, caregivers, planos] = await Promise.all([
@@ -47,7 +47,7 @@ module.exports = class DetailsVisitadoresController {
 
   static async show(req, res) {
     try {
-      const SupervisorId = req.session.userId;
+      const SupervisorId = req.user.userId;
       const id = req.params.id;
 
       const visitador = await Visitador.findOne({

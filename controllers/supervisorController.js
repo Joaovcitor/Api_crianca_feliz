@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
 module.exports = class SupervisorController {
 
   static async index(req, res) {
-    const id = req.session.userId;
+    const id = req.user.userId;
 
     try {
       const supervisores = await Users.findAll({ where: { coordenadorId: id, role: "supervisor" } });
@@ -24,7 +24,7 @@ module.exports = class SupervisorController {
   }
 
   static async store(req, res) {
-    const id = req.session.userId;
+    const id = req.user.userId;
     const { name, password, email, cpf, confirmepassword } = req.body;
 
     if (password !== confirmepassword) {
@@ -56,7 +56,7 @@ module.exports = class SupervisorController {
     try {
       const supervisorCriado = await Users.create(supervisor);
 
-      req.session.userId = supervisorCriado.id;
+      req.user.userId = supervisorCriado.id;
 
       res.status(200).json({ success: "supervisor criado com sucesso!" });
     } catch (e) {
@@ -65,7 +65,7 @@ module.exports = class SupervisorController {
   }
 
   static async showBeneficiarios(req, res) {
-    const id = req.session.userId;
+    const id = req.user.userId;
     const visitadores = await Visitador.findAll({
       where: { SupervisorId: id },
     });

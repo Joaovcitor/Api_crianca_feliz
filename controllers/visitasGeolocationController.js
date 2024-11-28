@@ -6,7 +6,7 @@ module.exports = class VisitaController {
 
   static async ShowVisitasMarcadas(req, res) {
     const idChild = req.params.id;
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     if (!idChild) {
       return res.status(401).json({ errors: "É necessário inserir o ID da criança." })
@@ -31,7 +31,7 @@ module.exports = class VisitaController {
   }
 
   static async show(req, res) {
-    const idVisitador = req.session.userId;
+    const idVisitador = req.user.userId;
     const id = req.params.id;
 
     if (!id) {
@@ -53,7 +53,7 @@ module.exports = class VisitaController {
 
   static async agendaVisita(req, res) {
     const { idChild, planoId, data_que_vai_ser_realizada } = req.body;
-    const session = req.session.userId;
+    const session = req.user.userId;
     if (!idChild || !planoId || !data_que_vai_ser_realizada) {
       return res.status(400).json({ errors: "Dados faltando para marcar a visita!" })
     }
@@ -73,7 +73,7 @@ module.exports = class VisitaController {
   }
 
   static async visitasPendentes(req, res) {
-    const id = req.session.userId;
+    const id = req.user.userId;
 
     try {
       const visita = await Visita.findAll({
@@ -97,7 +97,7 @@ module.exports = class VisitaController {
       motivo_da_nao_realizacao,
     } = req.body;
     const id = req.params.id;
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     if (!id) {
       return res
@@ -252,7 +252,7 @@ module.exports = class VisitaController {
 
   static async store(req, res) {
     const { latitude, longitude, hora_inicio, idVisita } = req.body;
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     const visitasNaoFeitas = await Visita.findAll({
       where: { visitadorId: session, visita_em_andamento: true },
@@ -293,7 +293,7 @@ module.exports = class VisitaController {
   static async update(req, res) {
     try {
       const { id, latitude_final, longitude_final, hora_fim } = req.body;
-      const session = req.session.userId;
+      const session = req.user.userId;
       if (!latitude_final || !longitude_final) {
         res
           .status(400)

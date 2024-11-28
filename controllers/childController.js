@@ -3,14 +3,14 @@ const Child = require("../models/Child");
 
 module.exports = class Children {
   static async store(req, res) {
-    const idVisitadorLogado = req.session.userId;
+    const idVisitadorLogado = req.user.userId;
     try {
       const children = {
         caregiverId: req.body.caregiverId,
         name: req.body.name,
         sexo: req.body.sexo,
         born: req.body.born,
-        visitadorId: req.session.userId,
+        visitadorId: req.user.userId,
         isBpc: req.body.isBpc,
         nis: req.body.nis
       };
@@ -36,7 +36,7 @@ module.exports = class Children {
 
   static async update(req, res) {
     const id = req.params.id;
-    const session = req.session.userId;
+    const session = req.user.userId;
     const { name, born, sexo, nis } = req.body;
 
     if (
@@ -80,7 +80,7 @@ module.exports = class Children {
 
   static async show(req, res) {
     const id = req.params.id;
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     try {
       const child = await Child.findOne({
@@ -121,7 +121,7 @@ module.exports = class Children {
   }
 
   static async index(req, res) {
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     try {
       const children = await Child.findAll({ where: { visitadorId: session }, include: [{ model: Caregiver, as: "Caregiver" }] });

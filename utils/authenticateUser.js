@@ -40,17 +40,12 @@ const authenticateUser = async (model, req, res) => {
       { expiresIn: "8h" }
     );
 
-    res.cookie("jwt", token, { httpOnly: true, secure: true, sameSite: 'none', domain: ".logicmasters.com.br" });
-
-    req.session.userId = user.id;
-    req.session.userRole = user.role;
-
-    req.session.save(() => {
-      return res.status(200).json({
-        token,
-        user: { name: user.name, email, role: user.role, id: user.id },
-      });
+    res.cookie("jwt", token, { httpOnly: true, secure: false, sameSite: 'Lax', });
+    return res.status(200).json({
+      token,
+      user: { name: user.name, email, role: user.role, id: user.id },
     });
+
   } catch (error) {
     console.error("Erro ao autenticar usuário:", error);
     res.status(500).json({ errors: "Ocorreu um erro ao autenticar o usuário." })

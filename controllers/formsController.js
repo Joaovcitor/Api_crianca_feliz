@@ -9,7 +9,7 @@ module.exports = class FormulariosController {
 
   static async showFormulario5(req, res) {
     const { id } = req.params;
-    const VisitadorId = req.session.userId;
+    const VisitadorId = req.user.userId;
     console.log(`id da criança ${id}`);
     const child = await Child.findOne({
       where: { id: id, VisitadorId: VisitadorId },
@@ -39,7 +39,7 @@ module.exports = class FormulariosController {
 
   static async showFormulario7(req, res) {
     const { id } = req.params;
-    const VisitadorId = req.session.userId;
+    const VisitadorId = req.user.userId;
     const child = await Child.findOne({
       where: { id: id, VisitadorId: VisitadorId },
     });

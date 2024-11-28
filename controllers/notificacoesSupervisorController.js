@@ -7,10 +7,10 @@ const {
 } = require("../services/notificationService");
 
 module.exports = class NotificacoesController {
-  
+
   static async storeAllNotificationsOfVisitadores(req, res) {
     const { notificacao_tipo, descricao } = req.body;
-    const sessionSupervisor = req.session.userId;
+    const sessionSupervisor = req.user.userId;
 
     const idsArrays = await buscarIds(
       Visitador,
@@ -30,7 +30,7 @@ module.exports = class NotificacoesController {
   }
   static async store(req, res) {
     const { id, notificacao_tipo, descricao } = req.body;
-    const sessionSupervisor = req.session.userId;
+    const sessionSupervisor = req.user.userId;
 
     if (!id) {
       return res.status(401).json({
@@ -68,7 +68,7 @@ module.exports = class NotificacoesController {
   }
 
   static async index(req, res) {
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     try {
       const notificacoes = await Notificacoes.findAll({
@@ -93,7 +93,7 @@ module.exports = class NotificacoesController {
 
   static async show(req, res) {
     const id = req.params.id;
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     if (!id) {
       return res

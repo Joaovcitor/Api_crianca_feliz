@@ -36,7 +36,7 @@ module.exports = class CoordenadorController {
     try {
       const coordenadorCriado = await Users.create(coordenador);
 
-      req.session.userId = coordenadorCriado.id;
+      req.user.userId = coordenadorCriado.id;
 
       res.status(200).json({ success: "Coordenador criado com sucesso!" });
     } catch (e) {

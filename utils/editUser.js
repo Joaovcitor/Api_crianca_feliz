@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 
 async function editarInformacoesUsuarios(Model, req, res) {
   const { email, password } = req.body;
-  const session = req.session.userId;
+  const session = req.user.userId;
 
   const visitadorEditado = await Model.findOne({ where: { email: email } });
 

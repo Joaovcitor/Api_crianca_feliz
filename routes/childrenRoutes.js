@@ -8,11 +8,10 @@ const authenticateJWT = require("../middlewares/authenticateJWT");
 router.post(
   "/adicionar/:id",
   authenticateJWT,
-  authRequired,
   childController.store
 );
 
-router.get("/info/:id", authenticateJWT, authRequired, childController.show);
-router.get("/infoall", authenticateJWT, authRequired, childController.index);
+router.get("/info/:id", authenticateJWT, childController.show);
+router.get("/infoall", authenticateJWT, childController.index);
 
 module.exports = router;

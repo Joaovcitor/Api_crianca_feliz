@@ -4,7 +4,7 @@ const Etapa4 = require("../models/Form5_9ma12m");
 module.exports = class Formulario5Etapa2 {
   static async store(req, res) {
     try {
-      const visitadorId = req.session.userId;
+      const visitadorId = req.user.userId;
       const id = req.body.id;
       const etapa = await Etapa4.findAll({ where: { ChildId: id } });
 

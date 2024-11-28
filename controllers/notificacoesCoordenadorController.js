@@ -4,7 +4,7 @@ const Coordenador = require("../models/Users");
 module.exports = class NotificacoesController {
   static async store(req, res) {
     const { id, notificacao_tipo, descricacao } = req.body;
-    const sessionCoordenador = req.session.userId;
+    const sessionCoordenador = req.user.userId;
 
     if (!id) {
       return res.status(401).json({
@@ -39,7 +39,7 @@ module.exports = class NotificacoesController {
   }
 
   static async index(req, res) {
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     try {
       const notificacoes = await Notificacoes.findAll({
@@ -64,7 +64,7 @@ module.exports = class NotificacoesController {
 
   static async show(req, res) {
     const id = req.params.id;
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     if (!id) {
       return res

@@ -3,7 +3,7 @@ const Child = require("../models/Child");
 
 module.exports = class TabelaDeVisitas {
   static async index(req, res) {
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     try {
       const visitas = await Visitas.findAll({
@@ -22,7 +22,7 @@ module.exports = class TabelaDeVisitas {
   }
 
   static async store(req, res) {
-    const id = req.session.userId;
+    const id = req.user.userId;
     const childId = req.params.id;
 
     try {
@@ -96,7 +96,7 @@ module.exports = class TabelaDeVisitas {
   static async delete(req, res) {
     try {
       const id = req.params.id;
-      const visitadorId = req.session.userId;
+      const visitadorId = req.user.userId;
 
       await Visitas.destroy({ where: { visitadorId: visitadorId, id: id } });
       res.status(200).json({ sucess: "Visita deletada com sucesso!" });

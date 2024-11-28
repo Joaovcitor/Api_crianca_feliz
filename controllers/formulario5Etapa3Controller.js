@@ -6,7 +6,7 @@ const {
 
 module.exports = class Formulario5Etapa2 {
   static async store(req, res) {
-    const visitadorId = req.session.userId;
+    const visitadorId = req.user.userId;
     await verificarQuantidadeDeFormsPorCrianca(Etapa3, req, res)
     await criarForm7Faixa2E3E6(Etapa3, req, res, visitadorId);
   }

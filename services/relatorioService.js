@@ -15,7 +15,7 @@ const {
 const { Op } = require("sequelize");
 
 async function relatorios(req, res) {
-  const id = req.session.userId;
+  const id = req.user.userId;
   console.log("ID da sessão:", id);
   try {
     const visitadores = await Visitador.findAll({
@@ -77,4 +77,4 @@ async function relatorios(req, res) {
 }
 
 
-module.exports = {relatorios}
+module.exports = { relatorios }

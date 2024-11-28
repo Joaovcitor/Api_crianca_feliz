@@ -5,6 +5,6 @@ const homeController = require('../controllers/homeController');
 const authRequired = require('../middlewares/authRequired');
 const jwt = require("../middlewares/authenticateJWT")
 
-router.get('/', jwt, authRequired, homeController.home);
+router.get('/', jwt, homeController.home);
 
 module.exports = router

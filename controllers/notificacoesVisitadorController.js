@@ -5,7 +5,7 @@ module.exports = class NotificacoesController {
 
   static async store(req, res) {
     const { id, notificacao_tipo, descricao } = req.body;
-    const visitadorId = req.session.userId;
+    const visitadorId = req.user.userId;
 
     if (!id) {
       return res.status(401).json({
@@ -43,7 +43,7 @@ module.exports = class NotificacoesController {
   }
 
   static async index(req, res) {
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     try {
       const notificacoes = await Notificacoes.findAll({
@@ -71,7 +71,7 @@ module.exports = class NotificacoesController {
 
   static async show(req, res) {
     const id = req.params.id;
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     if (!id) {
       return res

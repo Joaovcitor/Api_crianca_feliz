@@ -5,7 +5,7 @@ const PlanoDeVisita = require("../models/plain");
 module.exports = class planoDeVisita {
 
   static async store(req, res) {
-    const visitadorId = req.session.userId;
+    const visitadorId = req.user.userId;
     const childId = req.params.id;
     const {
       etapa1,
@@ -52,7 +52,7 @@ module.exports = class planoDeVisita {
   }
 
   static async show(req, res) {
-    const session = req.session.userId;
+    const session = req.user.userId;
     const id = req.params.id;
 
     if (!id) {
@@ -90,7 +90,7 @@ module.exports = class planoDeVisita {
   }
 
   static async index(req, res) {
-    const session = req.session.userId;
+    const session = req.user.userId;
     const id = req.params.id;
 
     try {
@@ -120,7 +120,7 @@ module.exports = class planoDeVisita {
   }
 
   static async relatorioHome(req, res) {
-    const session = req.session.userId;
+    const session = req.user.userId;
 
     try {
       const planoHome = await PlanoDeVisita.findAll({
@@ -158,7 +158,7 @@ module.exports = class planoDeVisita {
 
   static async update(req, res) {
     const id = req.params.id;
-    const session = req.session.userId
+    const session = req.user.userId
     const visita_realizada_geo = await Visita.findOne({ where: { planoId: id, visitadorId: session } })
 
     const edicaoPlano = {

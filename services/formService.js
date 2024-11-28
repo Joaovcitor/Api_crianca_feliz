@@ -14,7 +14,7 @@ async function verificarQuantidadeDeFormsPorCrianca(Model, req) {
 
 async function atualizarForm5E1(Model, req, res, ModelChild) {
   const id = req.params.id;
-  const session = req.session.userId;
+  const session = req.user.userId;
 
   try {
     const form = await Model.findAll({
