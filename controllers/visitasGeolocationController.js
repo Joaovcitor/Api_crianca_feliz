@@ -3,30 +3,39 @@ const Visita = require("../models/Visita_por_geo");
 const { verificaIdDaCrianca } = require("../services/visitaGeoService");
 
 module.exports = class VisitaController {
-
   static async ShowVisitasMarcadas(req, res) {
     const idChild = req.params.id;
     const session = req.user.userId;
 
     if (!idChild) {
-      return res.status(401).json({ errors: "É necessário inserir o ID da criança." })
+      return res
+        .status(401)
+        .json({ errors: "É necessário inserir o ID da criança." });
     }
 
     try {
       const visita = await Visita.findAll({
-        where: { childId: idChild, visitadorId: session, visita_marcada_finalizada: false },
-        include: [{ model: Child, as: "Child" }]
-      })
+        where: {
+          childId: idChild,
+          visitadorId: session,
+          visita_marcada_finalizada: false,
+        },
+        include: [{ model: Child, as: "Child" }],
+      });
 
       if (!visita) {
-        return res.status(401).json({ errors: "Não foi possível encontrar visitas marcadas para essa criança!" })
+        return res.status(401).json({
+          errors:
+            "Não foi possível encontrar visitas marcadas para essa criança!",
+        });
       }
 
-      res.status(200).json({ visita })
-
+      res.status(200).json({ visita });
     } catch (e) {
       console.log(e);
-      res.status(500).json({ errors: "Ocorreu um erro desconhecido ao buscar as visitas!" })
+      res
+        .status(500)
+        .json({ errors: "Ocorreu um erro desconhecido ao buscar as visitas!" });
     }
   }
 
@@ -35,19 +44,27 @@ module.exports = class VisitaController {
     const id = req.params.id;
 
     if (!id) {
-      return res.status(400).json({ errors: "ID da visita é necessário para buscar a visita!" })
+      return res
+        .status(400)
+        .json({ errors: "ID da visita é necessário para buscar a visita!" });
     }
 
     try {
-      const visita = await Visita.findOne({ where: { id: id, visitadorId: idVisitador } })
+      const visita = await Visita.findOne({
+        where: { id: id, visitadorId: idVisitador },
+      });
       if (!visita) {
-        return res.status(404).json({ errors: "Não foi encontrada visita para essa criança" })
+        return res
+          .status(404)
+          .json({ errors: "Não foi encontrada visita para essa criança" });
       }
 
-      res.status(200).json({ visita })
+      res.status(200).json({ visita });
     } catch (e) {
-      console.log(e)
-      res.status(500).json({ errors: "Ocorreu um erro desconhecido ao buscar essa visita!" })
+      console.log(e);
+      res.status(500).json({
+        errors: "Ocorreu um erro desconhecido ao buscar essa visita!",
+      });
     }
   }
 
@@ -55,20 +72,36 @@ module.exports = class VisitaController {
     const { idChild, planoId, data_que_vai_ser_realizada } = req.body;
     const session = req.user.userId;
     if (!idChild || !planoId || !data_que_vai_ser_realizada) {
-      return res.status(400).json({ errors: "Dados faltando para marcar a visita!" })
+      return res
+        .status(400)
+        .json({ errors: "Dados faltando para marcar a visita!" });
     }
 
     try {
-      const visita = await Visita.findAll({ where: { childId: idChild, finalizou: false } });
+      const visita = await Visita.findAll({
+        where: { childId: idChild, finalizou: false },
+      });
       if (visita.length >= 4) {
-        return res.status(401).json({ errors: "Você possui 4 visitas marcadas para essa criança, termine as outras!" })
+        return res.status(401).json({
+          errors:
+            "Você possui 4 visitas marcadas para essa criança, termine as outras!",
+        });
       }
 
-      await Visita.create({ childId: idChild, pendente_de_validacao: true, visitadorId: session, data_que_vai_ser_realizada: data_que_vai_ser_realizada, planoId: planoId, finalizou: false });
-      res.status(200).json({ success: "Visita marcada com sucesso!" })
+      await Visita.create({
+        childId: idChild,
+        pendente_de_validacao: true,
+        visitadorId: session,
+        data_que_vai_ser_realizada: data_que_vai_ser_realizada,
+        planoId: planoId,
+        finalizou: false,
+      });
+      res.status(200).json({ success: "Visita marcada com sucesso!" });
     } catch (e) {
       console.log(e);
-      res.status(500).json({ errors: "Ocorreu um erro desconhecido ao marcar a visita!" })
+      res
+        .status(500)
+        .json({ errors: "Ocorreu um erro desconhecido ao marcar a visita!" });
     }
   }
 
@@ -105,24 +138,25 @@ module.exports = class VisitaController {
         .json({ errors: "ID é necessário para prosseguir!" });
     }
 
-    await verificaIdDaCrianca(id, Child, session, req, res);
+    // await verificaIdDaCrianca(id, Child, session, req, res);
 
     if (!latitude_beneficiario || !longitude_beneficiario) {
       res
-        .status(401)
+        .status(400)
         .json({ errors: "Latitude e longitude estão indefinidas" });
       return;
     }
     try {
-      const visita = await Visita.create({
-        latitude_beneficiario,
-        longitude_beneficiario,
-        childId: id,
-        visitadorId: session,
-        motivo_da_nao_realizacao,
-        finalizou: true,
-        beneficiario_em_casa: false,
-      });
+      const visita = await Visita.update(
+        {
+          latitude_beneficiario,
+          longitude_beneficiario,
+          motivo_da_nao_realizacao,
+          finalizou: true,
+          beneficiario_em_casa: false,
+        },
+        { where: { id: id } }
+      );
       res.json({
         message: "Justificativa enviada ao sistema!",
         visita,
@@ -206,7 +240,7 @@ module.exports = class VisitaController {
           pendente_de_validacao: true,
           visita_mentirosa: false,
           beneficiario_em_casa: true,
-          visita_marcada_finalizada: true
+          visita_marcada_finalizada: true,
         },
       });
 
@@ -271,13 +305,16 @@ module.exports = class VisitaController {
       return;
     }
     try {
-      const visita = await Visita.update({
-        latitude,
-        longitude,
-        hora_inicio,
-        finalizou: false,
-        visita_em_andamento: true
-      }, { where: { id: idVisita } });
+      const visita = await Visita.update(
+        {
+          latitude,
+          longitude,
+          hora_inicio,
+          finalizou: false,
+          visita_em_andamento: true,
+        },
+        { where: { id: idVisita } }
+      );
       res.status(200).json({
         message: "Visita iniciada. Sua localização foi inserida no sistema!",
         visita,
@@ -308,7 +345,7 @@ module.exports = class VisitaController {
           hora_fim,
           finalizou: true,
           visita_marcada_finalizada: true,
-          visita_em_andamento: false
+          visita_em_andamento: false,
         },
         { where: { id: id, visitadorId: session } }
       );

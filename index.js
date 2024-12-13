@@ -54,7 +54,7 @@ class Server {
         resave: false,
         saveUninitialized: false,
         store: new FileStore({
-          logFn: function () { },
+          logFn: function () {},
           path: require("path").join(require("os").tmpdir(), "sessions"),
         }),
         cookie: {
@@ -62,7 +62,7 @@ class Server {
           maxAge: 28800000,
           httpOnly: true,
           sameSite: "None",
-          domain: ".logicmasters.com.br"
+          // domain: ".logicmasters.com.br"
         },
       })
     );
@@ -142,7 +142,7 @@ class Server {
     apiBase.use("/form7-etapa7", f7etapa7Routers);
     apiBase.use("/notificacoes", notificacoesRouter);
 
-    this.app.use("/apiv1", apiBase)
+    this.app.use("/apiv1", apiBase);
   }
 
   startServer() {

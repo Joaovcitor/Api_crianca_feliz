@@ -3,20 +3,23 @@ const router = express.Router();
 
 const authRequired = require("../middlewares/authRequired");
 const authenticateJWT = require("../middlewares/authenticateJWT");
-// const checkUserType = require("../utils/checkUserType");
+const checkUserType = require("../utils/checkUserType");
 
 const NotificacoesSupervisor = require("../controllers/notificacoesSupervisorController");
 const NotificacoesVisitador = require("../controllers/notificacoesVisitadorController");
 
 // endpoints dos visitadores
-router.get("/minhas-notificacoes", authenticateJWT, NotificacoesVisitador.index);
-
-// router.use(checkUserType(["supervisor"]));
+router.get(
+  "/minhas-notificacoes",
+  authenticateJWT,
+  NotificacoesVisitador.index
+);
 
 // endpoints dos supervisores
 router.get(
   "/supervisor-showall-notificacoes",
   authenticateJWT,
+  checkUserType(["supervisor"]),
   NotificacoesSupervisor.index
 );
 
@@ -29,6 +32,7 @@ router.post(
 router.post(
   "/supervisor-create-varias-notificacoes",
   authenticateJWT,
+  checkUserType(["supervisor"]),
   NotificacoesSupervisor.storeAllNotificationsOfVisitadores
 );
 

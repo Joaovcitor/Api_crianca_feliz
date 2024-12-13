@@ -9,6 +9,8 @@ const authenticateUser = async (model, req, res) => {
       attributes: ["email", "password", "id", "role"],
     });
 
+    console.log(user);
+
     if (!user) {
       return res.status(400).json({
         errors: "Usuário não encontrado, verifique suas crendenciais!",
@@ -40,15 +42,20 @@ const authenticateUser = async (model, req, res) => {
       { expiresIn: "8h" }
     );
 
-    res.cookie("jwt", token, { httpOnly: true, secure: true, sameSite: 'None', });
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    });
     return res.status(200).json({
       token,
       user: { name: user.name, email, role: user.role, id: user.id },
     });
-
   } catch (error) {
     console.error("Erro ao autenticar usuário:", error);
-    res.status(500).json({ errors: "Ocorreu um erro ao autenticar o usuário." })
+    res
+      .status(500)
+      .json({ errors: "Ocorreu um erro ao autenticar o usuário." });
   }
 };
 
