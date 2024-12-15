@@ -12,6 +12,5 @@ module.exports = class Formulario5Etapa2 {
       });
     }
     await criarForm7Faixa2E3E6(Etapa6, req, res, visitadorId);
-    // res.status(200).json({ success: "Formulário criado com sucesso!" });
   }
 };

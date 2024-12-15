@@ -10,7 +10,6 @@ module.exports = class Formulario5Etapa2 {
       const visitadorId = req.user.userId;
       await verificarQuantidadeDeFormsPorCrianca(Etapa3, req, res);
       await criarForm7Faixa2E3E6(Etapa3, req, res, visitadorId);
-      res.status(200).json({ success: "Formulário criado com sucesso!" });
     } catch (e) {
       console.log(e);
       res.status(500).json({
