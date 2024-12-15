@@ -65,6 +65,7 @@ async function criarForm7Faixa4(Model, req, res, VisitadorId) {
 async function criarForm7Faixa5(Model, req, res, VisitadorId) {
   const { id, q1, q2, q3, q4, q5, q6 } = req.body;
   VisitadorId = req.user.userId;
+  console.log(id);
 
   if (!id) {
     return req.status(401).json({ errors: ["Criança invalida!"] });

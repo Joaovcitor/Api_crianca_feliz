@@ -6,7 +6,7 @@ module.exports = class Formulario5Etapa2 {
     const visitadorId = req.user.userId;
     const id = req.body.id;
     const etapa = await Etapa5.findAll({ where: { ChildId: id } });
-    if (etapa.length > 1) {
+    if (etapa.length === 1) {
       return res.status(400).json({
         errors: "Você não pode criar mais formulários para essa faixa etária!",
       });

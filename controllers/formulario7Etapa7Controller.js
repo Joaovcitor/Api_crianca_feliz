@@ -1,13 +1,13 @@
 const { criarForm7Faixa1E7 } = require("../utils/createf7");
-const Etapa7 = require('../models/Form7_2aA3a');
+const Etapa7 = require("../models/Form7_2aA3a");
 
 module.exports = class Formulario5Etapa2 {
   static async store(req, res) {
     const visitadorId = req.user.userId;
     const id = req.params.id;
     const etapa = await Etapa7.findAll({ where: { ChildId: id } });
-    if (etapa.length > 1) {
-      return res.status(401).json({
+    if (etapa.length === 1) {
+      return res.status(400).json({
         message: "Você não pode criar mais formulários para essa faixa etária!",
       });
     }
