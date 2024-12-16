@@ -29,19 +29,29 @@ module.exports = class DetailsVisitadoresController {
     const idCoordenadorSession = req.user.userId;
 
     try {
-      const [visitador, supervisor, visitas, childrens, caregivers, planos] = await Promise.all([
-        Visitador.findAll({ where: { role: "visitador" } }),
-        Supervisor.findAll({ where: { role: "supervisor" } }),
-        Visita.findAll(),
-        Child.findAll(),
-        Caregiver.findAll(),
-        PlanoDeVisita.findAll()
-      ]);
+      const [visitador, supervisor, visitas, childrens, caregivers, planos] =
+        await Promise.all([
+          Visitador.findAll({ where: { role: "visitador" } }),
+          Supervisor.findAll({ where: { role: "supervisor" } }),
+          Visita.findAll(),
+          Child.findAll(),
+          Caregiver.findAll(),
+          PlanoDeVisita.findAll(),
+        ]);
 
-      res.status(200).json({ visitador, supervisor, visitas, childrens, caregivers, planos })
+      res.status(200).json({
+        visitador,
+        supervisor,
+        visitas,
+        childrens,
+        caregivers,
+        planos,
+      });
     } catch (e) {
       console.log(e);
-      return res.status(500).json({ errors: "Ocorreu um erro desconhecido ao buscar relatórios" })
+      return res
+        .status(500)
+        .json({ errors: "Ocorreu um erro desconhecido ao buscar relatórios" });
     }
   }
 
@@ -55,6 +65,10 @@ module.exports = class DetailsVisitadoresController {
         include: [{ model: Supervisor, as: "coordenador" }],
       });
 
+      const buscarVisitadorPeloId = await Visitador.findOne({
+        where: { id: id },
+      });
+
       const caregivers = await Caregiver.findAll({
         where: { visitadorId: visitador.id },
         include: [{ model: Visitador, as: "visitador" }],
@@ -65,18 +79,68 @@ module.exports = class DetailsVisitadoresController {
         include: [{ model: Visitador, as: "visitador" }],
       });
 
-      const visitasFeitas = await Visita.findAll({ where: { visitadorId: id, visita_marcada_finalizada: true } })
-      const visitasMarcadas = await Visita.findAll({ where: { visitadorId: id, visita_marcada_finalizada: false } })
-      const planos = await PlanoDeVisita.findAll({ where: { visitadorId: id } });
+      const visitasFeitas = await Visita.findAll({
+        where: { visitadorId: id, visita_marcada_finalizada: true },
+      });
+      const visitasMarcadas = await Visita.findAll({
+        where: { visitadorId: id, visita_marcada_finalizada: false },
+      });
+      const planos = await PlanoDeVisita.findAll({
+        where: { visitadorId: id },
+      });
 
-      res.status(200).json({ planos, child, visitador, caregivers, visitasFeitas, visitasMarcadas })
-
+      res.status(200).json({
+        planos,
+        child,
+        visitador,
+        caregivers,
+        visitasFeitas,
+        visitasMarcadas,
+        buscarVisitadorPeloId,
+      });
     } catch (e) {
       console.log(e);
     }
   }
 
   static async showInfoForCoordenador(req, res) {
-    await relatorios(req, res);
+    try {
+      const id = req.params.id;
+
+      const visitador = await Visitador.findOne({
+        where: { id: id },
+      });
+
+      const caregivers = await Caregiver.findAll({
+        where: { visitadorId: visitador.id },
+        include: [{ model: Visitador, as: "visitador" }],
+      });
+
+      const child = await Child.findAll({
+        where: { visitadorId: visitador.id },
+        include: [{ model: Visitador, as: "visitador" }],
+      });
+
+      const visitasFeitas = await Visita.findAll({
+        where: { visitadorId: id, visita_marcada_finalizada: true },
+      });
+      const visitasMarcadas = await Visita.findAll({
+        where: { visitadorId: id, visita_marcada_finalizada: false },
+      });
+      const planos = await PlanoDeVisita.findAll({
+        where: { visitadorId: id },
+      });
+
+      res.status(200).json({
+        planos,
+        child,
+        visitador,
+        caregivers,
+        visitasFeitas,
+        visitasMarcadas,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 };

@@ -6,17 +6,40 @@ const Visitador = require("../models/Users");
 const bcrypt = require("bcryptjs");
 
 module.exports = class SupervisorController {
-
   static async index(req, res) {
     const id = req.user.userId;
 
     try {
-      const supervisores = await Users.findAll({ where: { coordenadorId: id, role: "supervisor" } });
+      const supervisores = await Users.findAll({
+        where: { coordenadorId: id, role: "supervisor" },
+      });
       if (supervisores.length === 0) {
-        return res.status(400).json({ errors: "Você não possui supervisores!" });
+        return res
+          .status(400)
+          .json({ errors: "Você não possui supervisores!" });
       }
 
-      res.status(200).json({ supervisores })
+      res.status(200).json({ supervisores });
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ errors: "Ocorreu um erro desconhecido!" });
+    }
+  }
+
+  static async show(req, res) {
+    const id = req.params.id;
+
+    try {
+      const supervisores = await Users.findOne({
+        where: { id: id, role: "supervisor" },
+      });
+      if (supervisores.length === 0) {
+        return res
+          .status(400)
+          .json({ errors: "Você não possui supervisores!" });
+      }
+
+      res.status(200).json({ supervisores });
     } catch (e) {
       console.log(e);
       res.status(500).json({ errors: "Ocorreu um erro desconhecido!" });
@@ -51,7 +74,7 @@ module.exports = class SupervisorController {
       cpf: req.body.cpf,
       role: "supervisor",
       coordenadorId: id,
-      territorio: ""
+      territorio: "",
     };
     try {
       const supervisorCriado = await Users.create(supervisor);
@@ -102,10 +125,14 @@ module.exports = class SupervisorController {
     const { id } = req.body;
     try {
       await Child.update({ isPending: false }, { where: { id } });
-      res.status(200).json({ success: "Beneficiário validado com sucesso!" })
+      res.status(200).json({ success: "Beneficiário validado com sucesso!" });
     } catch (e) {
       console.log(e);
-      res.status(500).json({ errors: "Ocorreu um erro desconhecido ao validar o beneficiário!" })
+      res
+        .status(500)
+        .json({
+          errors: "Ocorreu um erro desconhecido ao validar o beneficiário!",
+        });
     }
   }
 };
