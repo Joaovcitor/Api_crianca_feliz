@@ -1,32 +1,38 @@
-const Users = require("../models/Users")
+const Users = require("../models/Users");
 const { editarInformacoesUsuarios } = require("../utils/editUser");
 const { hashPassword } = require("../services/users/senha");
-const { procurarUsuarioNoBancoDeDados } = require("../services/users/procurarUsuarios")
+const {
+  procurarUsuarioNoBancoDeDados,
+} = require("../services/users/procurarUsuarios");
 
 module.exports = class VisitadoresController {
-
   // esse método é usado apenas pelos coordenadores
   static async showVisitadorPendente(req, res) {
     const id = req.params.id;
 
     if (!id) {
-      return res.status(401).json({ errors: "ID é necessário!" })
+      return res.status(401).json({ errors: "ID é necessário!" });
     }
     try {
       const visitadorPendente = await Users.findAll({
-        where: { supervisorId: id, isPending: true, role: "visitador" }, include: [{
-          model: Users,
-          as: "supervisores"
-        }]
+        where: { supervisorId: id, isPending: true, role: "visitador" },
+        include: [
+          {
+            model: Users,
+            as: "supervisores",
+          },
+        ],
       });
       if (!visitadorPendente) {
-        return res.status(404).json({ errors: "Você não possui visitadores pendentes!" });
+        return res
+          .status(404)
+          .json({ errors: "Você não possui visitadores pendentes!" });
       }
 
-      res.status(200).json({ visitadorPendente })
+      res.status(200).json({ visitadorPendente });
     } catch (e) {
       console.log(e);
-      res.status(500).json({ errors: "Ocorreu um erro desconhecido!" })
+      res.status(500).json({ errors: "Ocorreu um erro desconhecido!" });
     }
   }
 
@@ -35,14 +41,21 @@ module.exports = class VisitadoresController {
     const id = req.params.id;
 
     if (!id) {
-      return res.status(401).json({ errors: "ID faltando" })
+      return res.status(400).json({ errors: "ID faltando" });
     }
 
     try {
-      await Users.update({ isPending: false, coordenadorId: session }, { where: { id: id } })
+      await Users.update(
+        { isPending: false, coordenadorId: session },
+        { where: { id: id } }
+      );
     } catch (e) {
       console.log(e);
-      res.status(500).json({ errors: "Ocorreu um erro desconhecido ao validar o visitador!" })
+      res
+        .status(500)
+        .json({
+          errors: "Ocorreu um erro desconhecido ao validar o visitador!",
+        });
     }
   }
 
@@ -73,16 +86,20 @@ module.exports = class VisitadoresController {
     const SupervisorId = req.user.userId;
     const { name, email, cpf: numCpf, password, territorio, cras } = req.body;
 
-    const verificarUsuario = await procurarUsuarioNoBancoDeDados(email, numCpf)
+    const verificarUsuario = await procurarUsuarioNoBancoDeDados(email, numCpf);
 
     if (!verificarUsuario) {
-      return res.status(400).json({ errors: verificarUsuario.msg })
+      return res.status(400).json({ errors: verificarUsuario.msg });
     }
 
-    const limiteDeVisitadores = await Users.count({ where: { role: "visitador", supervisorId: SupervisorId } });
+    const limiteDeVisitadores = await Users.count({
+      where: { role: "visitador", supervisorId: SupervisorId },
+    });
 
     if (limiteDeVisitadores > 10) {
-      return res.status(401).json({ errors: "Você já possui 10 visitadores no sistema!" })
+      return res
+        .status(401)
+        .json({ errors: "Você já possui 10 visitadores no sistema!" });
     }
 
     const hashedPassword = await hashPassword(password);
@@ -96,13 +113,13 @@ module.exports = class VisitadoresController {
       cras: cras,
       supervisorId: SupervisorId,
       isActive: true,
-      role: "visitador"
+      role: "visitador",
     };
 
     try {
       const visitadorCriado = await Users.create(Criarvisitador);
 
-      req.user.userId = visitadorCriado.id
+      req.user.userId = visitadorCriado.id;
 
       res.status(200).json({ success: "Visitador criado com sucesso!" });
     } catch (e) {
