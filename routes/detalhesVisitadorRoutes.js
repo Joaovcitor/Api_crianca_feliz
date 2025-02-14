@@ -16,5 +16,10 @@ router.get(
   authenticateJWT,
   detalhesController.RelatoriosGerais
 );
+router.get(
+  "/visitadores-do-supervisor/:id",
+  authenticateJWT,
+  detalhesController.visitadoresDoSupervisor
+);
 
 module.exports = router;

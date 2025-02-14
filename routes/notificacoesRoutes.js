@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const authRequired = require("../middlewares/authRequired");
 const authenticateJWT = require("../middlewares/authenticateJWT");
 const checkUserType = require("../utils/checkUserType");
 
 const NotificacoesSupervisor = require("../controllers/notificacoesSupervisorController");
+const NotificacoesCoordenador = require("../controllers/notificacoesCoordenadorController");
 const NotificacoesVisitador = require("../controllers/notificacoesVisitadorController");
 
 // endpoints dos visitadores
@@ -49,5 +49,35 @@ router.delete(
 );
 
 // endpoints dos coordenadores
+router.get(
+  "/supervisor-showall-notificacoes",
+  authenticateJWT,
+  checkUserType(["coordenador"]),
+  NotificacoesCoordenador.index
+);
 
+router.post(
+  "/coordenador-create-notificacoes",
+  authenticateJWT,
+  NotificacoesCoordenador.store
+);
+
+router.post(
+  "/coordenador-create-varias-notificacoes",
+  authenticateJWT,
+  checkUserType(["coordenador"]),
+  NotificacoesCoordenador.storeAllNotificationsOfVisitadores
+);
+
+router.put(
+  "/coordenador-update",
+  authenticateJWT,
+  NotificacoesCoordenador.update
+);
+
+router.delete(
+  "/coordenador-delete-notificacao",
+  authenticateJWT,
+  NotificacoesCoordenador.delete
+);
 module.exports = router;

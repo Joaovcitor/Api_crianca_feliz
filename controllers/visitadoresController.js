@@ -1,5 +1,5 @@
 const Users = require("../models/Users");
-const { editarInformacoesUsuarios } = require("../utils/editUser");
+const editarInformacoesUsuarios = require("../utils/editUser");
 const { hashPassword } = require("../services/users/senha");
 const {
   procurarUsuarioNoBancoDeDados,
@@ -51,32 +51,59 @@ module.exports = class VisitadoresController {
       );
     } catch (e) {
       console.log(e);
-      res
-        .status(500)
-        .json({
-          errors: "Ocorreu um erro desconhecido ao validar o visitador!",
-        });
+      res.status(500).json({
+        errors: "Ocorreu um erro desconhecido ao validar o visitador!",
+      });
+    }
+  }
+
+  static async inativarContaVisitador(req, res) {
+    const id = req.params.id;
+
+    try {
+      await Users.update(
+        { isActive: false },
+        { where: { id: id, role: "visitador" } }
+      );
+      res.status(200).json({ message: "Visitador foi inativado com sucesso!" });
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ errors: "Ocorreu um erro desconhecido!" });
+    }
+  }
+
+  static async ativarContaVisitador(req, res) {
+    const id = req.params.id;
+
+    try {
+      await Users.update(
+        { isActive: true },
+        { where: { id: id, role: "visitador" } }
+      );
+      res.status(200).json({ message: "Visitador foi ativado com sucesso!" });
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ errors: "Ocorreu um erro desconhecido!" });
     }
   }
 
   static async show(req, res) {
-    const id = req.user.userId;
+    const id = req.params.id;
     try {
-      const user = await Users.findOne({
-        where: id,
-        attributes: ["name", "id", "email", "password", "role"],
+      const visitador = await Users.findOne({
+        where: { id: id },
       });
-      if (!user) {
+      if (!visitador) {
         return res
           .status(404)
-          .json({ notFoundUser: "Não foi encontrado nenhum usuário!" });
+          .json({ errors: "Não foi encontrado nenhum usuário!" });
       }
 
-      res.status(200).json({ user });
+      res.status(200).json({ visitador });
     } catch (e) {
       console.log(e);
       res.status(500).json({
-        errorInternal:
+        errors:
           "Ocorreu um erro ao carregar suas informações! Recarregue a página.",
       });
     }
@@ -136,6 +163,29 @@ module.exports = class VisitadoresController {
     try {
       const visitadores = await Users.findAll({
         where: { supervisorId: session },
+      });
+
+      if (!visitadores) {
+        return res
+          .status(400)
+          .json({ errors: "Ocorreu um erro ao procurar seus visitadores!" });
+      }
+
+      res.status(200).json({ visitadores });
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({
+        errorInternal:
+          "Ocorreu um erro ao procurar seus visitadores na base de dados!",
+      });
+    }
+  }
+
+  static async visitadoresDoCoordenador(req, res) {
+    const session = req.user.userId;
+    try {
+      const visitadores = await Users.findAll({
+        where: { coordenadorId: session },
       });
 
       if (!visitadores) {

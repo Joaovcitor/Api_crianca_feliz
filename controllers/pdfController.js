@@ -1,4 +1,4 @@
-const { gerarPDF, pegarId, gerarRelatorios } = require("../utils/generatePdf");
+const { gerarPDF, pegarId } = require("../utils/generatePdf");
 const fs = require("fs");
 
 module.exports = class pdfController {

@@ -16,7 +16,7 @@ router.post(
 );
 
 router.get(
-  "/mostrar-infos",
+  "/:id",
   authenticateJWT,
   visitadoresController.show
 );

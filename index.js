@@ -1,13 +1,10 @@
 const express = require("express");
-const conn = require("./db/conn");
 const session = require("express-session");
 const FileStore = require("session-file-store")(session);
-const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const cors = require("cors");
 const helmet = require("helmet");
-const cacheMid = require("./middlewares/nodeCache");
 
 class Server {
   constructor() {
@@ -19,6 +16,8 @@ class Server {
       "https://pcfprefeiturav2.logicmasters.com.br",
       "https://pcfv2.netlify.app",
       "https://pcf.logicmasters.com.br",
+      "https://192.168.1.72:3000",
+      "http://192.168.1.72:3000"
     ];
 
     this.configureMiddlewares();
@@ -59,16 +58,14 @@ class Server {
           path: require("path").join(require("os").tmpdir(), "sessions"),
         }),
         cookie: {
-          secure: true,
+          secure: process.env.NODE_ENV === "production",
           maxAge: 28800000,
           httpOnly: true,
-          sameSite: "None",
-          // domain: ".logicmasters.com.br"
-        },
+          sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+        }
       })
     );
 
-    this.app.use(flash());
     this.app.use(express.static("public"));
     this.app.use(express.json());
     this.app.use(cookieParser());
@@ -149,7 +146,7 @@ class Server {
 
   startServer() {
     this.app.listen(3003, () => {
-      console.log("Server is running on port 3000");
+      console.log("Server is running on port 3003");
     });
   }
 }

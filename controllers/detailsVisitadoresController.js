@@ -25,6 +25,24 @@ module.exports = class DetailsVisitadoresController {
     }
   }
 
+  static async visitadoresDoSupervisor(req, res) {
+    try {
+      const supervisorId = req.params.id;
+
+      const visitadores = await Visitador.findAll({
+        where: { supervisorId: supervisorId, role: "visitador" },
+      });
+
+      if (!visitadores) {
+        return res.status(404).json({ errors: "Não existem visitadores!" });
+      }
+      res.status(200).json({ visitadores });
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ errors: "Ocorreu um erro desconhecido" });
+    }
+  }
+
   static async RelatoriosGerais(req, res) {
     const idCoordenadorSession = req.user.userId;
 

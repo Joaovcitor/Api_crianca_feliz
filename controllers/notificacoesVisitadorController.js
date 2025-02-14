@@ -56,12 +56,6 @@ module.exports = class NotificacoesController {
         ],
       });
 
-      if (notificacoes.length < 1) {
-        return res
-          .status(404)
-          .json({ errors: "Não foram encontradas notificações!" });
-      }
-
       res.status(200).json({ notificacoes })
     } catch (e) {
       console.log(e);

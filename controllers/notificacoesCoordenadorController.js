@@ -1,5 +1,11 @@
 const Notificacoes = require("../models/Notificacoes");
 const Coordenador = require("../models/Users");
+const Users = require("../models/Users");
+const {
+  criaVariasNotificacoesParaOCoordenador,
+  buscarIds,
+  buscarIdsDosVisitadoresDoCoordenador,
+} = require("../services/notificationService");
 
 module.exports = class NotificacoesController {
   static async store(req, res) {
@@ -38,6 +44,29 @@ module.exports = class NotificacoesController {
     }
   }
 
+  static async storeAllNotificationsOfVisitadores(req, res) {
+    const { notificacao_tipo, descricao } = req.body;
+    const sessionSupervisor = req.user.userId;
+    console.log(notificacao_tipo, descricao);
+
+    const idsArrays = await buscarIdsDosVisitadoresDoCoordenador(
+      Users,
+      "supervisor",
+      sessionSupervisor
+    );
+
+    const store = await criaVariasNotificacoesParaOCoordenador(
+      idsArrays,
+      notificacao_tipo,
+      descricao,
+      res,
+      Notificacoes,
+      sessionSupervisor
+    );
+    console.log(store);
+    res.status(200).json({ success: "Notificações criadas com sucesso!" });
+  }
+
   static async index(req, res) {
     const session = req.user.userId;
 
@@ -56,6 +85,8 @@ module.exports = class NotificacoesController {
           .status(404)
           .json({ errors: "Não foram encontradas notificações!" });
       }
+
+      res.status(200).json({ notificacoes });
     } catch (e) {
       console.log(e);
       res.status(500).json({ errors: "Ocorreu um erro desconhecido!" });
@@ -68,7 +99,7 @@ module.exports = class NotificacoesController {
 
     if (!id) {
       return res
-        .status(401)
+        .status(400)
         .json({ errors: "ID é necessário da notificação é necessário!" });
     }
 
@@ -96,7 +127,9 @@ module.exports = class NotificacoesController {
     }
 
     if (!id) {
-      return res.status(401).json({ errors: "ID do usuário é necessário!" });
+      return res
+        .status(400)
+        .json({ errors: "ID da notificação é necessário!" });
     }
 
     try {
@@ -118,7 +151,7 @@ module.exports = class NotificacoesController {
 
     if (!id) {
       return res
-        .status(401)
+        .status(400)
         .json({ errors: "Id da notificação é necessário!" });
     }
 

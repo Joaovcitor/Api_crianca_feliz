@@ -39,4 +39,10 @@ router.post(
   VisitadorController.store
 );
 
+router.get(
+  "/meus-visitadores",
+  authenticateJWT,
+  VisitadorController.index
+);
+
 module.exports = router;

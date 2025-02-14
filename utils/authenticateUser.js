@@ -6,7 +6,6 @@ const authenticateUser = async (model, req, res) => {
     const { email, password } = req.body;
     const user = await model.findOne({
       where: { email },
-      attributes: ["email", "password", "id", "role"],
     });
 
     console.log(user);
@@ -17,18 +16,17 @@ const authenticateUser = async (model, req, res) => {
       });
     }
 
-    // if (user.role === "visitador" && user.isPending) {
-    //   return res
-    //   .status(401)
-    //   .json({ errors: "Sua conta se encontra pendente! Aguarde." });
-    // }
+    if (user.role === "visitador" && user.isPending) {
+      return res
+        .status(401)
+        .json({ errors: "Sua conta se encontra pendente! Aguarde." });
+    }
 
-    // if (user.role === "visitador" && !user.isActive) {
-
-    //   return res
-    //     .status(401)
-    //     .json({ errors: "Sua conta se encontra inativa! Aguarde." });
-    // }
+    if (user.role === "visitador" && !user.isActive) {
+      return res
+        .status(401)
+        .json({ errors: "Sua conta se encontra inativa! Aguarde." });
+    }
 
     const passwordMatch = bcrypt.compareSync(password, user.password);
 
@@ -45,8 +43,9 @@ const authenticateUser = async (model, req, res) => {
     res.cookie("jwt", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "None",
+      sameSite: "None"
     });
+
     return res.status(200).json({
       token,
       user: { name: user.name, email, role: user.role, id: user.id },

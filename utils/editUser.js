@@ -6,7 +6,7 @@ async function editarInformacoesUsuarios(Model, req, res) {
 
   const visitadorEditado = await Model.findOne({ where: { email: email } });
 
-  if (visitadorEditado) {
+  if (visitadorEditado.email === email) {
     return res.status(400).json({ errors: "Email pertence a outro usuário!" });
   }
 
@@ -14,13 +14,13 @@ async function editarInformacoesUsuarios(Model, req, res) {
   const passwordHash = bcrypt.hashSync(password, salt);
 
   const edicao = {
-    email: req.body.email,
+    email: email,
     password: passwordHash,
   };
 
   try {
     await Model.update(edicao, { where: { id: session } });
-    res.status(200).json({ sucess: "Edição dos dados feita com sucesso!" });
+    res.status(200).json({ success: "Edição dos dados feita com sucesso!" });
   } catch (e) {
     console.log(e);
     res

@@ -87,7 +87,7 @@ module.exports = class TabelaDeVisitas {
         }
       );
 
-      res.status(200).json({ sucess: "Visita atualizada com sucesso!" });
+      res.status(200).json({ success: "Visita atualizada com sucesso!" });
     } catch (error) {
       console.log(error);
     }
@@ -99,7 +99,7 @@ module.exports = class TabelaDeVisitas {
       const visitadorId = req.user.userId;
 
       await Visitas.destroy({ where: { visitadorId: visitadorId, id: id } });
-      res.status(200).json({ sucess: "Visita deletada com sucesso!" });
+      res.status(200).json({ success: "Visita deletada com sucesso!" });
     } catch (error) {
       console.log(error);
     }
