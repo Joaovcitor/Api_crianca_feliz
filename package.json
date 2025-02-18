@@ -24,6 +24,7 @@
     "mysql": "^2.18.1",
     "node": "^20.13.1",
     "node-cache": "^5.1.2",
+    "nodemailer": "^6.10.0",
     "pdfkit": "^0.15.0",
     "react-leaflet": "^4.2.1",
     "sequelize": "^6.37.3",

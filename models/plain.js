@@ -1,10 +1,11 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, Model } = require("sequelize");
 const db = require("../db/conn");
 const Child = require("./Child");
 const User = require("./Users");
 
-const PlanoDeVisita = db.define(
-  "PlanosDeVisitas",
+class PlanoDeVisita extends Model {}
+
+PlanoDeVisita.init(
   {
     objetivo: {
       type: DataTypes.TEXT,
@@ -48,6 +49,9 @@ const PlanoDeVisita = db.define(
     },
   },
   {
+    sequelize: db,
+    modelName: "PlanoDeVisita",
+    tableName: "PlanosDeVisitas",
     timestamps: true,
   }
 );
@@ -59,7 +63,7 @@ Child.hasMany(PlanoDeVisita, {
 PlanoDeVisita.belongsTo(Child, {
   as: "Child",
   foreignKey: "childId",
-  onDelete: 'SET NULL'
+  onDelete: "SET NULL",
 });
 
 User.hasMany(PlanoDeVisita, {
@@ -70,7 +74,7 @@ User.hasMany(PlanoDeVisita, {
 PlanoDeVisita.belongsTo(User, {
   as: "visitador",
   foreignKey: "visitadorId",
-  onDelete: 'SET NULL'
+  onDelete: "SET NULL",
 });
 
 module.exports = PlanoDeVisita;

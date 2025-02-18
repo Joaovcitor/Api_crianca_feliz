@@ -9,7 +9,7 @@ const {
 
 module.exports = class NotificacoesController {
   static async store(req, res) {
-    const { id, notificacao_tipo, descricacao } = req.body;
+    const { id, notificacao_tipo, descricao } = req.body;
     const sessionCoordenador = req.user.userId;
 
     if (!id) {
@@ -18,20 +18,20 @@ module.exports = class NotificacoesController {
       });
     }
 
-    if (
-      typeof notificacao_tipo !== "string" ||
-      typeof descricacao !== "string"
-    ) {
-      return res
-        .status(400)
-        .json({ errors: "Tipo de dado inserido é inválido!" });
-    }
+    // if (
+    //   typeof notificacao_tipo !== "string" ||
+    //   typeof descricacao !== "string"
+    // ) {
+    //   return res
+    //     .status(400)
+    //     .json({ errors: "Tipo de dado inserido é inválido!" });
+    // }
 
     const notificacao = {
       notificacao_tipo,
       visitadorId: id,
       coordenadorId: sessionCoordenador,
-      descricacao,
+      descricao,
     };
     try {
       await Notificacoes.create(notificacao);

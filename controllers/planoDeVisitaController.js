@@ -3,7 +3,6 @@ const Visita = require("../models/Visita_por_geo");
 const PlanoDeVisita = require("../models/plain");
 
 module.exports = class planoDeVisita {
-
   static async store(req, res) {
     const visitadorId = req.user.userId;
     const childId = req.params.id;
@@ -28,9 +27,14 @@ module.exports = class planoDeVisita {
     }
 
     try {
-      const visita = await Visita.findAll({ where: { childId: childId, visita_marcada_finalizada: false } });
+      const visita = await Visita.findAll({
+        where: { childId: childId, visita_marcada_finalizada: false },
+      });
       if (visita.length >= 4) {
-        return res.status(400).json({ errors: "Você tem mais de 4 visitas marcadas para essa criança! Termine suas visitas antes de criar mais planos." })
+        return res.status(400).json({
+          errors:
+            "Você tem mais de 4 visitas marcadas para essa criança! Termine suas visitas antes de criar mais planos.",
+        });
       }
       const plano = await PlanoDeVisita.create({
         etapa1,
@@ -65,7 +69,9 @@ module.exports = class planoDeVisita {
         include: [{ model: Child, as: "Child" }],
       });
 
-      const visitaFeita = await Visita.findOne({ where: { planoId: id, visitadorId: session } })
+      const visitaFeita = await Visita.findOne({
+        where: { planoId: id, visitadorId: session },
+      });
 
       if (plano.visitadorId !== session) {
         return res.status(401).json({
@@ -92,10 +98,16 @@ module.exports = class planoDeVisita {
   static async index(req, res) {
     const session = req.user.userId;
     const id = req.params.id;
+    let { page, limit } = req.query;
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 10;
+    const offset = (page - 1) * limit;
 
     try {
-      const plano = await PlanoDeVisita.findAll({
+      const plano = await PlanoDeVisita.findAndCountAll({
         where: { VisitadorId: session, ChildId: id },
+        limit,
+        offset,
       });
 
       const planoHome = await PlanoDeVisita.findAll({
@@ -109,7 +121,16 @@ module.exports = class planoDeVisita {
         });
       }
 
-      res.status(200).json({ plano, planoHome });
+      res
+        .status(200)
+        .json({
+          plano,
+          planoHome,
+          total: plano.count,
+          totalPages: Math.ceil(plano.count / limit),
+          currentPage: page,
+          data: plano.rows,
+        });
     } catch (error) {
       console.log(error);
       res.status(500).json({
@@ -158,8 +179,10 @@ module.exports = class planoDeVisita {
 
   static async update(req, res) {
     const id = req.params.id;
-    const session = req.user.userId
-    const visita_realizada_geo = await Visita.findOne({ where: { planoId: id, visitadorId: session } })
+    const session = req.user.userId;
+    const visita_realizada_geo = await Visita.findOne({
+      where: { planoId: id, visitadorId: session },
+    });
 
     const edicaoPlano = {
       objetivo: req.body.objetivo,
@@ -191,8 +214,9 @@ module.exports = class planoDeVisita {
           .json({ error: "Ocorreu um erro ao editar o plano!" });
       }
 
-      res.status(200).json({ success: "Plano editado com sucesso!", visita_realizada_geo });
-
+      res
+        .status(200)
+        .json({ success: "Plano editado com sucesso!", visita_realizada_geo });
     } catch (e) {
       console.log(e);
       res.status(500).json({

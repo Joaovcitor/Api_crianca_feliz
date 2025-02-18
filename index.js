@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const cors = require("cors");
 const helmet = require("helmet");
+const mid = require("./middlewares/midDaMaldade");
 
 class Server {
   constructor() {
@@ -17,7 +18,7 @@ class Server {
       "https://pcfv2.netlify.app",
       "https://pcf.logicmasters.com.br",
       "https://192.168.1.72:3000",
-      "http://192.168.1.72:3000"
+      "http://192.168.1.72:3000",
     ];
 
     this.configureMiddlewares();
@@ -54,15 +55,15 @@ class Server {
         resave: false,
         saveUninitialized: false,
         store: new FileStore({
-          logFn: function () { },
+          logFn: function () {},
           path: require("path").join(require("os").tmpdir(), "sessions"),
         }),
         cookie: {
-          secure: process.env.NODE_ENV === "production",
+          secure: true,
           maxAge: 28800000,
           httpOnly: true,
-          sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-        }
+          sameSite: "none",
+        },
       })
     );
 
@@ -77,6 +78,7 @@ class Server {
     //   }
     //   next();
     // });
+    // this.app.use(mid);
   }
 
   configureRoutes() {
@@ -112,6 +114,7 @@ class Server {
     const f7etapa7Routers = require("./routes/form7Etapa7Routes");
 
     const notificacoesRouter = require("./routes/notificacoesRoutes");
+    const emailRouter = require("./routes/emailRoute");
     const apiBase = express.Router();
     apiBase.use("/", homeRouter);
     apiBase.use("/cuidador", caregiverRouter);
@@ -140,6 +143,7 @@ class Server {
     apiBase.use("/form7-etapa6", f7etapa6Routers);
     apiBase.use("/form7-etapa7", f7etapa7Routers);
     apiBase.use("/notificacoes", notificacoesRouter);
+    apiBase.use("/email", emailRouter);
 
     this.app.use("/apiv1", apiBase);
   }
