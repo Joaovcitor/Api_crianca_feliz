@@ -3,11 +3,7 @@ const router = express.Router();
 
 const planosDeVisitaController = require("../controllers/planoDeVisitaController");
 const childController = require("../controllers/childController");
-const authRequired = require("../middlewares/authRequired");
 const authenticateJWT = require("../middlewares/authenticateJWT");
-
-const checkUserType = require("../utils/checkUserType");
-
 
 router.get("/info", authenticateJWT, childController.index);
 
@@ -35,16 +31,13 @@ router.post(
   planosDeVisitaController.deletePlano
 );
 
+router.post("/criarplano/:id", authenticateJWT, planosDeVisitaController.store);
 router.post(
-  "/criarplano/:id",
+  "/criarplanocaregiver/:id",
   authenticateJWT,
-  planosDeVisitaController.store
+  planosDeVisitaController.storePlanoForCaregiver
 );
 
-router.put(
-  "/editar/:id",
-  authenticateJWT,
-  planosDeVisitaController.update
-);
+router.put("/editar/:id", authenticateJWT, planosDeVisitaController.update);
 
 module.exports = router;

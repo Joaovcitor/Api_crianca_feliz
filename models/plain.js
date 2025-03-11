@@ -2,6 +2,7 @@ const { DataTypes, Model } = require("sequelize");
 const db = require("../db/conn");
 const Child = require("./Child");
 const User = require("./Users");
+const Caregivers = require("./Caregiver");
 
 class PlanoDeVisita extends Model {}
 
@@ -63,6 +64,16 @@ Child.hasMany(PlanoDeVisita, {
 PlanoDeVisita.belongsTo(Child, {
   as: "Child",
   foreignKey: "childId",
+  onDelete: "SET NULL",
+});
+
+Caregivers.hasMany(PlanoDeVisita, {
+  as: "PlanosDeVisitas",
+  foreignKey: "CaregiverId",
+});
+PlanoDeVisita.belongsTo(Caregivers, {
+  as: "Caregiver",
+  foreignKey: "CaregiverId",
   onDelete: "SET NULL",
 });
 

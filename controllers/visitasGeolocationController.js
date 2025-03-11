@@ -1,6 +1,5 @@
 const Child = require("../models/Child");
 const Visita = require("../models/Visita_por_geo");
-const { verificaIdDaCrianca } = require("../services/visitaGeoService");
 
 module.exports = class VisitaController {
   static async ShowVisitasMarcadas(req, res) {
@@ -36,6 +35,23 @@ module.exports = class VisitaController {
       res
         .status(500)
         .json({ errors: "Ocorreu um erro desconhecido ao buscar as visitas!" });
+    }
+  }
+
+  static async showVisitasInvalidadas(req, res) {
+    const visitadorId = req.user.userId;
+
+    try {
+      const visitas = await Visita.findAll({
+        where: { visitadorId: visitadorId, visita_mentirosa: true },
+      });
+
+      res.status(200).json({ visitas });
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({
+        errors: "Ocorreu um erro desconhecido ao buscar suas visitas!",
+      });
     }
   }
 
@@ -130,7 +146,6 @@ module.exports = class VisitaController {
       motivo_da_nao_realizacao,
     } = req.body;
     const id = req.params.id;
-    const session = req.user.userId;
 
     if (!id) {
       return res
@@ -229,7 +244,7 @@ module.exports = class VisitaController {
     const id = req.params.id;
 
     if (!id) {
-      return res.status(401).json({ errors: "ID é necessário!" });
+      return res.status(400).json({ errors: "ID é necessário!" });
     }
 
     try {

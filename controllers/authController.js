@@ -46,24 +46,19 @@ module.exports = class AuthController {
     const token = req.params.token;
 
     try {
-      // Verifica e decodifica o token JWT
       const decoded = jwt.verify(token, process.env.SECRET_JWT);
 
-      // Encontra o usuário pelo ID extraído do token
       const user = await Users.findByPk(decoded.id);
       if (!user) {
         return res.status(400).json({ errors: "Usuário não encontrado!" });
       }
 
-      // Gera o hash da nova senha de forma assíncrona
       const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-      // Atualiza a senha do usuário no banco
       await user.update({ password: hashedPassword });
 
       return res.status(200).json({ message: "Senha redefinida com sucesso!" });
     } catch (error) {
-      // Verifica se o token expirou
       if (error.name === "TokenExpiredError") {
         return res.status(401).json({ message: "Token expirado." });
       }

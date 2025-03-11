@@ -1,15 +1,46 @@
 const db = require("../db/conn");
-const { DataTypes } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
+class Faltas extends Model {}
 
-const Falta = db.define("Falta", {
-  motivo_da_falta: {
-    type: DataTypes.TEXT,
-    allowNull: false,
+Faltas.init(
+  {
+    motivo_da_falta: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    falta_invalidada: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    pedir_para_invalidar_falta: {
+      type: DataTypes.TEXT,
+      validate: {
+        len: [4, 400],
+      },
+      allowNull: true,
+    },
+    visitadorId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+    },
+    supervisorId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+    },
   },
-  invalidar_falta: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  },
-});
+  {
+    sequelize: db,
+    modelName: "Faltas",
+    tableName: "Faltas",
+  }
+);
 
-module.exports = Falta;
+module.exports = Faltas;

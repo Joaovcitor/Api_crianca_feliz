@@ -5,7 +5,6 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const cors = require("cors");
 const helmet = require("helmet");
-const mid = require("./middlewares/midDaMaldade");
 
 class Server {
   constructor() {
@@ -70,15 +69,6 @@ class Server {
     this.app.use(express.static("public"));
     this.app.use(express.json());
     this.app.use(cookieParser());
-    // this.app.use(cacheMid);
-
-    // this.app.use((req, res, next) => {
-    //   if (req.user.userId) {
-    //     res.locals.session = req.session;
-    //   }
-    //   next();
-    // });
-    // this.app.use(mid);
   }
 
   configureRoutes() {

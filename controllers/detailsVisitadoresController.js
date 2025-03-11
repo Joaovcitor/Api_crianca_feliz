@@ -2,7 +2,6 @@ const Visitador = require("../models/Users");
 const Supervisor = require("../models/Users");
 const Caregiver = require("../models/Caregiver");
 const Child = require("../models/Child");
-const { relatorios } = require("../services/relatorioService");
 const PlanoDeVisita = require("../models/plain");
 const Visita = require("../models/Visita_por_geo");
 
@@ -32,10 +31,6 @@ module.exports = class DetailsVisitadoresController {
       const visitadores = await Visitador.findAll({
         where: { supervisorId: supervisorId, role: "visitador" },
       });
-
-      if (!visitadores) {
-        return res.status(404).json({ errors: "Não existem visitadores!" });
-      }
       res.status(200).json({ visitadores });
     } catch (e) {
       console.log(e);
@@ -118,6 +113,7 @@ module.exports = class DetailsVisitadoresController {
       });
     } catch (e) {
       console.log(e);
+      res.status(500).json({ errors: "Ocorreu um erro desconhecido!" });
     }
   }
 
@@ -129,25 +125,28 @@ module.exports = class DetailsVisitadoresController {
         where: { id: id },
       });
 
-      const caregivers = await Caregiver.findAll({
-        where: { visitadorId: visitador.id },
-        include: [{ model: Visitador, as: "visitador" }],
-      });
+      if (!visitador) {
+        return res.status(404).json({ errors: "Visitador não encontrado!" });
+      }
 
-      const child = await Child.findAll({
-        where: { visitadorId: visitador.id },
-        include: [{ model: Visitador, as: "visitador" }],
-      });
-
-      const visitasFeitas = await Visita.findAll({
-        where: { visitadorId: id, visita_marcada_finalizada: true },
-      });
-      const visitasMarcadas = await Visita.findAll({
-        where: { visitadorId: id, visita_marcada_finalizada: false },
-      });
-      const planos = await PlanoDeVisita.findAll({
-        where: { visitadorId: id },
-      });
+      const [caregivers, child, visitasFeitas, visitasMarcadas, planos] =
+        await Promise.all([
+          Caregiver.findAll({
+            where: { visitadorId: id },
+            include: [{ model: Visitador, as: "visitador" }],
+          }),
+          Child.findAll({
+            where: { visitadorId: id },
+            include: [{ model: Visitador, as: "visitador" }],
+          }),
+          Visita.findAll({
+            where: { visitadorId: id, visita_marcada_finalizada: true },
+          }),
+          Visita.findAll({
+            where: { visitadorId: id, visita_marcada_finalizada: false },
+          }),
+          PlanoDeVisita.findAll({ where: { visitadorId: id } }),
+        ]);
 
       res.status(200).json({
         planos,
@@ -159,6 +158,9 @@ module.exports = class DetailsVisitadoresController {
       });
     } catch (e) {
       console.log(e);
+      res.status(500).json({
+        errors: "Ocorreu um erro desconhecido ao procurar as informações",
+      });
     }
   }
 };

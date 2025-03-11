@@ -1,7 +1,6 @@
 const Users = require("../models/Users");
 const Caregiver = require("../models/Caregiver");
 const Child = require("../models/Child");
-const Supervisor = require("../models/Users");
 const Visitador = require("../models/Users");
 const bcrypt = require("bcryptjs");
 
@@ -128,11 +127,9 @@ module.exports = class SupervisorController {
       res.status(200).json({ success: "Beneficiário validado com sucesso!" });
     } catch (e) {
       console.log(e);
-      res
-        .status(500)
-        .json({
-          errors: "Ocorreu um erro desconhecido ao validar o beneficiário!",
-        });
+      res.status(500).json({
+        errors: "Ocorreu um erro desconhecido ao validar o beneficiário!",
+      });
     }
   }
 };

@@ -55,6 +55,58 @@ module.exports = class planoDeVisita {
     }
   }
 
+  static async storePlanoForCaregiver(req, res) {
+    const visitadorId = req.user.userId;
+    const CaregiverId = req.params.id;
+    const {
+      etapa1,
+      etapa2,
+      etapa3,
+      objetivo,
+      dia_a_ser_realizada_a_visita,
+      grau_de_dificuldade_objetivo,
+    } = req.body;
+
+    if (
+      !objetivo ||
+      !etapa1 ||
+      !etapa2 ||
+      !etapa3 ||
+      !dia_a_ser_realizada_a_visita ||
+      !grau_de_dificuldade_objetivo
+    ) {
+      return res.status(400).json({ error: "Preencha todos os campos!" });
+    }
+
+    try {
+      const visita = await Visita.findAll({
+        where: { CaregiverId: CaregiverId, visita_marcada_finalizada: false },
+      });
+      if (visita.length >= 4) {
+        return res.status(400).json({
+          errors:
+            "Você tem mais de 4 visitas marcadas para essa criança! Termine suas visitas antes de criar mais planos.",
+        });
+      }
+      const plano = await PlanoDeVisita.create({
+        etapa1,
+        etapa2,
+        etapa3,
+        objetivo,
+        dia_a_ser_realizada_a_visita,
+        CaregiverId,
+        visitadorId,
+        grau_de_dificuldade_objetivo,
+      });
+      res.status(200).json({ success: "Plano criado com sucesso!", plano });
+    } catch (error) {
+      console.log(error);
+      res
+        .status(500)
+        .json({ errors: "Ocorreu um erro ao criar o plano de visita!" });
+    }
+  }
+
   static async show(req, res) {
     const session = req.user.userId;
     const id = req.params.id;
@@ -121,16 +173,14 @@ module.exports = class planoDeVisita {
         });
       }
 
-      res
-        .status(200)
-        .json({
-          plano,
-          planoHome,
-          total: plano.count,
-          totalPages: Math.ceil(plano.count / limit),
-          currentPage: page,
-          data: plano.rows,
-        });
+      res.status(200).json({
+        plano,
+        planoHome,
+        total: plano.count,
+        totalPages: Math.ceil(plano.count / limit),
+        currentPage: page,
+        data: plano.rows,
+      });
     } catch (error) {
       console.log(error);
       res.status(500).json({
