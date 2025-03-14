@@ -19,7 +19,7 @@ Faltas.init(
       },
       allowNull: true,
     },
-    visitadorId: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -27,13 +27,32 @@ Faltas.init(
         key: "id",
       },
     },
-    supervisorId: {
+    registradorId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: "Users",
         key: "id",
       },
+    },
+    quando_ocorreu_a_falta: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    pedido_para_invalidar_aceito: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    motivo_falta_justificada: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      validate: {
+        len: [4, 400],
+      },
+    },
+    falta_justificada: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {

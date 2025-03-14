@@ -106,6 +106,7 @@ class Server {
     const notificacoesRouter = require("./routes/notificacoesRoutes");
     const emailRouter = require("./routes/emailRoute");
     const usersRoutes = require("./routes/userRoutes");
+    const faltasRoutes = require("./routes/faltasRoutes");
     const apiBase = express.Router();
     apiBase.use("/", homeRouter);
     apiBase.use("/cuidador", caregiverRouter);
@@ -136,6 +137,7 @@ class Server {
     apiBase.use("/notificacoes", notificacoesRouter);
     apiBase.use("/email", emailRouter);
     apiBase.use("/users", usersRoutes);
+    apiBase.use("/faltas", faltasRoutes);
 
     this.app.use("/apiv1", apiBase);
   }

@@ -85,7 +85,7 @@ module.exports = class planoDeVisita {
       if (visita.length >= 4) {
         return res.status(400).json({
           errors:
-            "Você tem mais de 4 visitas marcadas para essa criança! Termine suas visitas antes de criar mais planos.",
+            "Você tem mais de 4 visitas marcadas para essa gestante! Termine suas visitas antes de criar mais planos.",
         });
       }
       const plano = await PlanoDeVisita.create({
