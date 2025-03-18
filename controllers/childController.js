@@ -1,35 +1,37 @@
 const Caregiver = require("../models/Caregiver");
 const Child = require("../models/Child");
 
-module.exports = class Children {
+module.exports = class ChildrenController {
   static async store(req, res) {
     const idVisitadorLogado = req.user.userId;
     try {
-      const children = {
+      const child = {
         caregiverId: req.body.caregiverId,
         name: req.body.name,
         sexo: req.body.sexo,
         born: req.body.born,
         visitadorId: req.user.userId,
         isBpc: req.body.isBpc,
-        nis: req.body.nis
+        nis: req.body.nis,
       };
 
       const id = req.params.id;
 
-      const caregiver = await Caregiver.findOne({ where: { id: id, visitadorId: idVisitadorLogado } });
+      const caregiver = await Caregiver.findOne({
+        where: { id: id, visitadorId: idVisitadorLogado },
+      });
 
       if (!caregiver) {
         return res.status(404).json({ errors: "Cuidador não encontrado!" });
       }
 
-      await Child.create(children);
+      await Child.create(child);
 
       res.status(200).json({ success: "Criança criada com sucesso!" });
     } catch (e) {
       console.log(e);
       return res.status(500).json({
-        errorInternal: "Ocorreu um erro ao criar a criança! Tente novamente",
+        errors: "Ocorreu um erro ao criar a criança! Tente novamente",
       });
     }
   }
@@ -94,7 +96,7 @@ module.exports = class Children {
       }
       res.status(200).json({ child });
     } catch (e) {
-      console.log(e)
+      console.log(e);
       res.status(500).json({
         errorInternal:
           "Ocorreu um erro ao buscar pela criança. Tente novamente!",
@@ -106,17 +108,21 @@ module.exports = class Children {
     const { idChild } = req.body;
 
     try {
-      const child = await Child.findOne({ where: { id: idChild } })
+      const child = await Child.findOne({ where: { id: idChild } });
 
       if (!child) {
-        return res.status(400).json({ errors: "Criança não foi achada! Verifique o ID" });
+        return res
+          .status(400)
+          .json({ errors: "Criança não foi achada! Verifique o ID" });
       }
 
       await Child.update({ isPending: false }, { where: { id: idChild } });
       res.status(200).json({ success: "Criança validada com sucesso" });
     } catch (e) {
-      console.log(e)
-      res.status(500).json({ errors: "Ocorreu um erro desconhecido ao validar a criança!" })
+      console.log(e);
+      res
+        .status(500)
+        .json({ errors: "Ocorreu um erro desconhecido ao validar a criança!" });
     }
   }
 
@@ -124,7 +130,10 @@ module.exports = class Children {
     const session = req.user.userId;
 
     try {
-      const children = await Child.findAll({ where: { visitadorId: session }, include: [{ model: Caregiver, as: "Caregiver" }] });
+      const children = await Child.findAll({
+        where: { visitadorId: session },
+        include: [{ model: Caregiver, as: "caregiver" }],
+      });
       if (!children) {
         return res
           .status(404)

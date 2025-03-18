@@ -13,11 +13,15 @@ module.exports = class CoordenadorController {
       return res.status(401).json({ errors: "Preencha todos os campos!" });
     }
 
-    const checkUserExistEmail = await Users.findOne({ where: { email: email } });
+    const checkUserExistEmail = await Users.findOne({
+      where: { email: email },
+    });
     const checkUserExistCpf = await Users.findOne({ where: { cpf: cpf } });
 
     if (checkUserExistEmail || checkUserExistCpf) {
-      return res.status(401).json({ errors: "Usuário já cadastrado no sistema" });
+      return res
+        .status(401)
+        .json({ errors: "Usuário já cadastrado no sistema" });
     }
 
     const salt = bcrypt.genSaltSync(15);
@@ -36,7 +40,7 @@ module.exports = class CoordenadorController {
     try {
       const coordenadorCriado = await Users.create(coordenador);
 
-      req.user.userId = coordenadorCriado.id;
+      // req.user.userId = coordenadorCriado.id;
 
       res.status(200).json({ success: "Coordenador criado com sucesso!" });
     } catch (e) {

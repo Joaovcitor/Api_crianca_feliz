@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("VisitasPorGeolocalizacao", {
+    await queryInterface.createTable("VisitasPorGeolocalizacaos", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       latitude: {
         type: Sequelize.DOUBLE,
@@ -68,44 +68,44 @@ module.exports = {
       },
       data_que_vai_ser_realizada: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
       },
       visita_marcada_finalizada: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       visita_em_andamento: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       visitadorId: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: "Users",
-          key: 'id'
-        }
+          key: "id",
+        },
       },
       childId: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: "Child",
-          key: 'id'
-        }
+          key: "id",
+        },
       },
       planoId: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: "PlanosDeVisitas",
-          key: 'id'
-        }
-      }
-    })
+          key: "id",
+        },
+      },
+    });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("VisitasPorGeolocalizacao")
-  }
+    await queryInterface.dropTable("VisitasPorGeolocalizacao");
+  },
 };

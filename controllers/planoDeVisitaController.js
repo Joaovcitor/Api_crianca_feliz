@@ -157,13 +157,13 @@ module.exports = class planoDeVisita {
 
     try {
       const plano = await PlanoDeVisita.findAndCountAll({
-        where: { VisitadorId: session, ChildId: id },
+        where: { visitadorId: session, childId: id },
         limit,
         offset,
       });
 
       const planoHome = await PlanoDeVisita.findAll({
-        where: { VisitadorId: session },
+        where: { visitadorId: session },
       });
 
       if (!plano) {

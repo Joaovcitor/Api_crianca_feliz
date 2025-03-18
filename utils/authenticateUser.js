@@ -16,18 +16,18 @@ const authenticateUser = async (model, req, res) => {
       });
     }
 
-    if (user.role === "visitador") {
-      if (user.isPending) {
-        return res
-          .status(401)
-          .json({ errors: "Sua conta está pendente! Aguarde." });
-      }
-      if (!user.isActive) {
-        return res
-          .status(401)
-          .json({ errors: "Sua conta está inativa! Aguarde." });
-      }
-    }
+    // if (user.role === "visitador") {
+    //   if (user.isPending) {
+    //     return res
+    //       .status(401)
+    //       .json({ errors: "Sua conta está pendente! Aguarde." });
+    //   }
+    //   if (!user.isActive) {
+    //     return res
+    //       .status(401)
+    //       .json({ errors: "Sua conta está inativa! Aguarde." });
+    //   }
+    // }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 

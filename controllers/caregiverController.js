@@ -30,7 +30,9 @@ module.exports = class CaregiverController {
       }
 
       const cuidador = await Caregiver.create(caregiverCreate);
-      res.status(200).json({ success: "Cuidador criado com sucesso!", id: cuidador.id })
+      res
+        .status(200)
+        .json({ success: "Cuidador criado com sucesso!", id: cuidador.id });
     } catch (e) {
       console.log(e);
       res.status(500).json({
@@ -45,9 +47,7 @@ module.exports = class CaregiverController {
 
       await Caregiver.destroy({ where: { id } });
 
-      res
-        .status(200)
-        .json({ sucess: "Cuidador deletado com sucesso!" });
+      res.status(200).json({ sucess: "Cuidador deletado com sucesso!" });
     } catch (e) {
       console.log(`o erro foi: ${e}`);
       res.status(500).json({
@@ -63,15 +63,22 @@ module.exports = class CaregiverController {
     try {
       const cuidadores = await Caregiver.findAll({
         where: { visitadorId: id },
-        attributes: ["id", "name", "address", "district", "contact", "pregnant", "week_pregnant"],
+        attributes: [
+          "id",
+          "name",
+          "address",
+          "district",
+          "contact",
+          "pregnant",
+          "week_pregnant",
+        ],
       });
 
       res.status(200).json({ cuidadores });
     } catch (e) {
       console.log(e);
       res.status(500).json({
-        errors:
-          "Ocorreu um erro ao procurar seus cuidadores! Tente novamente,",
+        errors: "Ocorreu um erro ao procurar seus cuidadores! Tente novamente,",
       });
     }
   }
@@ -93,7 +100,7 @@ module.exports = class CaregiverController {
   }
 
   static async update(req, res) {
-    const { address, district, contact } = req.body
+    const { address, district, contact } = req.body;
     const id = req.params.id;
 
     try {
@@ -105,12 +112,12 @@ module.exports = class CaregiverController {
 
       await Caregiver.update(cuidador, { where: { id: id } });
 
-      res
-        .status(200)
-        .json({ sucess: "Cuidador editado com sucesso!" });
+      res.status(200).json({ sucess: "Cuidador editado com sucesso!" });
     } catch (e) {
       console.log(e);
-      return res.status(500).json({ errors: "Ocorreu um erro ao editar o cuidador" });
+      return res
+        .status(500)
+        .json({ errors: "Ocorreu um erro ao editar o cuidador" });
     }
   }
 
@@ -118,16 +125,21 @@ module.exports = class CaregiverController {
     const { idCaregiver } = req.body;
 
     try {
-      const caregiver = await Caregiver.findOne({ where: { id: idCaregiver } })
+      const caregiver = await Caregiver.findOne({ where: { id: idCaregiver } });
       if (!caregiver) {
-        return res.status(400).json({ errors: "Cuidador não existe!" })
+        return res.status(400).json({ errors: "Cuidador não existe!" });
       }
 
-      await Caregiver.update({ isPending: false }, { where: { id: idCaregiver } });
-      res.status(201).json({ success: "Cuidador validado com sucesso!" })
+      await Caregiver.update(
+        { isPending: false },
+        { where: { id: idCaregiver } }
+      );
+      res.status(201).json({ success: "Cuidador validado com sucesso!" });
     } catch (e) {
       console.log(e);
-      res.status(500).json({ errors: "Ocorreu um erro desconhecido ao validar o cuidador!" })
+      res.status(500).json({
+        errors: "Ocorreu um erro desconhecido ao validar o cuidador!",
+      });
     }
   }
 
@@ -135,24 +147,26 @@ module.exports = class CaregiverController {
     const id = req.user.userId;
     try {
       const visitadores = await Visitador.findAll({
-        where: { SupervisorId: id },
+        where: { supervisorId: id },
       });
 
       const visitadoresId = visitadores.map((visitador) => visitador.id);
       const caregivers = await Caregiver.findAll({
-        where: { VisitadorId: visitadoresId, isPending: true },
-        include: [{
-          model: Visitador,
-          as: "visitador",
-          attributes: ["name"],
-        }]
+        where: { visitadorId: visitadoresId, isPending: true },
+        include: [
+          {
+            model: Visitador,
+            as: "visitador",
+            attributes: ["name"],
+          },
+        ],
       });
       const caregiverId = caregivers.map((caregiver) => caregiver.id);
 
       const childrens = await Child.findAll({
         where: {
-          VisitadorId: visitadoresId,
-          CaregiverId: caregiverId,
+          visitadorId: visitadoresId,
+          caregiverId: caregiverId,
           isPending: true,
         },
         include: [
@@ -163,15 +177,25 @@ module.exports = class CaregiverController {
           },
           {
             model: Caregiver,
-            as: "Caregiver",
-            attributes: ["id", "name", "cpf", "rg", "address", "contact", "district"],
+            as: "caregiver",
+            attributes: [
+              "id",
+              "name",
+              "cpf",
+              "rg",
+              "address",
+              "contact",
+              "district",
+            ],
           },
         ],
       });
       res.status(200).json({ childrens, caregivers });
     } catch (e) {
       console.log(e);
-      res.status(500).json({ errors: "Ocorreu um erro desconhecido ao buscar os beneficiários" })
+      res.status(500).json({
+        errors: "Ocorreu um erro desconhecido ao buscar os beneficiários",
+      });
     }
   }
 };

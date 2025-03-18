@@ -3,8 +3,8 @@ require("dotenv").config();
 
 let sequelize;
 
-if (process.env.NODE_ENV === 'test') {
-  require("dotenv").config({ path: '.env.test' });
+if (process.env.NODE_ENV === "test") {
+  require("dotenv").config({ path: ".env.test" });
   sequelize = new Sequelize({
     dialect: "sqlite",
     storage: process.env.DB_STORAGE,
@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'test') {
     process.env.DB_PASSWORD,
     {
       host: process.env.DB_HOST,
-      port: 3306,
+      port: 5432,
       dialect: process.env.DB_DIALECT,
       timezone: "-03:00",
       dialectOptions: {
