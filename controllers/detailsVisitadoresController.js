@@ -68,6 +68,23 @@ module.exports = class DetailsVisitadoresController {
     }
   }
 
+  static async Visitas(req, res) {
+    const idCoordenadorSession = req.user.userId;
+
+    try {
+      const visitas = await Visita.findAll();
+
+      res.status(200).json({
+        visitas,
+      });
+    } catch (e) {
+      console.log(e);
+      return res
+        .status(500)
+        .json({ errors: "Ocorreu um erro desconhecido ao buscar relatórios" });
+    }
+  }
+
   static async show(req, res) {
     try {
       const SupervisorId = req.user.userId;
@@ -125,28 +142,29 @@ module.exports = class DetailsVisitadoresController {
         where: { id: id },
       });
 
-      if (!visitador) {
-        return res.status(404).json({ errors: "Visitador não encontrado!" });
-      }
+      const buscarVisitadorPeloId = await Visitador.findOne({
+        where: { id: id },
+      });
 
-      const [caregivers, child, visitasFeitas, visitasMarcadas, planos] =
-        await Promise.all([
-          Caregiver.findAll({
-            where: { visitadorId: id },
-            include: [{ model: Visitador, as: "visitador" }],
-          }),
-          Child.findAll({
-            where: { visitadorId: id },
-            include: [{ model: Visitador, as: "visitador" }],
-          }),
-          Visita.findAll({
-            where: { visitadorId: id, visita_marcada_finalizada: true },
-          }),
-          Visita.findAll({
-            where: { visitadorId: id, visita_marcada_finalizada: false },
-          }),
-          PlanoDeVisita.findAll({ where: { visitadorId: id } }),
-        ]);
+      const caregivers = await Caregiver.findAll({
+        where: { visitadorId: visitador.id },
+        include: [{ model: Visitador, as: "visitador" }],
+      });
+
+      const child = await Child.findAll({
+        where: { visitadorId: visitador.id },
+        include: [{ model: Visitador, as: "visitador" }],
+      });
+
+      const visitasFeitas = await Visita.findAll({
+        where: { visitadorId: id, visita_marcada_finalizada: true },
+      });
+      const visitasMarcadas = await Visita.findAll({
+        where: { visitadorId: id, visita_marcada_finalizada: false },
+      });
+      const planos = await PlanoDeVisita.findAll({
+        where: { visitadorId: id },
+      });
 
       res.status(200).json({
         planos,
@@ -155,12 +173,58 @@ module.exports = class DetailsVisitadoresController {
         caregivers,
         visitasFeitas,
         visitasMarcadas,
+        buscarVisitadorPeloId,
       });
     } catch (e) {
       console.log(e);
-      res.status(500).json({
-        errors: "Ocorreu um erro desconhecido ao procurar as informações",
-      });
+      res.status(500).json({ errors: "Ocorreu um erro desconhecido!" });
     }
   }
+
+  // static async showInfoForCoordenador(req, res) {
+  //   try {
+  //     const id = req.params.id;
+
+  //     const visitador = await Visitador.findOne({
+  //       where: { id: id },
+  //     });
+
+  //     if (!visitador) {
+  //       return res.status(404).json({ errors: "Visitador não encontrado!" });
+  //     }
+
+  //     const [caregivers, child, visitasFeitas, visitasMarcadas, planos] =
+  //       await Promise.all([
+  //         Caregiver.findAll({
+  //           where: { visitadorId: id },
+  //           include: [{ model: Visitador, as: "visitador" }],
+  //         }),
+  //         Child.findAll({
+  //           where: { visitadorId: id },
+  //           include: [{ model: Visitador, as: "visitador" }],
+  //         }),
+  //         Visita.findAll({
+  //           where: { visitadorId: id, visita_marcada_finalizada: true },
+  //         }),
+  //         Visita.findAll({
+  //           where: { visitadorId: id, visita_marcada_finalizada: false },
+  //         }),
+  //         PlanoDeVisita.findAll({ where: { visitadorId: id } }),
+  //       ]);
+
+  //     res.status(200).json({
+  //       planos,
+  //       child,
+  //       visitador,
+  //       caregivers,
+  //       visitasFeitas,
+  //       visitasMarcadas,
+  //     });
+  //   } catch (e) {
+  //     console.log(e);
+  //     res.status(500).json({
+  //       errors: "Ocorreu um erro desconhecido ao procurar as informações",
+  //     });
+  //   }
+  // }
 };

@@ -37,6 +37,40 @@ module.exports = class VisitaController {
         .json({ errors: "Ocorreu um erro desconhecido ao buscar as visitas!" });
     }
   }
+  static async ShowVisitasMarcadasGestantes(req, res) {
+    const caregiverId = req.params.id;
+    const session = req.user.userId;
+
+    if (!caregiverId) {
+      return res
+        .status(401)
+        .json({ errors: "É necessário inserir o ID da criança." });
+    }
+
+    try {
+      const visita = await Visita.findAll({
+        where: {
+          caregiverId: caregiverId,
+          visitadorId: session,
+          visita_marcada_finalizada: false,
+        },
+      });
+
+      if (!visita) {
+        return res.status(404).json({
+          errors:
+            "Não foi possível encontrar visitas marcadas para essa criança!",
+        });
+      }
+
+      res.status(200).json({ visita });
+    } catch (e) {
+      console.log(e);
+      res
+        .status(500)
+        .json({ errors: "Ocorreu um erro desconhecido ao buscar as visitas!" });
+    }
+  }
 
   static async showVisitasInvalidadas(req, res) {
     const visitadorId = req.user.userId;
@@ -106,6 +140,43 @@ module.exports = class VisitaController {
 
       await Visita.create({
         childId: idChild,
+        pendente_de_validacao: true,
+        visitadorId: session,
+        data_que_vai_ser_realizada: data_que_vai_ser_realizada,
+        planoId: planoId,
+        finalizou: false,
+      });
+      res.status(200).json({ success: "Visita marcada com sucesso!" });
+    } catch (e) {
+      console.log(e);
+      res
+        .status(500)
+        .json({ errors: "Ocorreu um erro desconhecido ao marcar a visita!" });
+    }
+  }
+
+  static async agendaVisitaGestante(req, res) {
+    const { caregiverId, planoId, data_que_vai_ser_realizada } = req.body;
+    const session = req.user.userId;
+    if (!caregiverId || !planoId || !data_que_vai_ser_realizada) {
+      return res
+        .status(400)
+        .json({ errors: "Dados faltando para marcar a visita!" });
+    }
+
+    try {
+      const visita = await Visita.findAll({
+        where: { caregiverId: caregiverId, finalizou: false },
+      });
+      if (visita.length >= 4) {
+        return res.status(401).json({
+          errors:
+            "Você possui 4 visitas marcadas para essa criança, termine as outras!",
+        });
+      }
+
+      await Visita.create({
+        caregiverId: caregiverId,
         pendente_de_validacao: true,
         visitadorId: session,
         data_que_vai_ser_realizada: data_que_vai_ser_realizada,

@@ -80,12 +80,12 @@ module.exports = class planoDeVisita {
 
     try {
       const visita = await Visita.findAll({
-        where: { CaregiverId: CaregiverId, visita_marcada_finalizada: false },
+        where: { caregiverId: CaregiverId, visita_marcada_finalizada: false },
       });
-      if (visita.length >= 4) {
+      if (visita.length >= 2) {
         return res.status(400).json({
           errors:
-            "Você tem mais de 4 visitas marcadas para essa gestante! Termine suas visitas antes de criar mais planos.",
+            "Você tem mais de 2 visitas marcadas para essa gestante! Termine suas visitas antes de criar mais planos.",
         });
       }
       const plano = await PlanoDeVisita.create({
@@ -118,7 +118,6 @@ module.exports = class planoDeVisita {
     try {
       const plano = await PlanoDeVisita.findOne({
         where: { visitadorId: session, id: id },
-        include: [{ model: Child, as: "Child" }],
       });
 
       const visitaFeita = await Visita.findOne({
@@ -158,6 +157,49 @@ module.exports = class planoDeVisita {
     try {
       const plano = await PlanoDeVisita.findAndCountAll({
         where: { visitadorId: session, childId: id },
+        limit,
+        offset,
+      });
+
+      const planoHome = await PlanoDeVisita.findAll({
+        where: { visitadorId: session },
+      });
+
+      if (!plano) {
+        return res.status(404).json({
+          error:
+            "Não foi  possível encontrar o plano especificado, tente novamente!",
+        });
+      }
+
+      res.status(200).json({
+        plano,
+        planoHome,
+        total: plano.count,
+        totalPages: Math.ceil(plano.count / limit),
+        currentPage: page,
+        data: plano.rows,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        errorInternal:
+          "Ocorreu um erro ao procurar o plano de visita, tente novamente!",
+      });
+    }
+  }
+
+  static async planosDaGestante(req, res) {
+    const session = req.user.userId;
+    const id = req.params.id;
+    let { page, limit } = req.query;
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 10;
+    const offset = (page - 1) * limit;
+
+    try {
+      const plano = await PlanoDeVisita.findAndCountAll({
+        where: { visitadorId: session, CaregiverId: id },
         limit,
         offset,
       });

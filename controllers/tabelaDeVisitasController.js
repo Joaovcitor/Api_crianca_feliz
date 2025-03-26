@@ -1,5 +1,6 @@
 const Visitas = require("../models/Visitas");
 const Child = require("../models/Child");
+const Caregiver = require("../models/Caregiver");
 
 module.exports = class TabelaDeVisitas {
   static async index(req, res) {
@@ -39,18 +40,66 @@ module.exports = class TabelaDeVisitas {
       };
 
       if (!visita.childId || !visita.visitadorId) {
-        return res.status(400).json({ errors: "Id da criança ou do visitador em falta!" })
+        return res
+          .status(400)
+          .json({ errors: "Id da criança ou do visitador em falta!" });
       }
 
-      const verificarTabelasFeitas = await Visitas.count({ where: { childId: childId } })
+      const verificarTabelasFeitas = await Visitas.count({
+        where: { childId: childId },
+      });
       if (verificarTabelasFeitas >= 1) {
-        return res.status(400).json({ errors: "Essa criança já possui uma tabela criada!" })
+        return res
+          .status(400)
+          .json({ errors: "Essa criança já possui uma tabela criada!" });
       }
 
       const visitaMarcada = await Visitas.create(visita);
       res
         .status(201)
-        .json({ sucess: "Visita marcada com sucesso!", visitaMarcada });
+        .json({ success: "Visita marcada com sucesso!", visitaMarcada });
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ error: "Ocorreu um erro ao marcar a visita!" });
+    }
+  }
+
+  static async criarTabelasParaGestante(req, res) {
+    const id = req.user.userId;
+    const caregiverId = req.params.id;
+
+    try {
+      const child = await Caregiver.findOne({
+        where: { visitadorId: id, id: caregiverId },
+      });
+
+      const visita = {
+        dayOfVisit: req.body.dayOfVisit,
+        period: req.body.period,
+        visitadorId: id,
+        childVisited: child.name,
+        caregiverId: caregiverId,
+      };
+
+      if (!visita.caregiverId || !visita.visitadorId) {
+        return res
+          .status(400)
+          .json({ errors: "Id da criança ou do visitador em falta!" });
+      }
+
+      const verificarTabelasFeitas = await Visitas.count({
+        where: { caregiverId: caregiverId },
+      });
+      if (verificarTabelasFeitas >= 1) {
+        return res
+          .status(400)
+          .json({ errors: "Essa gestante já possui uma tabela criada!" });
+      }
+
+      const visitaMarcada = await Visitas.create(visita);
+      res
+        .status(201)
+        .json({ success: "Visita marcada com sucesso!", visitaMarcada });
     } catch (e) {
       console.log(e);
       res.status(500).json({ error: "Ocorreu um erro ao marcar a visita!" });

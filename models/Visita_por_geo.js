@@ -2,7 +2,8 @@ const { DataTypes } = require("sequelize");
 const db = require("../db/conn");
 const User = require("./Users");
 const Child = require("./Child");
-const PlanosDeVisita = require("./plain")
+const PlanosDeVisita = require("./plain");
+const Caregiver = require("./Caregiver");
 
 const Visita = db.define("VisitasPorGeolocalizacao", {
   latitude: {
@@ -63,16 +64,16 @@ const Visita = db.define("VisitasPorGeolocalizacao", {
   },
   data_que_vai_ser_realizada: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
   },
   visita_marcada_finalizada: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false
+    defaultValue: false,
   },
   visita_em_andamento: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false
-  }
+    defaultValue: false,
+  },
 });
 
 Child.hasMany(Visita, {
@@ -82,7 +83,17 @@ Child.hasMany(Visita, {
 Visita.belongsTo(Child, {
   as: "Child",
   foreignKey: "childId",
-  onDelete: 'SET NULL'
+  onDelete: "SET NULL",
+});
+
+Caregiver.hasMany(Visita, {
+  as: "Visitas",
+  foreignKey: "caregiverId",
+});
+Visita.belongsTo(Caregiver, {
+  as: "Caregiver",
+  foreignKey: "caregiverId",
+  onDelete: "SET NULL",
 });
 
 User.hasMany(Visita, {
@@ -93,18 +104,18 @@ User.hasMany(Visita, {
 Visita.belongsTo(User, {
   as: "visitador",
   foreignKey: "visitadorId",
-  onDelete: 'SET NULL'
+  onDelete: "SET NULL",
 });
 
 PlanosDeVisita.hasMany(Visita, {
   as: "Visitas",
-  foreignKey: "planoId"
+  foreignKey: "planoId",
 });
 
 Visita.belongsTo(PlanosDeVisita, {
   as: "planos",
   foreignKey: "planoId",
-  onDelete: 'SET NULL'
-})
+  onDelete: "SET NULL",
+});
 
 module.exports = Visita;

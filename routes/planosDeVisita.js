@@ -20,6 +20,12 @@ router.get(
 );
 
 router.get(
+  "/planos-da-gestante/:id",
+  authenticateJWT,
+  planosDeVisitaController.planosDaGestante
+);
+
+router.get(
   "/infoallplanoshome",
   authenticateJWT,
   planosDeVisitaController.relatorioHome
@@ -32,6 +38,12 @@ router.post(
 );
 
 router.post("/criarplano/:id", authenticateJWT, planosDeVisitaController.store);
+router.post(
+  "/criarplano-gravida/:id",
+  authenticateJWT,
+  planosDeVisitaController.storePlanoForCaregiver
+);
+
 router.post(
   "/criarplanocaregiver/:id",
   authenticateJWT,

@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const VisitasController = require("../controllers/visitasGeolocationController");
-const checkUserType = require("../utils/checkUserType");
 const authenticateJWT = require("../middlewares/authenticateJWT");
 
 router.get(
@@ -19,10 +18,20 @@ router.post(
   authenticateJWT,
   VisitasController.agendaVisita
 );
+router.post(
+  "/agendar-visita-gravida/:id",
+  authenticateJWT,
+  VisitasController.agendaVisitaGestante
+);
 router.get(
   "/visitas-marcadas/:id",
   authenticateJWT,
   VisitasController.ShowVisitasMarcadas
+);
+router.get(
+  "/visitas-marcadas-gestantes/:id",
+  authenticateJWT,
+  VisitasController.ShowVisitasMarcadasGestantes
 );
 router.get("/verificar-visita/:id", authenticateJWT, VisitasController.show);
 router.post(

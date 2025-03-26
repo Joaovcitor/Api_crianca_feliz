@@ -16,6 +16,8 @@ router.get(
   authenticateJWT,
   detalhesController.RelatoriosGerais
 );
+
+router.get("/mapa", authenticateJWT, detalhesController.Visitas);
 router.get(
   "/visitadores-do-supervisor/:id",
   authenticateJWT,
