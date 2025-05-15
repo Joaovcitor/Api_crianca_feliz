@@ -1,4 +1,3 @@
-const Child = require("../models/Child");
 const Visita = require("../models/Visita_por_geo");
 const PlanoDeVisita = require("../models/plain");
 
@@ -15,27 +14,7 @@ module.exports = class planoDeVisita {
       grau_de_dificuldade_objetivo,
     } = req.body;
 
-    if (
-      !objetivo ||
-      !etapa1 ||
-      !etapa2 ||
-      !etapa3 ||
-      !dia_a_ser_realizada_a_visita ||
-      !grau_de_dificuldade_objetivo
-    ) {
-      return res.status(400).json({ error: "Preencha todos os campos!" });
-    }
-
     try {
-      const visita = await Visita.findAll({
-        where: { childId: childId, visita_marcada_finalizada: false },
-      });
-      if (visita.length >= 4) {
-        return res.status(400).json({
-          errors:
-            "Você tem mais de 4 visitas marcadas para essa criança! Termine suas visitas antes de criar mais planos.",
-        });
-      }
       const plano = await PlanoDeVisita.create({
         etapa1,
         etapa2,

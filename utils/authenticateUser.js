@@ -41,20 +41,17 @@ const authenticateUser = async (model, req, res) => {
       { expiresIn: "8h" }
     );
 
-    // Configurando o cookie com o token JWT
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: false,
+      sameSite: "lax",
     });
 
-    // Buscando mais informações do usuário
     const { name, email: userEmail } = await model.findOne({
       where: { id: user.id },
       attributes: ["name", "email"],
     });
 
-    // Retornando os dados do usuário e o token
     return res.status(200).json({
       token,
       user: { name, email: userEmail, role: user.role, id: user.id },

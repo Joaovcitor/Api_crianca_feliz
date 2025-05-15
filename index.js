@@ -18,7 +18,7 @@ class Server {
       "https://pcfv2.netlify.app",
       "https://pcf.logicmasters.com.br",
       "https://192.168.1.72:3000",
-      "http://192.168.1.72:3000",
+      "http://192.168.1.43:3000",
     ];
 
     this.configureMiddlewares();
@@ -59,10 +59,10 @@ class Server {
           path: require("path").join(require("os").tmpdir(), "sessions"),
         }),
         cookie: {
-          secure: true,
+          secure: false,
           maxAge: 28800000,
           httpOnly: true,
-          sameSite: "none",
+          sameSite: "lax",
         },
       })
     );
