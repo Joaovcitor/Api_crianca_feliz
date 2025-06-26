@@ -7,7 +7,7 @@ const authenticateUser = async (model, req, res) => {
 
     const user = await model.findOne({
       where: { email },
-      attributes: ["role", "password", "isPending", "isActive", "id"],
+      attributes: ["role", "password", "isPending", "isActive", "id", "email"],
     });
 
     if (!user) {

@@ -1,10 +1,25 @@
 const express = require("express");
+const os = require("os");
 const session = require("express-session");
 const FileStore = require("session-file-store")(session);
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const cors = require("cors");
 const helmet = require("helmet");
+
+function getLocalIP() {
+  const interfaces = os.networkInterfaces();
+  for (const ifaceName in interfaces) {
+    for (const iface of interfaces[ifaceName]) {
+      if (iface.family === "IPv4" && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+  return "localhost";
+}
+
+const localIP = getLocalIP();
 
 class Server {
   constructor() {
@@ -14,10 +29,7 @@ class Server {
       "http://localhost:3001",
       "http://localhost:3000",
       "http://localhost:46635",
-      "https://pcfprefeiturav2.logicmasters.com.br",
-      "https://pcfv2.netlify.app",
-      "https://pcf.logicmasters.com.br",
-      "https://192.168.1.72:3000",
+      `http://192.168.1.71:3000`,
       "http://192.168.1.43:3000",
     ];
 

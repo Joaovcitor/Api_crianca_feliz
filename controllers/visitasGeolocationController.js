@@ -132,7 +132,7 @@ module.exports = class VisitaController {
         where: { childId: idChild, finalizou: false },
       });
       if (visita.length >= 4) {
-        return res.status(401).json({
+        return res.status(400).json({
           errors:
             "Você possui 4 visitas marcadas para essa criança, termine as outras!",
         });
