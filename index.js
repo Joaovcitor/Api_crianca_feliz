@@ -1,25 +1,28 @@
+require("dotenv").config({
+  path:
+    process.env.NODE_ENV === "production"
+      ? ".env.production"
+      : ".env.development",
+});
 const express = require("express");
-const os = require("os");
+// const os = require("os");
 const session = require("express-session");
 const FileStore = require("session-file-store")(session);
 const cookieParser = require("cookie-parser");
-require("dotenv").config();
 const cors = require("cors");
 const helmet = require("helmet");
 
-function getLocalIP() {
-  const interfaces = os.networkInterfaces();
-  for (const ifaceName in interfaces) {
-    for (const iface of interfaces[ifaceName]) {
-      if (iface.family === "IPv4" && !iface.internal) {
-        return iface.address;
-      }
-    }
-  }
-  return "localhost";
-}
-
-const localIP = getLocalIP();
+// function getLocalIP() {
+//   const interfaces = os.networkInterfaces();
+//   for (const ifaceName in interfaces) {
+//     for (const iface of interfaces[ifaceName]) {
+//       if (iface.family === "IPv4" && !iface.internal) {
+//         return iface.address;
+//       }
+//     }
+//   }
+//   return "localhost";
+// }
 
 class Server {
   constructor() {
@@ -27,6 +30,7 @@ class Server {
     this.whiteList = [
       "https://criancafeliz.logicmasters.com.br",
       "http://localhost:3001",
+      "http://192.168.1.71:38157",
       "http://localhost:3000",
       "http://localhost:46635",
       `http://192.168.1.71:3000`,
