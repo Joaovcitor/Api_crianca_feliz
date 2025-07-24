@@ -4,9 +4,9 @@ async function editarInformacoesUsuarios(Model, req, res) {
   const { email, password } = req.body;
   const session = req.user.userId;
 
-  const visitadorEditado = await Model.findOne({ where: { email: email } });
+  const usuarioEditado = await Model.findOne({ where: { email: email } });
 
-  if (visitadorEditado.email === email) {
+  if (usuarioEditado.email === email) {
     return res.status(400).json({ errors: "Email pertence a outro usuário!" });
   }
 

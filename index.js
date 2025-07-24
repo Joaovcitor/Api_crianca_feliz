@@ -160,7 +160,7 @@ class Server {
   }
 
   startServer() {
-    this.app.listen(3003, () => {
+    this.app.listen(3003, "0.0.0.0", () => {
       console.log("Server is running on port 3003");
     });
   }
