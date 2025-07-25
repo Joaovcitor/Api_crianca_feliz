@@ -1,20 +1,24 @@
 async function verificarQuantidadeDeFormsPorCrianca(Model, req) {
   const id = req.body.id;
   if (!id) {
-    return { success: false, message: "ID da criança é necessário." }
+    return { success: false, message: "ID da criança é necessário." };
   }
 
   const etapa = await Model.count({ where: { ChildId: id } });
   if (etapa > 1) {
-    return { success: false, message: "Essa criança possui mais de um formulário para essa faixa etária." }
+    return {
+      success: false,
+      message:
+        "Essa criança possui mais de um formulário para essa faixa etária.",
+    };
   }
 
-  return { success: true }
+  return { success: true };
 }
 
 async function atualizarForm5E1(Model, req, res, ModelChild) {
   const id = req.params.id;
-  const session = req.user.userId;
+  const session = req.user.id;
 
   try {
     const form = await Model.findAll({

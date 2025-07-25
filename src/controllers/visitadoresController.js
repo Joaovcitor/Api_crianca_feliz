@@ -37,7 +37,7 @@ module.exports = class VisitadoresController {
   }
 
   static async validarVisitador(req, res) {
-    const session = req.user.userId;
+    const session = req.user.id;
     const id = req.params.id;
 
     if (!id) {
@@ -110,7 +110,7 @@ module.exports = class VisitadoresController {
   }
 
   static async store(req, res) {
-    const SupervisorId = req.user.userId;
+    const SupervisorId = req.user.id;
     const { name, email, cpf: numCpf, password, territorio, cras } = req.body;
 
     const verificarUsuario = await procurarUsuarioNoBancoDeDados(email, numCpf);
@@ -146,7 +146,7 @@ module.exports = class VisitadoresController {
     try {
       const visitadorCriado = await Users.create(Criarvisitador);
 
-      req.user.userId = visitadorCriado.id;
+      req.user.id = visitadorCriado.id;
 
       res.status(200).json({ success: "Visitador criado com sucesso!" });
     } catch (e) {
@@ -159,7 +159,7 @@ module.exports = class VisitadoresController {
   }
 
   static async index(req, res) {
-    const session = req.user.userId;
+    const session = req.user.id;
     try {
       const visitadores = await Users.findAll({
         where: { supervisorId: session },
@@ -182,7 +182,7 @@ module.exports = class VisitadoresController {
   }
 
   static async visitadoresDoCoordenador(req, res) {
-    const session = req.user.userId;
+    const session = req.user.id;
     try {
       const visitadores = await Users.findAll({
         where: { coordenadorId: session },

@@ -3,53 +3,53 @@ const router = express.Router();
 
 const planosDeVisitaController = require("../controllers/planoDeVisitaController");
 const childController = require("../controllers/childController");
-const authenticateJWT = require("../middlewares/authenticateJWT");
+const { isAuthenticated } = require("../middlewares/auth.middleware");
 
-router.get("/info", authenticateJWT, childController.index);
+router.get("/info", isAuthenticated, childController.index);
 
 router.get(
   "/infosingleplano/:id",
-  authenticateJWT,
+  isAuthenticated,
   planosDeVisitaController.show
 );
 
 router.get(
   "/infoallplanos/:id",
-  authenticateJWT,
+  isAuthenticated,
   planosDeVisitaController.index
 );
 
 router.get(
   "/planos-da-gestante/:id",
-  authenticateJWT,
+  isAuthenticated,
   planosDeVisitaController.planosDaGestante
 );
 
 router.get(
   "/infoallplanoshome",
-  authenticateJWT,
+  isAuthenticated,
   planosDeVisitaController.relatorioHome
 );
 
 router.post(
   "/planosdacrianca/:id",
-  authenticateJWT,
+  isAuthenticated,
   planosDeVisitaController.deletePlano
 );
 
-router.post("/criarplano/:id", authenticateJWT, planosDeVisitaController.store);
+router.post("/criarplano/:id", isAuthenticated, planosDeVisitaController.store);
 router.post(
   "/criarplano-gravida/:id",
-  authenticateJWT,
+  isAuthenticated,
   planosDeVisitaController.storePlanoForCaregiver
 );
 
 router.post(
   "/criarplanocaregiver/:id",
-  authenticateJWT,
+  isAuthenticated,
   planosDeVisitaController.storePlanoForCaregiver
 );
 
-router.put("/editar/:id", authenticateJWT, planosDeVisitaController.update);
+router.put("/editar/:id", isAuthenticated, planosDeVisitaController.update);
 
 module.exports = router;

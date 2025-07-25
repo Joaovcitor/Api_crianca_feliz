@@ -35,7 +35,7 @@ module.exports = class pdfController {
 
   static async storeRelatorioGeral(req, res) {
     try {
-      const id = req.user.userId;
+      const id = req.user.id;
       const filePath = await gerarPDF(id, req);
 
       res.download(filePath, "visitadores_qtd.pdf", (err) => {

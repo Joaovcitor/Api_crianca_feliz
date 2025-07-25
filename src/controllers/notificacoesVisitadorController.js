@@ -2,10 +2,9 @@ const Notificacoes = require("../models/Notificacoes");
 const Supervisor = require("../models/Users");
 
 module.exports = class NotificacoesController {
-
   static async store(req, res) {
     const { id, notificacao_tipo, descricao } = req.body;
-    const visitadorId = req.user.userId;
+    const visitadorId = req.user.id;
 
     if (!id) {
       return res.status(401).json({
@@ -43,7 +42,7 @@ module.exports = class NotificacoesController {
   }
 
   static async index(req, res) {
-    const session = req.user.userId;
+    const session = req.user.id;
 
     try {
       const notificacoes = await Notificacoes.findAll({
@@ -56,7 +55,7 @@ module.exports = class NotificacoesController {
         ],
       });
 
-      res.status(200).json({ notificacoes })
+      res.status(200).json({ notificacoes });
     } catch (e) {
       console.log(e);
       res.status(500).json({ errors: "Ocorreu um erro desconhecido!" });
@@ -65,7 +64,7 @@ module.exports = class NotificacoesController {
 
   static async show(req, res) {
     const id = req.params.id;
-    const session = req.user.userId;
+    const session = req.user.id;
 
     if (!id) {
       return res

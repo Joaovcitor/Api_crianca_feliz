@@ -3,7 +3,7 @@ const Faltas = require("../models/Faltas");
 module.exports = class FaltasController {
   static async store(req, res) {
     const { motivo_da_falta, userId, quando_ocorreu_a_falta } = req.body;
-    const registradorId = req.user.userId;
+    const registradorId = req.user.id;
 
     try {
       const faltaCriada = {
@@ -39,7 +39,7 @@ module.exports = class FaltasController {
   }
 
   static async faltasQueORegistradorDeu(req, res) {
-    const registradorId = req.user.userId;
+    const registradorId = req.user.id;
 
     try {
       const faltas = await Faltas.findAll({
@@ -72,7 +72,7 @@ module.exports = class FaltasController {
 
   static async show(req, res) {
     const id = req.params.id;
-    const userId = req.user.userId;
+    const userId = req.user.id;
 
     try {
       const falta = await Faltas.findOne({ where: { id: id, userId: userId } });

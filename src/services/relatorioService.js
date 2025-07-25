@@ -2,10 +2,10 @@ const Visitador = require("../models/Users");
 const Supervisor = require("../models/Users");
 const Coordenador = require("../models/Users");
 const Caregiver = require("../models/Caregiver");
-const PlanosDeVisita = require("../models/plain")
-const Visita = require("../models/Visita_por_geo")
+const PlanosDeVisita = require("../models/plain");
+const Visita = require("../models/Visita_por_geo");
 const Child = require("../models/Child");
-const { verificaVisitasMarcadas } = require("./visitaGeoService")
+const { verificaVisitasMarcadas } = require("./visitaGeoService");
 const {
   mapChildrens,
   mapPlanos,
@@ -15,7 +15,7 @@ const {
 const { Op } = require("sequelize");
 
 async function relatorios(req, res) {
-  const id = req.user.userId;
+  const id = req.user.id;
   console.log("ID da sessão:", id);
   try {
     const visitadores = await Visitador.findAll({
@@ -48,8 +48,8 @@ async function relatorios(req, res) {
         childCountByVisitador.find((c) => c.visitadorId === visitador.id)
           ?.count || 0;
       const countPlanos =
-        planosByVisitador.find((c) => c.visitadorId === visitador.id)
-          ?.count || 0;
+        planosByVisitador.find((c) => c.visitadorId === visitador.id)?.count ||
+        0;
       return {
         ...visitador.toJSON(),
         qtdChildren: count,
@@ -65,7 +65,14 @@ async function relatorios(req, res) {
       fimMes = req.query.fimMes;
     }
 
-    const visitasMarcadas = await verificaVisitasMarcadas(visitadorIds, Visita, inicioMes, fimMes, req, res);
+    const visitasMarcadas = await verificaVisitasMarcadas(
+      visitadorIds,
+      Visita,
+      inicioMes,
+      fimMes,
+      req,
+      res
+    );
 
     res.status(200).json({
       visitasMarcadas,
@@ -76,5 +83,4 @@ async function relatorios(req, res) {
   }
 }
 
-
-module.exports = { relatorios }
+module.exports = { relatorios };

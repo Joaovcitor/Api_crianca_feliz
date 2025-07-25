@@ -3,24 +3,24 @@ const router = express.Router();
 
 const detalhesController = require("../controllers/detailsVisitadoresController");
 const { checkUserType } = require("../utils/checkUserType");
-const authenticateJWT = require("../middlewares/authenticateJWT");
+const { isAuthenticated } = require("../middlewares/auth.middleware");
 
-router.get("/visitador/:id", authenticateJWT, detalhesController.show);
+router.get("/visitador/:id", isAuthenticated, detalhesController.show);
 router.get(
   "/coordenador/visitador/:id",
-  authenticateJWT,
+  isAuthenticated,
   detalhesController.showInfoForCoordenador
 );
 router.get(
   "/relatorio-geral",
-  authenticateJWT,
+  isAuthenticated,
   detalhesController.RelatoriosGerais
 );
 
-router.get("/mapa", authenticateJWT, detalhesController.Visitas);
+router.get("/mapa", isAuthenticated, detalhesController.Visitas);
 router.get(
   "/visitadores-do-supervisor/:id",
-  authenticateJWT,
+  isAuthenticated,
   detalhesController.visitadoresDoSupervisor
 );
 

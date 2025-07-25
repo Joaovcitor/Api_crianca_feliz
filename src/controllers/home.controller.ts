@@ -4,7 +4,6 @@ export const HomeController = {
   async home(req: Request, res: Response) {
     try {
       const loggedUser = req.user;
-      console.log("Usuário autenticado:", loggedUser);
       if (!loggedUser) {
         return res.status(401).json({ error: "Usuário não autenticado" });
       }

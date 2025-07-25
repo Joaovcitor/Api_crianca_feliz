@@ -3,7 +3,7 @@ const PlanoDeVisita = require("../models/plain");
 
 module.exports = class planoDeVisita {
   static async store(req, res) {
-    const visitadorId = req.user.userId;
+    const visitadorId = req.user.id;
     const childId = req.params.id;
     const {
       etapa1,
@@ -35,7 +35,7 @@ module.exports = class planoDeVisita {
   }
 
   static async storePlanoForCaregiver(req, res) {
-    const visitadorId = req.user.userId;
+    const visitadorId = req.user.id;
     const CaregiverId = req.params.id;
     const {
       etapa1,
@@ -87,7 +87,7 @@ module.exports = class planoDeVisita {
   }
 
   static async show(req, res) {
-    const session = req.user.userId;
+    const session = req.user.id;
     const id = req.params.id;
 
     if (!id) {
@@ -126,7 +126,7 @@ module.exports = class planoDeVisita {
   }
 
   static async index(req, res) {
-    const session = req.user.userId;
+    const session = req.user.id;
     const id = req.params.id;
     let { page, limit } = req.query;
     page = parseInt(page) || 1;
@@ -169,7 +169,7 @@ module.exports = class planoDeVisita {
   }
 
   static async planosDaGestante(req, res) {
-    const session = req.user.userId;
+    const session = req.user.id;
     const id = req.params.id;
     let { page, limit } = req.query;
     page = parseInt(page) || 1;
@@ -212,7 +212,7 @@ module.exports = class planoDeVisita {
   }
 
   static async relatorioHome(req, res) {
-    const session = req.user.userId;
+    const session = req.user.id;
 
     try {
       const planoHome = await PlanoDeVisita.findAll({
@@ -250,7 +250,7 @@ module.exports = class planoDeVisita {
 
   static async update(req, res) {
     const id = req.params.id;
-    const session = req.user.userId;
+    const session = req.user.id;
     const visita_realizada_geo = await Visita.findOne({
       where: { planoId: id, visitadorId: session },
     });

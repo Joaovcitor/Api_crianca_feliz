@@ -4,40 +4,39 @@ const router = express.Router();
 const CoordenadorController = require("../controllers/coordenadorController");
 const visitadorController = require("../controllers/visitadoresController");
 const supervisorController = require("../controllers/supervisorController");
-const authenticateJWT = require("../middlewares/authenticateJWT");
-const checkUserType = require("../utils/checkUserType");
+const { isAuthenticated } = require("../middlewares/auth.middleware");
 
 router.post("/cadastro", CoordenadorController.store);
 
 router.post(
   "/cadastrar-supervisor",
-  authenticateJWT,
+  isAuthenticated,
   supervisorController.store
 );
 
-router.get("/meus-supervisores", authenticateJWT, supervisorController.index);
+router.get("/meus-supervisores", isAuthenticated, supervisorController.index);
 
 router.post(
   "/validar-visitador-do-supervisor/:id",
-  authenticateJWT,
+  isAuthenticated,
   visitadorController.validarVisitador
 );
 
 router.post(
   "/inativar-visitador/:id",
-  authenticateJWT,
+  isAuthenticated,
   visitadorController.inativarContaVisitador
 );
 
 router.post(
   "/ativar-visitador/:id",
-  authenticateJWT,
+  isAuthenticated,
   visitadorController.ativarContaVisitador
 );
 
 router.get(
   "/meus-visitadores",
-  authenticateJWT,
+  isAuthenticated,
   visitadorController.visitadoresDoCoordenador
 );
 

@@ -1,21 +1,19 @@
 const jwt = require("jsonwebtoken");
 
-const authenticateJWT = (req, res, next) => {
+const isAuthenticated = (req, res, next) => {
   const token = req.cookies.jwt;
 
   if (!token) {
-    return res
-      .status(401)
-      .json({
-        invalid_token: "Token inválido ou não informado! do auth de js",
-      });
+    return res.status(401).json({
+      invalid_token: "Token inválido ou não informado! do auth de js",
+    });
   }
 
   console.log(token);
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_JWT);
-    req.user = decoded;
+    req.user.id = decoded;
     next();
   } catch (ex) {
     console.log(ex);
@@ -25,4 +23,4 @@ const authenticateJWT = (req, res, next) => {
   }
 };
 
-module.exports = authenticateJWT;
+module.exports = isAuthenticated;

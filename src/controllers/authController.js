@@ -15,7 +15,7 @@ module.exports = class AuthController {
 
   static async editEmail(req, res) {
     const { email } = req.body;
-    const id = req.user.userId;
+    const id = req.user.id;
 
     try {
       const user = await Users.findOne({ where: { email: email } });
@@ -38,7 +38,7 @@ module.exports = class AuthController {
   }
   static async editPassword(req, res) {
     const { password } = req.body;
-    const id = req.user.userId;
+    const id = req.user.id;
     console.log(id);
 
     try {

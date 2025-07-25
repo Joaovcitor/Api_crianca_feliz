@@ -3,7 +3,7 @@ const Users = require("../models/Users");
 module.exports = class HomeController {
   static async home(req, res) {
     try {
-      const id = req.user.userId;
+      const id = req.user.id;
 
       if (!id) {
         return res

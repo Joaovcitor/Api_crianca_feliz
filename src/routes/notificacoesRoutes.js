@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const authenticateJWT = require("../middlewares/authenticateJWT");
+const { isAuthenticated } = require("../middlewares/auth.middleware");
+
 const checkUserType = require("../utils/checkUserType");
 
 const NotificacoesSupervisor = require("../controllers/notificacoesSupervisorController");
@@ -11,73 +12,73 @@ const NotificacoesVisitador = require("../controllers/notificacoesVisitadorContr
 // endpoints dos visitadores
 router.get(
   "/minhas-notificacoes",
-  authenticateJWT,
+  isAuthenticated,
   NotificacoesVisitador.index
 );
 
 // endpoints dos supervisores
 router.get(
   "/supervisor-showall-notificacoes",
-  authenticateJWT,
-  checkUserType(["supervisor"]),
+  isAuthenticated,
+  // checkUserType(["supervisor"]),
   NotificacoesSupervisor.index
 );
 
 router.post(
   "/supervisor-create-notificacoes",
-  authenticateJWT,
+  isAuthenticated,
   NotificacoesSupervisor.store
 );
 
 router.post(
   "/supervisor-create-varias-notificacoes",
-  authenticateJWT,
-  checkUserType(["supervisor"]),
+  isAuthenticated,
+  // checkUserType(["supervisor"]),
   NotificacoesSupervisor.storeAllNotificationsOfVisitadores
 );
 
 router.put(
   "/supervisor-update",
-  authenticateJWT,
+  isAuthenticated,
   NotificacoesSupervisor.update
 );
 
 router.delete(
   "/supervisor-delete-notificacao",
-  authenticateJWT,
+  isAuthenticated,
   NotificacoesSupervisor.delete
 );
 
 // endpoints dos coordenadores
 router.get(
   "/supervisor-showall-notificacoes",
-  authenticateJWT,
-  checkUserType(["coordenador"]),
+  isAuthenticated,
+  // checkUserType(["coordenador"]),
   NotificacoesCoordenador.index
 );
 
 router.post(
   "/coordenador-create-notificacoes",
-  authenticateJWT,
+  isAuthenticated,
   NotificacoesCoordenador.store
 );
 
 router.post(
   "/coordenador-create-varias-notificacoes",
-  authenticateJWT,
-  checkUserType(["coordenador"]),
+  isAuthenticated,
+  // checkUserType(["coordenador"]),
   NotificacoesCoordenador.storeAllNotificationsOfVisitadores
 );
 
 router.put(
   "/coordenador-update",
-  authenticateJWT,
+  isAuthenticated,
   NotificacoesCoordenador.update
 );
 
 router.delete(
   "/coordenador-delete-notificacao",
-  authenticateJWT,
+  isAuthenticated,
   NotificacoesCoordenador.delete
 );
 module.exports = router;

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const homeController = require("../controllers/homeController");
-const jwt = require("../middlewares/authenticateJWT");
+const jwt = require("../middlewares/isAuthenticated");
 
 router.get("/", jwt, homeController.home);
 

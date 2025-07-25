@@ -3,25 +3,25 @@ const router = express.Router();
 
 const usersController = require("../controllers/userController");
 const checkUserType = require("../utils/checkUserType");
-const authenticateJWT = require("../middlewares/authenticateJWT");
+const { isAuthenticated } = require("../middlewares/auth.middleware");
 
-router.get("/", authenticateJWT, usersController.show);
+router.get("/", isAuthenticated, usersController.show);
 
 router.get(
   "/visitadores",
-  authenticateJWT,
+  isAuthenticated,
   usersController.showAllUsersWithRoleVisitador
 );
 
 router.post(
   "/validar-visitador",
-  authenticateJWT,
+  isAuthenticated,
   usersController.validatePendingUserWithRoleVisitador
 );
 
 router.get(
   "/visitadores-pendentes",
-  authenticateJWT,
+  isAuthenticated,
   usersController.showAllUsersWithRoleVisitadorThatAtributeIsPending
 );
 

@@ -14,7 +14,7 @@ module.exports = class CaregiverController {
         contact: req.body.contact,
         pregnant: req.body.pregnant,
         born: req.body.born,
-        visitadorId: req.user.userId,
+        visitadorId: req.user.id,
         week_pregnant: req.body.week_pregnant,
       };
 
@@ -58,7 +58,7 @@ module.exports = class CaregiverController {
   }
 
   static async index(req, res) {
-    const id = req.user.userId;
+    const id = req.user.id;
 
     try {
       const cuidadores = await Caregiver.findAll({
@@ -144,7 +144,7 @@ module.exports = class CaregiverController {
   }
 
   static async showBeneficiarios(req, res) {
-    const id = req.user.userId;
+    const id = req.user.id;
     try {
       const visitadores = await Visitador.findAll({
         where: { supervisorId: id },

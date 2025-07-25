@@ -2,21 +2,29 @@ const express = require("express");
 const router = express.Router();
 
 const faltasController = require("../controllers/faltasController");
-const jwt = require("../middlewares/authenticateJWT");
+const { isAuthenticated } = require("../middlewares/auth.middleware");
 
-router.post("/", jwt, faltasController.store);
-router.get("/", jwt, faltasController.todasAsFaltasDosUsuarios);
+router.post("/", isAuthenticated, faltasController.store);
+router.get("/", isAuthenticated, faltasController.todasAsFaltasDosUsuarios);
 router.get(
   "/faltas-geradas-pelo-user",
-  jwt,
+  isAuthenticated,
   faltasController.faltasQueORegistradorDeu
 );
-router.get("/faltas-que-o-user-levou/:id", jwt, faltasController.show);
+router.get(
+  "/faltas-que-o-user-levou/:id",
+  isAuthenticated,
+  faltasController.show
+);
 router.post(
   "/pedir-para-invalidar",
-  jwt,
+  isAuthenticated,
   faltasController.pedirParaInvalidarFalta
 );
-router.post("/invalidar-falta", jwt, faltasController.invalidarFalta);
+router.post(
+  "/invalidar-falta",
+  isAuthenticated,
+  faltasController.invalidarFalta
+);
 
 module.exports = router;

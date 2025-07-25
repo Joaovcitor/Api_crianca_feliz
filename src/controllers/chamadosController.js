@@ -3,7 +3,7 @@ const Chamados = require("../models/Chamados");
 module.exports = class ChamadosController {
   static async store(req, res) {
     const { descricao, tipo_do_chamado, userIdDestinatario } = req.body;
-    const userId = req.user.userId;
+    const userId = req.user.id;
 
     try {
       await Chamados.create(
@@ -22,7 +22,7 @@ module.exports = class ChamadosController {
   }
 
   static async chamadosDosDestinatarios(req, res) {
-    const userId = req.user.userId;
+    const userId = req.user.id;
 
     try {
       const chamados = await Chamados.findAll({
@@ -41,7 +41,7 @@ module.exports = class ChamadosController {
   }
 
   static async meusChamados(req, res) {
-    const id = req.user.userId;
+    const id = req.user.id;
 
     try {
       const chamados = await Chamados.findAll({ where: { userId: id } });

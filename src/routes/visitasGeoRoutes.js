@@ -2,68 +2,68 @@ const express = require("express");
 const router = express.Router();
 
 const VisitasController = require("../controllers/visitasGeolocationController");
-const authenticateJWT = require("../middlewares/authenticateJWT");
+const { isAuthenticated } = require("../middlewares/auth.middleware");
 
 router.get(
   "/visitas-invalidadas",
-  authenticateJWT,
+  isAuthenticated,
   VisitasController.showVisitasInvalidadas
 );
 
-router.put("/finalizar-visita/:id", authenticateJWT, VisitasController.update);
-router.post("/realizarvisita/:id", authenticateJWT, VisitasController.store);
+router.put("/finalizar-visita/:id", isAuthenticated, VisitasController.update);
+router.post("/realizarvisita/:id", isAuthenticated, VisitasController.store);
 
 router.post(
   "/agendar-visita/:id",
-  authenticateJWT,
+  isAuthenticated,
   VisitasController.agendaVisita
 );
 router.post(
   "/agendar-visita-gravida/:id",
-  authenticateJWT,
+  isAuthenticated,
   VisitasController.agendaVisitaGestante
 );
 router.get(
   "/visitas-marcadas/:id",
-  authenticateJWT,
+  isAuthenticated,
   VisitasController.ShowVisitasMarcadas
 );
 router.get(
   "/visitas-marcadas-gestantes/:id",
-  authenticateJWT,
+  isAuthenticated,
   VisitasController.ShowVisitasMarcadasGestantes
 );
-router.get("/verificar-visita/:id", authenticateJWT, VisitasController.show);
+router.get("/verificar-visita/:id", isAuthenticated, VisitasController.show);
 router.post(
   "/realizarjustificativa/:id",
-  authenticateJWT,
+  isAuthenticated,
   VisitasController.storeJustificativaBeneficiarioAusente
 );
 
 router.get(
   "/finalizar-visita-pendente",
-  authenticateJWT,
+  isAuthenticated,
   VisitasController.visitasPendentes
 );
 
 router.post(
   "/finalizarvisitapendente",
-  authenticateJWT,
+  isAuthenticated,
   VisitasController.update
 );
 
 // router.use(checkUserType(["supervisor"]));
-router.get("/visitas/:id", authenticateJWT, VisitasController.index);
+router.get("/visitas/:id", isAuthenticated, VisitasController.index);
 
 router.post(
   "/validar-visita/:id",
-  authenticateJWT,
+  isAuthenticated,
   VisitasController.validarVisita
 );
 
 router.post(
   "/invalidar-visita/:id",
-  authenticateJWT,
+  isAuthenticated,
   VisitasController.invalidarVisita
 );
 

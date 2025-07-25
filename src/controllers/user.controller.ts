@@ -29,8 +29,8 @@ export const UserController = {
 
   async createVisitador(req: Request, res: Response): Promise<Response> {
     try {
-      const supervisorId = req.user.userId;
-      const newUser = await UserService.createVisitador(req.body);
+      const supervisorId = req.user?.id;
+      const newUser = await UserService.createVisitador(req.body, supervisorId);
       return res.status(201).json(newUser);
     } catch (e: any) {
       return res.status(500).json({

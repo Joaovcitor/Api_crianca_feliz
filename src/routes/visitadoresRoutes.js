@@ -4,38 +4,25 @@ const router = express.Router();
 const visitadoresController = require("../controllers/visitadoresController");
 const VisitasController = require("../controllers/visitasGeolocationController");
 const checkUserType = require("../utils/checkUserType");
-const authenticateJWT = require("../middlewares/authenticateJWT");
-
+const { isAuthenticated } = require("../middlewares/auth.middleware");
 
 router.get("/showInformations", visitadoresController.show);
 
 router.post(
   "/editarperfilvisitador/",
-  authenticateJWT,
+  isAuthenticated,
   visitadoresController.editPost
 );
 
-router.get(
-  "/:id",
-  authenticateJWT,
-  visitadoresController.show
-);
+router.get("/:id", isAuthenticated, visitadoresController.show);
 
-router.post(
-  "/realizarvisita/:id",
-  authenticateJWT,
-  VisitasController.store
-);
+router.post("/realizarvisita/:id", isAuthenticated, VisitasController.store);
 
-router.post(
-  "/finalizarvisita/:id",
-  authenticateJWT,
-  VisitasController.update
-);
+router.post("/finalizarvisita/:id", isAuthenticated, VisitasController.update);
 
 router.post(
   "/finalizarvisitapendente/:id",
-  authenticateJWT,
+  isAuthenticated,
   VisitasController.update
 );
 

@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const etapa2Controller = require("../controllers/formulario5Etapa2Controller");
-const authenticateJWT = require("../middlewares/authenticateJWT");
+const { isAuthenticated } = require("../middlewares/auth.middleware");
 
-router.post("/create", authenticateJWT, etapa2Controller.store);
+router.post("/create", isAuthenticated, etapa2Controller.store);
 
 module.exports = router;

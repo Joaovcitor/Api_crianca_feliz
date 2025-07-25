@@ -5,7 +5,7 @@ const Usuario = require("../models/Users");
 module.exports = class FamiliaController {
   static async show(req, res) {
     try {
-      const VisitadorId = req.user.userId;
+      const VisitadorId = req.user.id;
 
       const children = await Child.findAll({
         where: {

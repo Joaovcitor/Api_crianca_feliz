@@ -17,7 +17,7 @@ module.exports = class UsersController {
   // método feito unicamente para coordenadores
   static async validatePendingUserWithRoleVisitador(req, res) {
     const { id } = req.body;
-    const coordenadorId = req.user.userId;
+    const coordenadorId = req.user.id;
     try {
       await Users.update(
         { isPending: false, coordenadorId: coordenadorId },

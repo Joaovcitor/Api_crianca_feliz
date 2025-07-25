@@ -4,7 +4,7 @@ const Caregiver = require("../models/Caregiver");
 
 module.exports = class TabelaDeVisitas {
   static async index(req, res) {
-    const session = req.user.userId;
+    const session = req.user.id;
 
     try {
       const visitas = await Visitas.findAll({
@@ -23,7 +23,7 @@ module.exports = class TabelaDeVisitas {
   }
 
   static async store(req, res) {
-    const id = req.user.userId;
+    const id = req.user.id;
     const childId = req.params.id;
 
     try {
@@ -65,7 +65,7 @@ module.exports = class TabelaDeVisitas {
   }
 
   static async criarTabelasParaGestante(req, res) {
-    const id = req.user.userId;
+    const id = req.user.id;
     const caregiverId = req.params.id;
 
     try {
@@ -145,7 +145,7 @@ module.exports = class TabelaDeVisitas {
   static async delete(req, res) {
     try {
       const id = req.params.id;
-      const visitadorId = req.user.userId;
+      const visitadorId = req.user.id;
 
       await Visitas.destroy({ where: { visitadorId: visitadorId, id: id } });
       res.status(200).json({ success: "Visita deletada com sucesso!" });

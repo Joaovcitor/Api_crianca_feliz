@@ -6,43 +6,39 @@ const detalhesVisitadores = require("../controllers/detailsVisitadoresController
 const childController = require("../controllers/childController");
 const caregiverController = require("../controllers/caregiverController");
 const checkUserType = require("../utils/checkUserType");
-const authenticateJWT = require("../middlewares/authenticateJWT");
+const { isAuthenticated } = require("../middlewares/auth.middleware");
 const validateCreateUser = require("../middlewares/validateCreateUser");
 const SupervisorController = require("../controllers/supervisorController");
 
 router.get(
   "/info-dos-meus-visitadores",
-  authenticateJWT,
+  isAuthenticated,
   detalhesVisitadores.index
 );
 
-router.get("/info/:id", authenticateJWT, SupervisorController.show);
+router.get("/info/:id", isAuthenticated, SupervisorController.show);
 
 router.get(
   "/beneficiarios-pendentes",
-  authenticateJWT,
+  isAuthenticated,
   caregiverController.showBeneficiarios
 );
 
 router.put(
   "/validar-cuidador",
-  authenticateJWT,
+  isAuthenticated,
   caregiverController.validarCaregiver
 );
 
-router.put("/validar-crianca", authenticateJWT, childController.validarChild);
+router.put("/validar-crianca", isAuthenticated, childController.validarChild);
 
 router.post(
   "/cadastrar-visitador",
-  authenticateJWT,
+  isAuthenticated,
   validateCreateUser,
   VisitadorController.store
 );
 
-router.get(
-  "/meus-visitadores",
-  authenticateJWT,
-  VisitadorController.index
-);
+router.get("/meus-visitadores", isAuthenticated, VisitadorController.index);
 
 module.exports = router;

@@ -3,9 +3,8 @@ const router = express.Router();
 
 const etapa3Controller = require("../controllers/formulario7Etapa3Controller");
 const authRequired = require("../middlewares/authRequired");
-const authenticateJWT = require("../middlewares/authenticateJWT");
+const { isAuthenticated } = require("../middlewares/auth.middleware");
 
-router.post("/create", authenticateJWT, authRequired, etapa3Controller.store);
+router.post("/create", isAuthenticated, authRequired, etapa3Controller.store);
 
 module.exports = router;
-

@@ -1,6 +1,6 @@
 async function criarForm7Faixa1E7(Model, req, res, VisitadorId) {
   const { id, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11 } = req.body;
-  VisitadorId = req.user.userId;
+  VisitadorId = req.user.id;
 
   if (!id) {
     return res.status(401).json({ errors: "Criança invalida!" });
@@ -34,7 +34,7 @@ async function criarForm7Faixa1E7(Model, req, res, VisitadorId) {
 
 async function criarForm7Faixa4(Model, req, res, VisitadorId) {
   const { id, q1, q2, q3, q4, q5, q6, q7 } = req.body;
-  VisitadorId = req.user.userId;
+  VisitadorId = req.user.id;
 
   if (!id) {
     return res.status(400).json({ errors: ["Criança invalida!"] });
@@ -64,7 +64,7 @@ async function criarForm7Faixa4(Model, req, res, VisitadorId) {
 
 async function criarForm7Faixa5(Model, req, res, VisitadorId) {
   const { id, q1, q2, q3, q4, q5, q6 } = req.body;
-  VisitadorId = req.user.userId;
+  VisitadorId = req.user.id;
   console.log(id);
 
   if (!id) {
@@ -94,7 +94,7 @@ async function criarForm7Faixa5(Model, req, res, VisitadorId) {
 
 async function criarForm7Faixa2E3E6(Model, req, res, VisitadorId) {
   const { id, q1, q2, q3, q4, q5, q6, q7, q8, q9 } = req.body;
-  VisitadorId = req.user.userId;
+  VisitadorId = req.user.id;
 
   if (!id) {
     return res.status(401).json({ errors: ["Criança invalida!"] });

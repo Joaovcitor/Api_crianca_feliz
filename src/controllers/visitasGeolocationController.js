@@ -4,7 +4,7 @@ const Visita = require("../models/Visita_por_geo");
 module.exports = class VisitaController {
   static async ShowVisitasMarcadas(req, res) {
     const idChild = req.params.id;
-    const session = req.user.userId;
+    const session = req.user.id;
 
     if (!idChild) {
       return res
@@ -39,7 +39,7 @@ module.exports = class VisitaController {
   }
   static async ShowVisitasMarcadasGestantes(req, res) {
     const caregiverId = req.params.id;
-    const session = req.user.userId;
+    const session = req.user.id;
 
     if (!caregiverId) {
       return res
@@ -73,7 +73,7 @@ module.exports = class VisitaController {
   }
 
   static async showVisitasInvalidadas(req, res) {
-    const visitadorId = req.user.userId;
+    const visitadorId = req.user.id;
 
     try {
       const visitas = await Visita.findAll({
@@ -90,7 +90,7 @@ module.exports = class VisitaController {
   }
 
   static async show(req, res) {
-    const idVisitador = req.user.userId;
+    const idVisitador = req.user.id;
     const id = req.params.id;
 
     if (!id) {
@@ -120,7 +120,7 @@ module.exports = class VisitaController {
 
   static async agendaVisita(req, res) {
     const { idChild, planoId, data_que_vai_ser_realizada } = req.body;
-    const session = req.user.userId;
+    const session = req.user.id;
     if (!idChild || !planoId || !data_que_vai_ser_realizada) {
       return res
         .status(400)
@@ -157,7 +157,7 @@ module.exports = class VisitaController {
 
   static async agendaVisitaGestante(req, res) {
     const { caregiverId, planoId, data_que_vai_ser_realizada } = req.body;
-    const session = req.user.userId;
+    const session = req.user.id;
     if (!caregiverId || !planoId || !data_que_vai_ser_realizada) {
       return res
         .status(400)
@@ -193,7 +193,7 @@ module.exports = class VisitaController {
   }
 
   static async visitasPendentes(req, res) {
-    const id = req.user.userId;
+    const id = req.user.id;
 
     try {
       const visita = await Visita.findAll({
@@ -372,7 +372,7 @@ module.exports = class VisitaController {
 
   static async store(req, res) {
     const { latitude, longitude, hora_inicio, idVisita } = req.body;
-    const session = req.user.userId;
+    const session = req.user.id;
 
     const visitasNaoFeitas = await Visita.findAll({
       where: { visitadorId: session, visita_em_andamento: true },
@@ -416,7 +416,7 @@ module.exports = class VisitaController {
   static async update(req, res) {
     try {
       const { id, latitude_final, longitude_final, hora_fim } = req.body;
-      const session = req.user.userId;
+      const session = req.user.id;
       if (!latitude_final || !longitude_final) {
         res
           .status(400)
