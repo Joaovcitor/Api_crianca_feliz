@@ -7,7 +7,7 @@ module.exports = {
 
       exec_mode: "fork",
       interpreter: "node",
-      args: "-r ts-node/register --inspect ./src/server.ts",
+      interpreter_args: "-r ts-node/register",
       autorestart: true,
       watch: false,
       max_memory_restart: "1G",
