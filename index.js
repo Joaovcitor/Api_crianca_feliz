@@ -35,6 +35,7 @@ class Server {
       "http://localhost:46635",
       `http://192.168.1.71:3000`,
       "http://192.168.1.43:3000",
+      "http://192.168.1.28:3000",
     ];
 
     this.configureMiddlewares();

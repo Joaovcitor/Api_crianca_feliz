@@ -1,0 +1,28 @@
+const jwt = require("jsonwebtoken");
+
+const authenticateJWT = (req, res, next) => {
+  const token = req.cookies.jwt;
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({
+        invalid_token: "Token inválido ou não informado! do auth de js",
+      });
+  }
+
+  console.log(token);
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_JWT);
+    req.user = decoded;
+    next();
+  } catch (ex) {
+    console.log(ex);
+    return res.status(500).json({
+      errorInternal: "Ocorreu um erro inesperado! Tente novamente.",
+    });
+  }
+};
+
+module.exports = authenticateJWT;

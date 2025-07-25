@@ -1,0 +1,71 @@
+# Versão do Docker Compose. '3.8' é uma versão moderna e estável.
+version: "3.8"
+
+# Definição dos serviços (containers)
+services:
+  # Serviço do banco de dados PostgreSQL
+  db:
+    image: postgres:16-alpine # Imagem oficial do PostgreSQL, versão 16 com base Alpine (mais leve)
+    container_name: postgres_db
+    restart: unless-stopped
+
+    # === REQUISITOS DE RECURSOS ===
+    # Esta seção define os limites de CPU e Memória RAM.
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0" # Limita o uso a no máximo 1 núcleo de CPU.
+          memory: 1.5G # Limita o uso a no máximo 1.5 GB de RAM.
+
+    # === CONFIGURAÇÃO DO BANCO DE DADOS ===
+    # Variáveis de ambiente para configurar o PostgreSQL.
+    # IMPORTANTE: Altere a senha para um valor seguro!
+    environment:
+      POSTGRES_USER: user # Nome de usuário do banco
+      POSTGRES_PASSWORD: password # Senha do usuário
+      POSTGRES_DB: mydatabase # Nome do banco de dados que será criado
+
+    # === ARMAZENAMENTO PERSISTENTE ===
+    # Mapeia um volume para a pasta de dados do PostgreSQL.
+    # Isso garante que seus dados não sejam perdidos ao recriar o container.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    # === REDE ===
+    # Conecta este serviço à rede 'app-network' para comunicação com outros serviços.
+    networks:
+      - app-network
+
+  # Serviço do Adminer (ferramenta de gerenciamento de DB)
+  adminer:
+    image: adminer
+    container_name: adminer_ui
+    restart: unless-stopped
+
+    # === PORTAS ===
+    # Expõe a porta 8080 do container para a porta 8080 da sua máquina.
+    # Acesse via http://localhost:8080
+    ports:
+      - "8080:8080"
+
+    # === REDE ===
+    # Também conectado à mesma rede para poder "enxergar" o serviço 'db'.
+    networks:
+      - app-network
+
+    # === ORDEM DE INICIALIZAÇÃO ===
+    # Garante que o serviço 'db' seja iniciado antes do 'adminer'.
+    depends_on:
+      - db
+
+# Definição dos volumes
+volumes:
+  # O volume que será usado pelo serviço 'db' para persistir os dados.
+  postgres_data:
+    driver: local
+
+# Definição das redes
+networks:
+  # A rede customizada para os serviços se comunicarem.
+  app-network:
+    driver: bridge
