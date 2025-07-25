@@ -42,8 +42,9 @@ import f7etapa6Routers from "./routes/form7Etapa6Routes";
 import f7etapa7Routers from "./routes/form7Etapa7Routes";
 import notificacoesRouter from "./routes/notificacoesRoutes";
 import emailRouter from "./routes/emailRoute";
-import usersRoutes from "./routes/userRoutes";
+// import usersRoutes from "./routes/userRoutes";
 import faltasRoutes from "./routes/faltasRoutes";
+import userRoutes from "./routes/user.routes";
 
 // 2. CONFIGURAÇÃO DO DOTENV
 // Executado uma vez no início da aplicação.
@@ -154,7 +155,7 @@ class Server {
     apiBase.use("/form7-etapa7", f7etapa7Routers);
     apiBase.use("/notificacoes", notificacoesRouter);
     apiBase.use("/email", emailRouter);
-    apiBase.use("/users", usersRoutes);
+    apiBase.use("/users", userRoutes);
     apiBase.use("/faltas", faltasRoutes);
 
     this.app.use("/apiv1", apiBase);

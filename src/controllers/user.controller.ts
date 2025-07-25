@@ -57,6 +57,7 @@ export const UserController = {
       const newUser = await UserService.createCoordenador(req.body);
       return res.status(201).json(newUser);
     } catch (e: any) {
+      console.log(e);
       return res.status(500).json({
         error: e.message || "Internal Server Error",
       });
