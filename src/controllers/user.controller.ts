@@ -30,6 +30,10 @@ export const UserController = {
   async createVisitador(req: Request, res: Response): Promise<Response> {
     try {
       const supervisorId = req.user?.id;
+      if (!supervisorId) {
+        return res.status(401).json({ error: "Usuário não autenticado" });
+      }
+
       const newUser = await UserService.createVisitador(req.body, supervisorId);
       return res.status(201).json(newUser);
     } catch (e: any) {

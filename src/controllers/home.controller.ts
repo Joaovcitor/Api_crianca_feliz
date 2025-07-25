@@ -7,7 +7,7 @@ export const HomeController = {
       if (!loggedUser) {
         return res.status(401).json({ error: "Usuário não autenticado" });
       }
-      const { password, ...userResponse } = loggedUser;
+      const userResponse = loggedUser;
       return res.status(200).json({ user: userResponse });
     } catch (error) {
       console.error("Erro ao acessar a rota home:", error);

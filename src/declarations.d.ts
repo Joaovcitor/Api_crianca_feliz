@@ -6,7 +6,7 @@ declare module "*.js";
 // Define o tipo de dados do seu objeto 'user' que vem do token/auth
 // Sinta-se à vontade para adicionar mais campos se precisar deles.
 interface UserPayload {
-  id: string;
+  id: number;
   name: string;
   // exemplo: email: string;
 }
