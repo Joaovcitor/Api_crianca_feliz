@@ -35,16 +35,13 @@ export const CaregiverService = {
     const caregiver = await prisma.caregiver.findUnique({ where: { id: id } });
     return caregiver;
   },
-  getByLoggedInVisitorID: async (
-    id: number,
-    visitadorId: number
-  ): Promise<Caregiver | null> => {
-    const caregiver = await prisma.caregiver.findUnique({
-      where: { id: id },
+  getByLoggedInVisitorID: async (visitadorId: number): Promise<Caregiver[]> => {
+    const caregiver = await prisma.caregiver.findMany({
+      where: { visitadorId: visitadorId },
     });
 
-    if (caregiver?.id !== visitadorId) {
-      throw new Error("Esse cuidador não pertence a você");
+    if (!caregiver) {
+      throw new Error("Não existem cuidadores!");
     }
 
     return caregiver;

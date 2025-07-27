@@ -15,7 +15,7 @@ import os from "os";
 // Importe suas rotas aqui (eventualmente, elas também serão .ts)
 // Por enquanto, o TypeScript consegue importar arquivos .js se "allowJs": true estiver no tsconfig.json
 import caregiverRouter from "./routes/caregiver.routes";
-import childRouter from "./routes/childrenRoutes";
+import childRouter from "./routes/child.routes";
 import homeRouter from "./routes/home.routes";
 import formRouter from "./routes/formsRoutes";
 import familiaRouter from "./routes/familiaRoutes";

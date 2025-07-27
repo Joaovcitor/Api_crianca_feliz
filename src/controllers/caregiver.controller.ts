@@ -45,4 +45,32 @@ export const CaregiverController = {
       return res.status(500).json({ errors: "Erro interno do servidor!" });
     }
   },
+  async caregiversDoVisitador(req: Request, res: Response): Promise<Response> {
+    const visitadorId = req.user?.id;
+
+    if (!visitadorId)
+      return res.status(401).json({ errors: "Você tem que estar autenticado" });
+
+    try {
+      const caregivers = await CaregiverService.getByLoggedInVisitorID(
+        visitadorId
+      );
+      return res.status(200).json(caregivers);
+    } catch (e: unknown) {
+      console.log(e);
+      return res.status(500).json({ errors: "Erro interno do servidor!" });
+    }
+  },
+  async getById(req: Request, res: Response): Promise<Response> {
+    const id = parseInt(req.params.id, 10);
+    try {
+      const caregiver = await CaregiverService.getById(id);
+      if (!caregiver)
+        return res.status(404).json({ errors: "Cuidador não encontrado!" });
+      return res.status(200).json(caregiver);
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({ errors: "Erro interno do servidor!" });
+    }
+  },
 };
