@@ -1,6 +1,7 @@
 import { PrismaClient, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import type { Token } from "nodemailer/lib/xoauth2";
 
 const prisma = new PrismaClient();
 
@@ -37,5 +38,24 @@ export const authService = {
       token,
       user: userWithoutPassword,
     };
+  },
+  updateEmail: async (email: string, id: number): Promise<User | void> => {
+    const existingUserWithEmail = await prisma.user.findUnique({
+      where: { email: email },
+    });
+
+    if (!email) {
+      throw new Error("Email é obrigatório!");
+    }
+
+    if (existingUserWithEmail && existingUserWithEmail.id !== id) {
+      throw new Error("Existe usuário com esse email!");
+    }
+
+    const emailUpdate = await prisma.user.update({
+      where: { id: id },
+      data: { email: email },
+    });
+    return emailUpdate;
   },
 };

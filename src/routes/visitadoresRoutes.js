@@ -3,7 +3,6 @@ const router = express.Router();
 
 const visitadoresController = require("../controllers/visitadoresController");
 const VisitasController = require("../controllers/visitasGeolocationController");
-const checkUserType = require("../utils/checkUserType");
 const { isAuthenticated } = require("../middlewares/auth.middleware");
 
 router.get("/showInformations", visitadoresController.show);

@@ -14,7 +14,7 @@ import os from "os";
 
 // Importe suas rotas aqui (eventualmente, elas também serão .ts)
 // Por enquanto, o TypeScript consegue importar arquivos .js se "allowJs": true estiver no tsconfig.json
-import caregiverRouter from "./routes/caregiverRoutes";
+import caregiverRouter from "./routes/caregiver.routes";
 import childRouter from "./routes/childrenRoutes";
 import homeRouter from "./routes/home.routes";
 import formRouter from "./routes/formsRoutes";
@@ -72,7 +72,7 @@ class Server {
       `http://192.168.1.71:3000`,
       "http://192.168.1.43:3000",
       "http://192.168.1.28:3000",
-      "http://192.168.0.4:3000",
+      "http://192.168.0.5:3000",
     ];
 
     this.configureMiddlewares();

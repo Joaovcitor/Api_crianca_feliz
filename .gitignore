@@ -7,3 +7,4 @@ database.sqlite
 :memory
 /generated/prisma
 dist
+generated

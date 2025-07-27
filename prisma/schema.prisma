@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  // binaryTargets = ["native", "debian-openssl-3.0.x"]
   // output   = "../generated/prisma"
 }
 
@@ -25,7 +26,7 @@ model Caregiver {
   isPending         Boolean?  @default(true)
   supervisorId      Int?
   visitadorId       Int?
-  createdAt         DateTime  @db.Timestamptz(6)
+  createdAt         DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt         DateTime  @updatedAt @db.Timestamptz(6)
   weekPregnant      Int?      @default(0) @map("week_pregnant")
 
@@ -60,7 +61,7 @@ model Child {
   born              DateTime?         @db.Timestamptz(6)
   visitorId         Int?              @map("visitadorId")
   caregiverId       Int?
-  createdAt         DateTime          @db.Timestamptz(6)
+  createdAt         DateTime          @default(now()) @db.Timestamptz(6)
   updatedAt         DateTime          @updatedAt @db.Timestamptz(6)
   isPending         Boolean?          @default(true)
   gender            ChildGender?      @map("sexo")
@@ -104,7 +105,7 @@ model Etapa1 {
   q10         EtapaAnswer
   childId     Int
   visitorId   Int             @map("visitadorId")
-  createdAt   DateTime        @db.Timestamptz(6)
+  createdAt   DateTime        @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime        @updatedAt @db.Timestamptz(6)
 
   child       Child           @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -126,7 +127,7 @@ model Etapa2 {
   q9          EtapaAnswer
   childId     Int
   visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @db.Timestamptz(6)
+  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
 
   child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -148,7 +149,7 @@ model Etapa3 {
   q9          EtapaAnswer
   childId     Int
   visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @db.Timestamptz(6)
+  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
 
   child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -168,7 +169,7 @@ model Etapa4 {
   q7          EtapaAnswer
   childId     Int
   visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @db.Timestamptz(6)
+  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
 
   child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -187,7 +188,7 @@ model Etapa5 {
   q6          EtapaAnswer
   childId     Int
   visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @db.Timestamptz(6)
+  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
 
   child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -209,7 +210,7 @@ model Etapa6 {
   q9          EtapaAnswer
   childId     Int
   visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @db.Timestamptz(6)
+  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
 
   child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -231,7 +232,7 @@ model Etapa7 {
   q9          EtapaAnswer
   childId     Int
   visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @db.Timestamptz(6)
+  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
 
   child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -246,7 +247,7 @@ model Falta {
   occurrenceDate          DateTime? @map("quando_ocorreu_a_falta") @db.Date
   isInvalidated           Boolean?  @default(false) @map("falta_invalidada")
   invalidationRequest     String?   @map("pedir_para_invalidar_falta")
-  createdAt               DateTime  @db.Timestamptz(6)
+  createdAt               DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt               DateTime  @updatedAt @db.Timestamptz(6)
   userId                  Int
   recorderId              Int       @map("registradorId")
@@ -267,7 +268,7 @@ model Notificacao {
   visitorId      Int?             @map("visitadorId")
   supervisorId   Int?
   coordinatorId  Int?             @map("coordenadorId")
-  createdAt      DateTime         @db.Timestamptz(6)
+  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
   updatedAt      DateTime         @updatedAt @db.Timestamptz(6)
 
   coordinator    User?            @relation("NotificacoesCoordenador", fields: [coordinatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -291,7 +292,7 @@ model PlanoDeVisitas {
   realizedWithDifficulty     Boolean?                       @default(false) @map("fez_com_dificuldade")
   visitorId                  Int?                           @map("visitadorId")
   childId                    Int?
-  createdAt                  DateTime                       @db.Timestamptz(6)
+  createdAt                  DateTime                       @default(now()) @db.Timestamptz(6)
   updatedAt                  DateTime                       @updatedAt @db.Timestamptz(6)
   caregiverId                Int?                           @map("CaregiverId")
 
@@ -316,7 +317,7 @@ model TabelaDeVisitas {
   period       TabelaVisitaPeriodo
   visitorId    Int?                  @map("visitadorId")
   childId      Int?
-  createdAt    DateTime              @db.Timestamptz(6)
+  createdAt    DateTime              @default(now()) @db.Timestamptz(6)
   updatedAt    DateTime              @updatedAt @db.Timestamptz(6)
   caregiverId  Int?
 
@@ -343,7 +344,7 @@ model User {
   earlyAccess               Boolean?   @default(false) @map("early_access")
   supervisorId              Int?
   coordenadorId             Int?
-  createdAt                 DateTime   @db.Timestamptz(6)
+  createdAt                 DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt                 DateTime   @updatedAt @db.Timestamptz(6)
 
   // Self-relations for hierarchy
@@ -413,7 +414,7 @@ model VisitaPorGeolocalizacao {
   visitorId                Int?       @map("visitadorId")
   childId                  Int?
   planId                   Int?       @map("planoId")
-  createdAt                DateTime   @db.Timestamptz(6)
+  createdAt                DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt                DateTime   @updatedAt @db.Timestamptz(6)
   caregiverId              Int?
 
@@ -439,7 +440,7 @@ model Form7Etapa1 {
   q10         EtapaAnswer
   childId     Int
   visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @db.Timestamptz(6)
+  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
 
   child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -461,7 +462,7 @@ model Form7Etapa2 {
   q9          EtapaAnswer
   childId     Int
   visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @db.Timestamptz(6)
+  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
 
   child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -483,7 +484,7 @@ model Form7Etapa3 {
   q9          EtapaAnswer
   childId     Int
   visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @db.Timestamptz(6)
+  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
 
   child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -503,7 +504,7 @@ model Form7Etapa4 {
   q7          EtapaAnswer
   childId     Int
   visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @db.Timestamptz(6)
+  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
 
   child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -522,7 +523,7 @@ model Form7Etapa5 {
   q6          EtapaAnswer
   childId     Int
   visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @db.Timestamptz(6)
+  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
 
   child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -544,7 +545,7 @@ model Form7Etapa6 {
   q9          EtapaAnswer
   childId     Int
   visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @db.Timestamptz(6)
+  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
 
   child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -566,7 +567,7 @@ model Form7Etapa7 {
   q9          EtapaAnswer
   childId     Int
   visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @db.Timestamptz(6)
+  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
 
   child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)

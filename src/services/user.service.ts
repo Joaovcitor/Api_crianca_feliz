@@ -1,5 +1,4 @@
-import { connect } from "http2";
-import { PrismaClient, UserRole, User, Prisma } from "./../generated/prisma";
+import { PrismaClient, UserRole, User, Prisma } from "@prisma/client";
 import { hashPassword } from "./users/senha";
 const prisma = new PrismaClient();
 

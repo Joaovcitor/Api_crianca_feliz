@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/user.service";
+import type { UserResponseDto } from "../dtos/UserResponseDTO";
+import type { UserCreateVisitador } from "../dtos/UserCreateVisitadorDTO";
+import type { UserCreateCoordenador } from "../dtos/UserCreateCoordenadorDTO";
 
 export const UserController = {
   async getAll(req: Request, res: Response): Promise<Response> {
@@ -28,14 +31,31 @@ export const UserController = {
   },
 
   async createVisitador(req: Request, res: Response): Promise<Response> {
+    const {
+      name,
+      email,
+      password,
+      cpf,
+      territorio,
+      cras,
+    }: UserCreateVisitador = req.body;
     try {
       const supervisorId = req.user?.id;
       if (!supervisorId) {
         return res.status(401).json({ error: "Usuário não autenticado" });
       }
 
-      const newUser = await UserService.createVisitador(req.body, supervisorId);
-      return res.status(201).json(newUser);
+      const newUserFromDB = await UserService.createVisitador(
+        { name, email, password, cpf, territorio, cras },
+        supervisorId
+      );
+      const newUserResponse: UserResponseDto = {
+        id: newUserFromDB.id,
+        name: newUserFromDB.name,
+        email: newUserFromDB.email,
+        createdAt: newUserFromDB.createdAt.toISOString(),
+      };
+      return res.status(201).json(newUserResponse);
     } catch (e: any) {
       return res.status(500).json({
         error: e.message || "Internal Server Error",
@@ -43,10 +63,37 @@ export const UserController = {
     }
   },
   async createSupervisor(req: Request, res: Response): Promise<Response> {
+    const {
+      name,
+      email,
+      password,
+      cpf,
+      cras,
+      territorio,
+    }: UserCreateCoordenador = req.body;
     try {
-      const newUser = await UserService.createSupervisor(req.body);
-      return res.status(201).json(newUser);
+      const supervisorId = req.user?.id;
+      if (!supervisorId) {
+        return res.status(401).json({ error: "Usuário não autenticado" });
+      }
+
+      if (!territorio) {
+        return res.status(400).json({ errors: "Território é obrigatório!" });
+      }
+
+      const newUserFromDB = await UserService.createVisitador(
+        { name, email, password, cpf, cras, territorio },
+        supervisorId
+      );
+      const newUserResponse: UserResponseDto = {
+        id: newUserFromDB.id,
+        name: newUserFromDB.name,
+        email: newUserFromDB.email,
+        createdAt: newUserFromDB.createdAt.toISOString(),
+      };
+      return res.status(201).json(newUserResponse);
     } catch (e: any) {
+      console.log(e);
       return res.status(500).json({
         error: e.message || "Internal Server Error",
       });
