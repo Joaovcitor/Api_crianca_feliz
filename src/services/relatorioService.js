@@ -1,18 +1,9 @@
 const Visitador = require("../models/Users");
-const Supervisor = require("../models/Users");
 const Coordenador = require("../models/Users");
-const Caregiver = require("../models/Caregiver");
 const PlanosDeVisita = require("../models/plain");
 const Visita = require("../models/Visita_por_geo");
 const Child = require("../models/Child");
 const { verificaVisitasMarcadas } = require("./visitaGeoService");
-const {
-  mapChildrens,
-  mapPlanos,
-  mapPesquisa,
-  mapCaregivers,
-} = require("../utils/mapsDetailsOfVisitador");
-const { Op } = require("sequelize");
 
 async function relatorios(req, res) {
   const id = req.user.id;

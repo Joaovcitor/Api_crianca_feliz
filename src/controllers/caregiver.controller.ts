@@ -20,7 +20,6 @@ export const CaregiverController = {
     const {
       name,
       cpf,
-      nis,
       address,
       district,
       contact,
@@ -32,7 +31,7 @@ export const CaregiverController = {
       return res.status(401).json({ errors: "Você precisa estar autenticado" });
     try {
       const newCaregiver = await CaregiverService.create(
-        { name, cpf, nis, address, district, contact, born, pregnant },
+        { name, cpf, address, district, contact, born, pregnant },
         visitadorId
       );
       const caregiverResponse: CaregiverResponse = {

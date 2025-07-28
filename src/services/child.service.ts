@@ -9,6 +9,10 @@ export const ChildService = {
 
     const child = await prisma.child.findMany({
       where: { visitorId: visitadorId },
+      include: {
+        caregiver: true,
+        visitor: true,
+      },
     });
 
     return child;

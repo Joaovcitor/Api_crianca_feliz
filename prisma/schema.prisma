@@ -604,10 +604,10 @@ enum EtapaAnswer {
 }
 
 enum NotificacaoType {
-  Evento
+  Evento @map("Evento")
   Reuniao @map("Reunião")
-  Falta
-  Outras
+  Falta @map("Falta")
+  Outras @map("Outras")
 
   @@map("enum_Notificacoes_notificacao_tipo")
 }
@@ -623,24 +623,24 @@ enum PlanoVisitaRealizacao {
 enum PlanoVisitaDificuldade {
   Facil @map("Fácil")
   Media @map("Média")
-  Dificil
+  Dificil @map("Difícil")
 
   @@map("enum_PlanosDeVisitas_grau_de_dificuldade_objetivo")
 }
 
 enum TabelaVisitaDia {
-  Segunda
+  Segunda @map("Segunda")
   Terca @map("Terça")
-  Quarta
-  Quinta
-  Sexta
+  Quarta @map("Quarta")
+  Quinta @map("Quinta")
+  Sexta @map("Sexta")
 
   @@map("enum_TabelasDeVisitas_dayOfVisit")
 }
 
 enum TabelaVisitaPeriodo {
   Manha @map("Manhã")
-  Tarde
+  Tarde @map("Tarde")
 
   @@map("enum_TabelasDeVisitas_period")
 }

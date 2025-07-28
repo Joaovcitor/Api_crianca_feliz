@@ -72,8 +72,8 @@ export const UserController = {
       territorio,
     }: UserCreateCoordenador = req.body;
     try {
-      const supervisorId = req.user?.id;
-      if (!supervisorId) {
+      const coordenadorId = req.user?.id;
+      if (!coordenadorId) {
         return res.status(401).json({ error: "Usuário não autenticado" });
       }
 
@@ -81,9 +81,9 @@ export const UserController = {
         return res.status(400).json({ errors: "Território é obrigatório!" });
       }
 
-      const newUserFromDB = await UserService.createVisitador(
+      const newUserFromDB = await UserService.createSupervisor(
         { name, email, password, cpf, cras, territorio },
-        supervisorId
+        coordenadorId
       );
       const newUserResponse: UserResponseDto = {
         id: newUserFromDB.id,
@@ -100,9 +100,34 @@ export const UserController = {
     }
   },
   async createCoordenador(req: Request, res: Response): Promise<Response> {
+    const {
+      name,
+      email,
+      password,
+      cpf,
+      cras,
+      territorio,
+    }: UserCreateCoordenador = req.body;
     try {
-      const newUser = await UserService.createCoordenador(req.body);
-      return res.status(201).json(newUser);
+      if (!territorio) {
+        return res.status(400).json({ errors: "Território é obrigatório!" });
+      }
+
+      const newUserFromDB = await UserService.createCoordenador({
+        name,
+        email,
+        password,
+        cpf,
+        cras,
+        territorio,
+      });
+      const newUserResponse: UserResponseDto = {
+        id: newUserFromDB.id,
+        name: newUserFromDB.name,
+        email: newUserFromDB.email,
+        createdAt: newUserFromDB.createdAt.toISOString(),
+      };
+      return res.status(201).json(newUserResponse);
     } catch (e: any) {
       console.log(e);
       return res.status(500).json({

@@ -27,10 +27,26 @@ export const UserService = {
   createCoordenador: async (
     data: Omit<Prisma.UserCreateInput, "role">
   ): Promise<User> => {
-    const coordenadorData = { ...data, role: UserRole.coordenador };
-    return prisma.user.create({
-      data: coordenadorData,
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ email: data.email }, { cpf: data.cpf }],
+      },
     });
+
+    if (existingUser) {
+      throw new Error("Já existe um usuário com esse email ou cpf.");
+    }
+
+    const hashedPassword = await hashPassword(data.password);
+    const newUser = await prisma.user.create({
+      data: {
+        ...data,
+        password: hashedPassword,
+        role: UserRole.coordenador,
+        isActive: true,
+      },
+    });
+    return newUser;
   },
   createVisitador: async (
     data: Omit<Prisma.UserCreateInput, "role">,
@@ -73,11 +89,23 @@ export const UserService = {
     return newUser;
   },
   createSupervisor: async (
-    data: Omit<Prisma.UserCreateInput, "role">
+    data: Omit<Prisma.UserCreateInput, "role">,
+    coordenadorId: number
   ): Promise<User> => {
     const supervisorData = { ...data, role: UserRole.supervisor };
+    const hashedPassword = await hashPassword(data.password);
+
     return prisma.user.create({
-      data: supervisorData,
+      data: {
+        ...supervisorData,
+        password: hashedPassword,
+        isActive: true,
+        coordinator: {
+          connect: {
+            id: coordenadorId,
+          },
+        },
+      },
     });
   },
   update: async (id: number, data: UserUpdateData): Promise<User> => {

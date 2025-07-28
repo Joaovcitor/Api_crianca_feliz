@@ -17,13 +17,11 @@ import os from "os";
 import caregiverRouter from "./routes/caregiver.routes";
 import childRouter from "./routes/child.routes";
 import homeRouter from "./routes/home.routes";
-import formRouter from "./routes/formsRoutes";
 import familiaRouter from "./routes/familiaRoutes";
 import authRoute from "./routes/auth.routes";
 import supervisorRouter from "./routes/supervisorRoutes";
 import visitadoresDosSupervisores from "./routes/visitadoresRoutes";
 import detalhesVisitadorRoute from "./routes/detalhesVisitadorRoutes";
-import PlanoDeVisitaRouter from "./routes/planosDeVisita";
 import coordenadorRoutes from "./routes/coordenadorRoutes";
 import visitasGeoRoutes from "./routes/visitasGeoRoutes";
 import tabelaDeVisitasRoutes from "./routes/tabelaDeVisitasRoutes";
@@ -45,6 +43,7 @@ import emailRouter from "./routes/emailRoute";
 // import usersRoutes from "./routes/userRoutes";
 import faltasRoutes from "./routes/faltasRoutes";
 import userRoutes from "./routes/user.routes";
+import planosDeVisitaRouter from "./routes/planos.routes";
 
 // 2. CONFIGURAÇÃO DO DOTENV
 // Executado uma vez no início da aplicação.
@@ -130,13 +129,12 @@ class Server {
     apiBase.use("/", homeRouter);
     apiBase.use("/cuidador", caregiverRouter);
     apiBase.use("/crianca", childRouter);
-    apiBase.use("/formularios", formRouter);
     apiBase.use("/familias", familiaRouter);
     apiBase.use("/login", authRoute);
     apiBase.use("/supervisor", supervisorRouter);
     apiBase.use("/visitadores", visitadoresDosSupervisores);
     apiBase.use("/detalhes", detalhesVisitadorRoute);
-    apiBase.use("/planos", PlanoDeVisitaRouter);
+    apiBase.use("/planos", planosDeVisitaRouter);
     apiBase.use("/coordenador", coordenadorRoutes);
     apiBase.use("/visitasporgeolo", visitasGeoRoutes);
     apiBase.use("/tabelas", tabelaDeVisitasRoutes);
