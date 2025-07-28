@@ -51,4 +51,15 @@ export const ChildService = {
     });
     return createChild;
   },
+  validarCrianca: async (childId: number): Promise<Child> => {
+    if (!childId) throw new Error("ID da criança é necessário!");
+
+    const child = await prisma.child.findUnique({ where: { id: childId } });
+    if (!child) throw new Error("Criança não encontrada!");
+
+    return prisma.child.update({
+      where: { id: childId },
+      data: { isPending: false },
+    });
+  },
 };

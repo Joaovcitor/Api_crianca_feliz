@@ -1,4 +1,3 @@
-import { PrismaClient, Child } from "@prisma/client";
 import { Request, Response } from "express";
 import { ChildService } from "../services/child.service";
 import { ChildCreateDTO } from "../dtos/ChildCreateDTO";

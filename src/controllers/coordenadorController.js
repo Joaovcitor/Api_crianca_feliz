@@ -38,7 +38,7 @@ module.exports = class CoordenadorController {
       territorio: "",
     };
     try {
-      const coordenadorCriado = await Users.create(coordenador);
+      await Users.create(coordenador);
 
       // req.user.id = coordenadorCriado.id;
 

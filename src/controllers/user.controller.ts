@@ -145,7 +145,6 @@ export const UserController = {
       return res.status(500).json({ message: error.message });
     }
   },
-
   async delete(req: Request, res: Response): Promise<Response> {
     try {
       const id = parseInt(req.params.id, 10);
