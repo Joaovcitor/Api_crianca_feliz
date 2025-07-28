@@ -1,12 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const CoordenadorController = require("../controllers/coordenadorController");
 const visitadorController = require("../controllers/visitadoresController");
 const supervisorController = require("../controllers/supervisorController");
 const { isAuthenticated } = require("../middlewares/auth.middleware");
-
-router.post("/cadastro", CoordenadorController.store);
 
 router.post(
   "/cadastrar-supervisor",
