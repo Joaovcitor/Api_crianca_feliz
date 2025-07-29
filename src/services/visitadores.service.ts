@@ -8,6 +8,11 @@ export const VisitadoresService = {
         role: UserRole.visitador,
         supervisorId: supervisorId,
       },
+      include: {
+        children: true,
+        supervisor: true,
+        visitorCaregivers: true,
+      },
     });
   },
   desativarConta: async (visitadorId: number): Promise<User> => {

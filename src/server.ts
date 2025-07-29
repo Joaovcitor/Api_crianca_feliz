@@ -64,7 +64,7 @@ class Server {
     this.app = express();
     this.whiteList = [
       "https://criancafeliz.logicmasters.com.br",
-      "http://localhost:3001",
+      "http://192.168.1.12:3000",
       "http://192.168.1.71:38157",
       "http://localhost:3000",
       "http://localhost:46635",

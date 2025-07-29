@@ -7,18 +7,61 @@ import {
 } from "@prisma/client";
 import type { PlanoDeVisitaCreateDTO } from "../dtos/PlanoDeVisitaDTO";
 import type { PlanoDeVisitaUpdate } from "../dtos/PlanoDeVisitaUpdateDTO";
+import { PaginationParams } from "../interfaces/PaginationParams";
 const prisma = new PrismaClient();
 
 export const PlanosDeVisitaService = {
-  getAll: async (visitadorId: number): Promise<PlanoDeVisitas[]> => {
-    return prisma.planoDeVisitas.findMany({
-      where: {
-        visitorId: visitadorId,
+  getAll: async ({
+    visitadorId,
+    page = 1,
+    pageSize = 10,
+    childId,
+  }: {
+    visitadorId: number;
+    page?: number;
+    pageSize?: number;
+    childId: number;
+  }): Promise<{
+    data: PlanoDeVisitas[];
+    meta: {
+      total: number;
+      page: number;
+      pageSize: number;
+      totalPages: number;
+    };
+  }> => {
+    const skip = (page - 1) * pageSize;
+    const [total, planos] = await prisma.$transaction([
+      prisma.planoDeVisitas.count({
+        where: {
+          visitorId: visitadorId,
+          childId: childId,
+        },
+      }),
+      prisma.planoDeVisitas.findMany({
+        where: {
+          visitorId: visitadorId,
+        },
+        include: {
+          visitor: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: pageSize,
+        skip: skip,
+      }),
+    ]);
+    const totalPages = Math.ceil(total / pageSize);
+    return {
+      data: planos,
+      meta: {
+        total,
+        page,
+        pageSize,
+        totalPages,
       },
-      include: {
-        visitor: true,
-      },
-    });
+    };
   },
   getById: async (id: number): Promise<PlanoDeVisitas | null> => {
     return prisma.planoDeVisitas.findUnique({

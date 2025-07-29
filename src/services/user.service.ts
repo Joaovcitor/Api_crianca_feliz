@@ -1,5 +1,7 @@
 import { PrismaClient, UserRole, User, Prisma } from "@prisma/client";
 import { hashPassword } from "./users/senha";
+import type { UserUpdatePasswordDTO } from "../dtos/UserUpdatePasswordDTO";
+import type { UserUpdateEmailDTO } from "../dtos/UserUpdateEmailDTO";
 const prisma = new PrismaClient();
 
 type UserCreateData = Prisma.UserCreateInput;
@@ -106,6 +108,33 @@ export const UserService = {
           },
         },
       },
+    });
+  },
+  updatePassword: async (
+    id: number,
+    data: UserUpdatePasswordDTO
+  ): Promise<User> => {
+    const existingUser = await prisma.user.findUnique({ where: { id } });
+    if (!existingUser) {
+      throw new Error("Usuário não encontrado.");
+    }
+    return prisma.user.update({
+      where: { id },
+      data: { password: await hashPassword(data.password) },
+    });
+  },
+  updateEmail: async (id: number, data: UserUpdateEmailDTO): Promise<User> => {
+    const existingUser = await prisma.user.findUnique({ where: { id } });
+    if (!existingUser) {
+      throw new Error("Usuário não encontrado.");
+    }
+
+    if (existingUser.email === data.email) {
+      throw new Error("Já existe um usuário com esse email.");
+    }
+    return prisma.user.update({
+      where: { id },
+      data: { email: data.email },
     });
   },
   update: async (id: number, data: UserUpdateData): Promise<User> => {

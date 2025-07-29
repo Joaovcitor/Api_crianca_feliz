@@ -6,11 +6,21 @@ import { Request, Response } from "express";
 export const PlanosDeVisitaController = {
   async getAll(req: Request, res: Response): Promise<Response> {
     const visitadorId = req.user?.id;
+    const childId = parseInt(req.params.id, 10);
+    const { page, pageSize } = req.query;
+
+    const pageNum = page ? parseInt(page as string) : undefined;
+    const pageSizeNum = pageSize ? parseInt(pageSize as string) : undefined;
     if (!visitadorId) {
       return res.status(400).json({ errors: "Você deve estar autenticado!" });
     }
     try {
-      const planos = await PlanosDeVisitaService.getAll(visitadorId);
+      const planos = await PlanosDeVisitaService.getAll({
+        visitadorId: visitadorId,
+        page: pageNum,
+        pageSize: pageSizeNum,
+        childId: childId,
+      });
       return res.status(200).json(planos);
     } catch (e: unknown) {
       console.log(e);
