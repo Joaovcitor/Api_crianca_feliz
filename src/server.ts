@@ -64,6 +64,7 @@ class Server {
     this.app = express();
     this.whiteList = [
       "https://primeirainfanciasuas.socialquixada.com.br",
+      "https://www.primeirainfanciasuas.socialquixada.com.br",
       "http://192.168.1.12:3000",
       "http://192.168.1.71:38157",
       "http://localhost:3000",
