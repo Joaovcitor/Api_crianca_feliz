@@ -2,6 +2,7 @@ import { PrismaClient, type VisitaPorGeolocalizacao } from "@prisma/client";
 import type { VisitCreateDTO } from "../dtos/VisitCreateDTO";
 import type { VisitEndDTO } from "../dtos/VisitEndDTO";
 import type { VisitUpdateDTO } from "../dtos/VisitUpdateDTO";
+import type { VisitStartDTO } from "../dtos/VisitStartDTO";
 const prisma = new PrismaClient();
 export const visitasPorGeoLocalizacaoService = {
   getAll: async (visitadorId: number): Promise<VisitaPorGeolocalizacao[]> => {
@@ -30,7 +31,7 @@ export const visitasPorGeoLocalizacaoService = {
   ): Promise<VisitaPorGeolocalizacao> => {
     return prisma.visitaPorGeolocalizacao.create({
       data: {
-        scheduledDate: new Date(data.scheduledDate),
+        scheduledDate: data.scheduledDate,
         planId: data.planId,
         childId: data.childId,
         caregiverId: data.caregiverId,
@@ -40,6 +41,19 @@ export const visitasPorGeoLocalizacaoService = {
         visitor: true,
         child: true,
         caregiver: true,
+      },
+    });
+  },
+  iniciarVisita: async (
+    id: number,
+    data: VisitStartDTO
+  ): Promise<VisitaPorGeolocalizacao> => {
+    return prisma.visitaPorGeolocalizacao.update({
+      where: { id },
+      data: {
+        latitude: data.latitude,
+        longitude: data.longitude,
+        isVisitInProgress: true,
       },
     });
   },
@@ -54,6 +68,19 @@ export const visitasPorGeoLocalizacaoService = {
         finalLongitude: data.finalLongitude,
         nonRealizationReason: data.nonRealizationReason,
         isBeneficiaryHome: data.isBeneficiaryHome,
+        isFinished: true,
+        isVisitInProgress: false,
+      },
+    });
+  },
+  visitasMarcadasChild: async (
+    childId: number
+  ): Promise<VisitaPorGeolocalizacao[]> => {
+    return prisma.visitaPorGeolocalizacao.findMany({
+      where: { childId: childId },
+      include: {
+        visitor: true,
+        child: true,
       },
     });
   },

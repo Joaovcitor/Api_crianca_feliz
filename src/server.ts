@@ -23,7 +23,7 @@ import supervisorRouter from "./routes/supervisorRoutes";
 import visitadoresDosSupervisores from "./routes/visitadoresRoutes";
 import detalhesVisitadorRoute from "./routes/detalhesVisitadorRoutes";
 import coordenadorRoutes from "./routes/coordenadorRoutes";
-import visitasGeoRoutes from "./routes/visitasGeoRoutes";
+import visitasGeoRoutes from "./routes/visitasPorGeoLocalizacao.routes";
 import tabelaDeVisitasRoutes from "./routes/tabelaDeVisitasRoutes";
 import pdfRouters from "./routes/pdfRoutes";
 import etapa2Routers from "./routes/form5Etapa2Routes";
@@ -69,7 +69,7 @@ class Server {
       "http://localhost:3000",
       "http://localhost:46635",
       `http://192.168.1.71:3000`,
-      "http://192.168.1.43:3000",
+      "http://192.168.1.56:3000",
       "http://192.168.1.28:3000",
       "http://192.168.0.5:3000",
     ];
@@ -110,7 +110,7 @@ class Server {
           path: path.join(os.tmpdir(), "sessions"),
         }),
         cookie: {
-          secure: false,
+          secure: true,
           maxAge: 28800000,
           httpOnly: true,
           sameSite: "lax",
