@@ -63,7 +63,7 @@ class Server {
   constructor() {
     this.app = express();
     this.whiteList = [
-      "https://criancafeliz.logicmasters.com.br",
+      "https://primeirainfanciasuas.socialquixada.com.br",
       "http://192.168.1.12:3000",
       "http://192.168.1.71:38157",
       "http://localhost:3000",
@@ -113,7 +113,7 @@ class Server {
           secure: true,
           maxAge: 28800000,
           httpOnly: true,
-          sameSite: "lax",
+          sameSite: "none",
         },
       })
     );
