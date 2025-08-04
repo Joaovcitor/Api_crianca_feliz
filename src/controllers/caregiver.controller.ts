@@ -4,6 +4,7 @@ import { CaregiverCreate } from "../dtos/CaregiverCreateDTO";
 import type { CaregiverResponse } from "../dtos/CaregiverResponseDTO";
 
 export const CaregiverController = {
+  // criar uma lógica mais robusta na busca dos dados, para que visitadores não acessem essa rota!
   async getAll(req: Request, res: Response): Promise<Response> {
     try {
       const caregivers = await CaregiverService.getAll();

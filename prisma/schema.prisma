@@ -265,15 +265,12 @@ model Notificacao {
   id             Int              @id @default(autoincrement())
   type           NotificacaoType  @map("notificacao_tipo")
   description    String           @map("descricao")
-  visitorId      Int?             @map("visitadorId")
-  supervisorId   Int?
-  coordinatorId  Int?             @map("coordenadorId")
+  userId      Int             @map("userId")
+  
   createdAt      DateTime         @default(now()) @db.Timestamptz(6)
   updatedAt      DateTime         @updatedAt @db.Timestamptz(6)
 
-  coordinator    User?            @relation("NotificacoesCoordenador", fields: [coordinatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  supervisor     User?            @relation("NotificacoesSupervisor", fields: [supervisorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor        User?            @relation("NotificacoesVisitador", fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user User @relation("NotificacoesDoUsuario", fields: [userId], references: [id])
 
   @@map("Notificacoes")
 }
@@ -373,9 +370,8 @@ model User {
   faltasRegistradas         Falta[]   @relation("FaltasRegistradas")
   faltasUsuario             Falta[]   @relation("FaltasUsuario")
 
-  notificacoesCoordenador   Notificacao[] @relation("NotificacoesCoordenador")
-  notificacoesSupervisor    Notificacao[] @relation("NotificacoesSupervisor")
-  notificacoesVisitador     Notificacao[] @relation("NotificacoesVisitador")
+  notificacoes   Notificacao[] @relation("NotificacoesDoUsuario")
+  
 
   planosDeVisitas           PlanoDeVisitas[]
   tabelasDeVisitas          TabelaDeVisitas[]

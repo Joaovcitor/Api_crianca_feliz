@@ -12,6 +12,29 @@ export const VisitadoresService = {
         children: true,
         supervisor: true,
         visitorCaregivers: true,
+        planosDeVisitas: true,
+        visitasPorGeolocalizacaos: true,
+      },
+    });
+  },
+  getById: async (id: number, userId: number): Promise<User[]> => {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (user?.role === UserRole.visitador) {
+      throw new Error("Você não tem permissão para acessar este recurso!");
+    }
+    return prisma.user.findMany({
+      where: {
+        role: UserRole.visitador,
+        id: id,
+      },
+      include: {
+        children: true,
+        supervisor: true,
+        visitorCaregivers: true,
+        planosDeVisitas: true,
+        visitasPorGeolocalizacaos: true,
       },
     });
   },
