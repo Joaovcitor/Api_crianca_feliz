@@ -22,7 +22,6 @@ import authRoute from "./routes/auth.routes";
 import supervisorRouter from "./routes/supervisorRoutes";
 import visitadoresDosSupervisores from "./routes/visitadoresRoutes";
 import detalhesVisitadorRoute from "./routes/detalhesVisitadorRoutes";
-import coordenadorRoutes from "./routes/coordenadorRoutes";
 import visitasGeoRoutes from "./routes/visitasPorGeoLocalizacao.routes";
 import tabelaDeVisitasRoutes from "./routes/tabelaDeVisitasRoutes";
 import pdfRouters from "./routes/pdfRoutes";
@@ -136,7 +135,6 @@ class Server {
     apiBase.use("/visitadores", visitadoresDosSupervisores);
     apiBase.use("/detalhes", detalhesVisitadorRoute);
     apiBase.use("/planos", planosDeVisitaRouter);
-    apiBase.use("/coordenador", coordenadorRoutes);
     apiBase.use("/visitasporgeolo", visitasGeoRoutes);
     apiBase.use("/tabelas", tabelaDeVisitasRoutes);
     apiBase.use("/pdf", pdfRouters);
