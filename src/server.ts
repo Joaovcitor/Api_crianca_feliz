@@ -93,6 +93,22 @@ class Server {
       credentials: true,
     };
 
+    const cookieSettings: session.CookieOptions = {
+      maxAge: 28800000, // 8 horas
+      httpOnly: true,
+    };
+
+    // Se estiver em produção, aplica as regras de segurança máxima
+    if (process.env.NODE_ENV === "production") {
+      this.app.set("trust proxy", 1); // Confia no proxy (ex: Nginx, Heroku, etc.)
+      cookieSettings.secure = true;
+      cookieSettings.sameSite = "none";
+    } else {
+      // Em desenvolvimento, permite cookies em HTTP e mesma origem
+      cookieSettings.secure = false;
+      cookieSettings.sameSite = "lax";
+    }
+
     this.app.use(cors(corsOptions));
     this.app.use(helmet());
     this.app.set("trust proxy", 1);
@@ -109,12 +125,7 @@ class Server {
           logFn: function () {},
           path: path.join(os.tmpdir(), "sessions"),
         }),
-        cookie: {
-          secure: true,
-          maxAge: 28800000,
-          httpOnly: true,
-          sameSite: "none",
-        },
+        cookie: cookieSettings,
       })
     );
 
