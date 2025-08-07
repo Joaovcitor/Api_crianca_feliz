@@ -64,7 +64,7 @@ class Server {
     this.whiteList = [
       "https://primeirainfanciasuas.socialquixada.com.br",
       "https://www.primeirainfanciasuas.socialquixada.com.br",
-      "http://192.168.1.12:3000",
+      "https://192.168.1.56:5173",
       "http://192.168.1.71:38157",
       "http://localhost:3000",
       "http://localhost:8100",
