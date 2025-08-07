@@ -1,7 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import type { Token } from "nodemailer/lib/xoauth2";
 
 const prisma = new PrismaClient();
 
