@@ -65,7 +65,7 @@ class Server {
       "https://primeirainfanciasuas.socialquixada.com.br",
       "https://www.primeirainfanciasuas.socialquixada.com.br",
       "https://172.31.48.1:4173",
-      "http://192.168.1.71:38157",
+      "https://192.168.1.27:4173",
       "http://localhost:3000",
       "http://localhost:8100",
       `http://localhost:4173`,
