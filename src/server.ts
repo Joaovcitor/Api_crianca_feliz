@@ -70,8 +70,8 @@ class Server {
       "http://localhost:8100",
       `http://localhost:4173`,
       "http://192.168.1.56:3000",
-      "http://192.168.1.28:3000",
-      "http://192.168.0.5:3000",
+      "https://app-mobile-pcf-gxpv.vercel.app",
+      "https://mobilepcf.socialquixada.com.br",
     ];
 
     this.configureMiddlewares();
