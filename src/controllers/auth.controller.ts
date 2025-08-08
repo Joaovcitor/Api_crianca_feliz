@@ -8,9 +8,9 @@ export const authController = {
       const result = await authService.login(email, password);
       res.cookie("jwt", result.token, {
         httpOnly: true,
-        secure: false,
-        sameSite: "none",
-        maxAge: 8 * 60 * 60 * 1000, // 8 horas
+        secure: process.env.NODE_ENV === "production", // true em produção, false em dev
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        maxAge: 8 * 60 * 60 * 1000,
       });
 
       console.log(result);
