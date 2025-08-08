@@ -111,7 +111,6 @@ class Server {
 
     this.app.use(cors(corsOptions));
     this.app.use(helmet());
-    this.app.set("trust proxy", 1);
 
     this.app.use(express.urlencoded({ extended: true }));
 
