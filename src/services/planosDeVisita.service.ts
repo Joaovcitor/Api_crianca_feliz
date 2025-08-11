@@ -41,6 +41,7 @@ export const PlanosDeVisitaService = {
       prisma.planoDeVisitas.findMany({
         where: {
           visitorId: visitadorId,
+          childId: childId,
         },
         include: {
           visitor: true,

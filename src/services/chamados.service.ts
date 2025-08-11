@@ -20,7 +20,10 @@ export const ChamadosService = {
     if (!id) {
       throw new Error("Id é necessário!");
     }
-    return await prisma.chamado.findUnique({ where: { id: id } });
+    return await prisma.chamado.findUnique({
+      where: { id: id },
+      include: { author: true, recipient: true },
+    });
   },
   create: async (userId: number, data: ChamadosCreateDTO): Promise<Chamado> => {
     const dadosForPrisma: Prisma.ChamadoCreateInput = {
