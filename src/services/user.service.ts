@@ -72,6 +72,14 @@ export const UserService = {
           },
         },
       };
+      includeOptions.visitasPorGeolocalizacaos = {
+        where: {
+          createdAt: {
+            gte: new Date(filters.startDate as string),
+            lte: inclusiveEndDate,
+          },
+        },
+      };
     }
 
     return prisma.user.findUnique({
