@@ -4,26 +4,79 @@ import type { UserUpdatePasswordDTO } from "../dtos/UserUpdatePasswordDTO";
 import type { UserUpdateEmailDTO } from "../dtos/UserUpdateEmailDTO";
 const prisma = new PrismaClient();
 
+interface FilterOptions {
+  startDate?: string;
+  endDate?: string;
+}
+
 type UserCreateData = Prisma.UserCreateInput;
 type UserUpdateData = Prisma.UserUpdateInput;
 
 export const UserService = {
-  getAll: async (): Promise<User[]> => {
+  getAll: async (filters?: FilterOptions): Promise<User[]> => {
+    const includeOptions: Prisma.UserInclude = {
+      coordinator: true,
+      supervisor: true,
+      children: true,
+      coordinated: true,
+      visitorCaregivers: true,
+    };
+    const hasDateFilter = filters?.startDate || filters?.endDate;
+
+    if (hasDateFilter) {
+      const inclusiveEndDate = new Date(`${filters.endDate}T23:59:59.999Z`);
+
+      includeOptions.planosDeVisitas = {
+        where: {
+          createdAt: {
+            gte: new Date(filters.startDate as string),
+            lte: inclusiveEndDate,
+          },
+        },
+      };
+      includeOptions.visitasPorGeolocalizacaos = {
+        where: {
+          createdAt: {
+            gte: new Date(filters.startDate as string),
+            lte: inclusiveEndDate,
+          },
+        },
+      };
+    }
+
     return prisma.user.findMany({
-      include: {
-        supervisor: true,
-        coordinator: true,
-      },
+      include: includeOptions,
     });
   },
 
-  getById: async (id: number): Promise<User | null> => {
+  getById: async (
+    id: number,
+    filters?: FilterOptions
+  ): Promise<User | null> => {
+    const includeOptions: Prisma.UserInclude = {
+      coordinator: true,
+      supervisor: true,
+      children: true,
+      coordinated: true,
+    };
+    const hasDateFilter = filters?.startDate || filters?.endDate;
+
+    if (hasDateFilter) {
+      const inclusiveEndDate = new Date(`${filters.endDate}T23:59:59.999Z`);
+
+      includeOptions.planosDeVisitas = {
+        where: {
+          createdAt: {
+            gte: new Date(filters.startDate as string),
+            lte: inclusiveEndDate,
+          },
+        },
+      };
+    }
+
     return prisma.user.findUnique({
       where: { id },
-      include: {
-        coordinator: true,
-        supervisor: true,
-      },
+      include: includeOptions,
     });
   },
   createCoordenador: async (

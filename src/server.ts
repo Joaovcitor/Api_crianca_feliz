@@ -36,7 +36,6 @@ import f7etapa4Routers from "./routes/form7Etapa4Routes";
 import f7etapa5Routers from "./routes/form7Etapa5Routes";
 import f7etapa6Routers from "./routes/form7Etapa6Routes";
 import f7etapa7Routers from "./routes/form7Etapa7Routes";
-import notificacoesRouter from "./routes/notificacoesRoutes";
 import emailRouter from "./routes/emailRoute";
 import faltasRoutes from "./routes/faltas.routes";
 import userRoutes from "./routes/user.routes";
@@ -157,7 +156,6 @@ class Server {
     apiBase.use("/form7-etapa5", f7etapa5Routers);
     apiBase.use("/form7-etapa6", f7etapa6Routers);
     apiBase.use("/form7-etapa7", f7etapa7Routers);
-    apiBase.use("/notificacoes", notificacoesRouter);
     apiBase.use("/email", emailRouter);
     apiBase.use("/users", userRoutes);
     apiBase.use("/faltas", faltasRoutes);

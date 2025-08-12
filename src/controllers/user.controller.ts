@@ -6,8 +6,13 @@ import type { UserCreateCoordenador } from "../dtos/UserCreateCoordenadorDTO";
 
 export const UserController = {
   async getAll(req: Request, res: Response): Promise<Response> {
+    const { startDate, endDate } = req.query;
+
     try {
-      const users = await UserService.getAll();
+      const users = await UserService.getAll({
+        startDate: startDate as string | undefined,
+        endDate: endDate as string | undefined,
+      });
       return res.status(200).json(users);
     } catch (error: any) {
       return res
@@ -15,10 +20,18 @@ export const UserController = {
         .json({ error: error.message || "Internal Server Error" });
     }
   },
+
   async getById(req: Request, res: Response): Promise<Response> {
     try {
       const id = parseInt(req.params.id, 10);
-      const user = await UserService.getById(id);
+
+      const { startDate, endDate } = req.query;
+
+      const user = await UserService.getById(id, {
+        startDate: startDate as string | undefined,
+        endDate: endDate as string | undefined,
+      });
+
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
