@@ -17,7 +17,7 @@ import childRouter from "./routes/child.routes";
 import homeRouter from "./routes/home.routes";
 import authRoute from "./routes/auth.routes";
 import visitasGeoRoutes from "./routes/visitasPorGeoLocalizacao.routes";
-// import tabelaDeVisitasRoutes from "./routes/";
+import supervisorRoutes from "./routes/supervisor.routes";
 
 import faltasRoutes from "./routes/faltas.routes";
 import userRoutes from "./routes/user.routes";
@@ -119,7 +119,7 @@ class Server {
     apiBase.use("/login", authRoute);
     apiBase.use("/planos", planosDeVisitaRouter);
     apiBase.use("/visitasporgeolo", visitasGeoRoutes);
-    // apiBase.use("/tabelas", tabelaDeVisitasRoutes);
+    apiBase.use("/supervisor", supervisorRoutes);
 
     apiBase.use("/users", userRoutes);
     apiBase.use("/faltas", faltasRoutes);

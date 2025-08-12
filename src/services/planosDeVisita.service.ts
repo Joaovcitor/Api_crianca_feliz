@@ -68,7 +68,7 @@ export const PlanosDeVisitaService = {
     return prisma.planoDeVisitas.findUnique({
       where: { id },
       include: {
-        visitor: true,
+        geoLocatedVisits: true,
       },
     });
   },
