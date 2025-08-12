@@ -12,31 +12,13 @@ import helmet from "helmet";
 import path from "path";
 import os from "os";
 
-// Importe suas rotas aqui (eventualmente, elas também serão .ts)
-// Por enquanto, o TypeScript consegue importar arquivos .js se "allowJs": true estiver no tsconfig.json
 import caregiverRouter from "./routes/caregiver.routes";
 import childRouter from "./routes/child.routes";
 import homeRouter from "./routes/home.routes";
 import authRoute from "./routes/auth.routes";
-import supervisorRouter from "./routes/supervisorRoutes";
-import visitadoresDosSupervisores from "./routes/visitadoresRoutes";
-import detalhesVisitadorRoute from "./routes/detalhesVisitadorRoutes";
 import visitasGeoRoutes from "./routes/visitasPorGeoLocalizacao.routes";
 // import tabelaDeVisitasRoutes from "./routes/";
-import pdfRouters from "./routes/pdfRoutes";
-import etapa2Routers from "./routes/form5Etapa2Routes";
-import etapa3Routers from "./routes/form5Etapa3Routes";
-import etapa4Routers from "./routes/form5Etapa4Routes";
-import etapa5Routers from "./routes/form5Etapa5Routes";
-import etapa6Routers from "./routes/form5Etapa6Routes";
-import etapa7Routers from "./routes/form5Etapa7Routes";
-import f7etapa2Routers from "./routes/form7Etapa2Routes";
-import f7etapa3Routers from "./routes/form7Etapa3Routes";
-import f7etapa4Routers from "./routes/form7Etapa4Routes";
-import f7etapa5Routers from "./routes/form7Etapa5Routes";
-import f7etapa6Routers from "./routes/form7Etapa6Routes";
-import f7etapa7Routers from "./routes/form7Etapa7Routes";
-import emailRouter from "./routes/emailRoute";
+
 import faltasRoutes from "./routes/faltas.routes";
 import userRoutes from "./routes/user.routes";
 import planosDeVisitaRouter from "./routes/planos.routes";
@@ -50,9 +32,7 @@ dotenv.config({
       : ".env.development",
 });
 
-// 3. A CLASSE DO SERVIDOR
 class Server {
-  // Declaração das propriedades da classe com seus tipos
   public app: Application;
   private readonly whiteList: string[];
 
@@ -137,26 +117,10 @@ class Server {
     apiBase.use("/cuidador", caregiverRouter);
     apiBase.use("/crianca", childRouter);
     apiBase.use("/login", authRoute);
-    apiBase.use("/supervisor", supervisorRouter);
-    apiBase.use("/visitadores", visitadoresDosSupervisores);
-    apiBase.use("/detalhes", detalhesVisitadorRoute);
     apiBase.use("/planos", planosDeVisitaRouter);
     apiBase.use("/visitasporgeolo", visitasGeoRoutes);
     // apiBase.use("/tabelas", tabelaDeVisitasRoutes);
-    apiBase.use("/pdf", pdfRouters);
-    apiBase.use("/form5-etapa2", etapa2Routers);
-    apiBase.use("/form5-etapa3", etapa3Routers);
-    apiBase.use("/form5-etapa4", etapa4Routers);
-    apiBase.use("/form5-etapa5", etapa5Routers);
-    apiBase.use("/form5-etapa6", etapa6Routers);
-    apiBase.use("/form5-etapa7", etapa7Routers);
-    apiBase.use("/form7-etapa2", f7etapa2Routers);
-    apiBase.use("/form7-etapa3", f7etapa3Routers);
-    apiBase.use("/form7-etapa4", f7etapa4Routers);
-    apiBase.use("/form7-etapa5", f7etapa5Routers);
-    apiBase.use("/form7-etapa6", f7etapa6Routers);
-    apiBase.use("/form7-etapa7", f7etapa7Routers);
-    apiBase.use("/email", emailRouter);
+
     apiBase.use("/users", userRoutes);
     apiBase.use("/faltas", faltasRoutes);
 

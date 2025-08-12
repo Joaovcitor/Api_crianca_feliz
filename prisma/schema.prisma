@@ -70,175 +70,13 @@ model Child {
   caregiver         Caregiver?        @relation(fields: [caregiverId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   visitor           User?             @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  etapa1            Etapa1[]
-  etapa2            Etapa2[]
-  etapa3            Etapa3[]
-  etapa4            Etapa4[]
-  etapa5            Etapa5[]
-  etapa6            Etapa6[]
-  etapa7            Etapa7[]
+ 
   visitPlans        PlanoDeVisitas[]
   visitTables       TabelaDeVisitas[]
   geoLocatedVisits  VisitaPorGeolocalizacao[]
-  form7Etapa1s      Form7Etapa1[]
-  form7Etapa2s      Form7Etapa2[]
-  form7Etapa3s      Form7Etapa3[]
-  form7Etapa4s      Form7Etapa4[]
-  form7Etapa5s      Form7Etapa5[]
-  form7Etapa6s      Form7Etapa6[]
-  form7Etapa7s      Form7Etapa7[]
+  formularios       Formulario[]
 
   @@map("Child")
-}
-
-model Etapa1 {
-  id          Int             @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  q8          EtapaAnswer
-  q9          EtapaAnswer
-  q10         EtapaAnswer
-  childId     Int
-  visitorId   Int             @map("visitadorId")
-  createdAt   DateTime        @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime        @updatedAt @db.Timestamptz(6)
-
-  child       Child           @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User            @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("Etapa1")
-}
-
-model Etapa2 {
-  id          Int            @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  q8          EtapaAnswer
-  q9          EtapaAnswer
-  childId     Int
-  visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
-
-  child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User           @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("Etapa2")
-}
-
-model Etapa3 {
-  id          Int            @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  q8          EtapaAnswer
-  q9          EtapaAnswer
-  childId     Int
-  visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
-
-  child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User           @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("Etapa3")
-}
-
-model Etapa4 {
-  id          Int            @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  childId     Int
-  visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
-
-  child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User           @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("Etapa4")
-}
-
-model Etapa5 {
-  id          Int            @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  childId     Int
-  visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
-
-  child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User           @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("Etapa5")
-}
-
-model Etapa6 {
-  id          Int            @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  q8          EtapaAnswer
-  q9          EtapaAnswer
-  childId     Int
-  visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
-
-  child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User           @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("Etapa6")
-}
-
-model Etapa7 {
-  id          Int            @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  q8          EtapaAnswer
-  q9          EtapaAnswer
-  childId     Int
-  visitorId   Int            @map("visitadorId")
-  createdAt   DateTime       @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime       @updatedAt @db.Timestamptz(6)
-
-  child       Child          @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User           @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("Etapa7")
 }
 
 model Falta {
@@ -359,13 +197,7 @@ model User {
 
   children                  Child[]
   
-  etapa1                    Etapa1[]
-  etapa2                    Etapa2[]
-  etapa3                    Etapa3[]
-  etapa4                    Etapa4[]
-  etapa5                    Etapa5[]
-  etapa6                    Etapa6[]
-  etapa7                    Etapa7[]
+   formularios   Formulario[]
 
   faltasRegistradas         Falta[]   @relation("FaltasRegistradas")
   faltasUsuario             Falta[]   @relation("FaltasUsuario")
@@ -376,14 +208,6 @@ model User {
   planosDeVisitas           PlanoDeVisitas[]
   tabelasDeVisitas          TabelaDeVisitas[]
   visitasPorGeolocalizacaos VisitaPorGeolocalizacao[]
-  
-  form7Etapa1s              Form7Etapa1[]
-  form7Etapa2s              Form7Etapa2[]
-  form7Etapa3s              Form7Etapa3[]
-  form7Etapa4s              Form7Etapa4[]
-  form7Etapa5s              Form7Etapa5[]
-  form7Etapa6s              Form7Etapa6[]
-  form7Etapa7s              Form7Etapa7[]
 
   @@map("Users")
 }
@@ -422,161 +246,31 @@ model VisitaPorGeolocalizacao {
   @@map("VisitasPorGeolocalizacaos")
 }
 
-model Form7Etapa1 {
-  id          Int         @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  q8          EtapaAnswer
-  q9          EtapaAnswer
-  q10         EtapaAnswer
+
+
+model Formulario {
+  id          Int      @id @default(autoincrement())
+  tipo        TiposFormularios 
+  etapa       Int   
   childId     Int
-  visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
+  visitorId   Int      @map("visitadorId")
+  respostas   Json
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
+  child       Child    @relation(fields: [childId], references: [id], onDelete: Cascade) // Usar Cascade pode ser útil aqui
+  visitor     User     @relation(fields: [visitorId], references: [id], onDelete: NoAction)
 
-  child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User        @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("form7-Etapa1s")
-}
-
-model Form7Etapa2 {
-  id          Int         @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  q8          EtapaAnswer
-  q9          EtapaAnswer
-  childId     Int
-  visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
-
-  child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User        @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("form7-Etapa2s")
-}
-
-model Form7Etapa3 {
-  id          Int         @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  q8          EtapaAnswer
-  q9          EtapaAnswer
-  childId     Int
-  visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
-
-  child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User        @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("form7-Etapa3s")
-}
-
-model Form7Etapa4 {
-  id          Int         @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  childId     Int
-  visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
-
-  child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User        @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("form7-Etapa4s")
-}
-
-model Form7Etapa5 {
-  id          Int         @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  childId     Int
-  visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
-
-  child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User        @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("form7-Etapa5s")
-}
-
-model Form7Etapa6 {
-  id          Int         @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  q8          EtapaAnswer
-  q9          EtapaAnswer
-  childId     Int
-  visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
-
-  child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User        @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("form7-Etapa6s")
-}
-
-model Form7Etapa7 {
-  id          Int         @id @default(autoincrement())
-  q1          EtapaAnswer
-  q2          EtapaAnswer
-  q3          EtapaAnswer
-  q4          EtapaAnswer
-  q5          EtapaAnswer
-  q6          EtapaAnswer
-  q7          EtapaAnswer
-  q8          EtapaAnswer
-  q9          EtapaAnswer
-  childId     Int
-  visitorId   Int         @map("visitadorId")
-  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
-
-  child       Child       @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor     User        @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("form7-Etapa7s")
+  @@map("formularios")
 }
 
 
 // -------------------
 // --- Enums
 // -------------------
-
+enum TiposFormularios {
+  tipo5
+  tipo7
+}
 enum ChamadoType {
   bug
   duvida
