@@ -4,5 +4,4 @@ export type PlanoDeVisitaCreateDTO = {
   etapa2: string;
   etapa3: string;
   scheduledDay: Date;
-  objectiveDifficulty: string;
 };

@@ -122,7 +122,7 @@ model PlanoDeVisitas {
   observation                String?                        @map("observacao")
   realizationDay             DateTime?                      @map("dia_de_visita_realizado") @db.Timestamptz(6)
   scheduledDay               DateTime                       @map("dia_a_ser_realizada_a_visita") @db.Timestamptz(6)
-  objectiveDifficulty        PlanoVisitaDificuldade         @map("grau_de_dificuldade_objetivo")
+  
   realizationStatus          PlanoVisitaRealizacao?         @map("conseguiu_fazer")
   realizedWithDifficulty     Boolean?                       @default(false) @map("fez_com_dificuldade")
   visitorId                  Int?                           @map("visitadorId")
