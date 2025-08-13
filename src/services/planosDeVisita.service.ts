@@ -2,7 +2,6 @@ import {
   PrismaClient,
   PlanoDeVisitas,
   type Prisma,
-  type PlanoVisitaDificuldade,
   type PlanoVisitaRealizacao,
 } from "@prisma/client";
 import type { PlanoDeVisitaCreateDTO } from "../dtos/PlanoDeVisitaDTO";
@@ -83,7 +82,6 @@ export const PlanosDeVisitaService = {
       etapa2: data.etapa2,
       etapa3: data.etapa3,
       scheduledDay: data.scheduledDay,
-      objectiveDifficulty: data.objectiveDifficulty as PlanoVisitaDificuldade,
       visitor: {
         connect: { id: visitadorId },
       },
@@ -108,7 +106,6 @@ export const PlanosDeVisitaService = {
       etapa2: data.etapa2,
       etapa3: data.etapa3,
       scheduledDay: data.scheduledDay,
-      objectiveDifficulty: data.objectiveDifficulty as PlanoVisitaDificuldade,
       visitor: {
         connect: { id: visitadorId },
       },
