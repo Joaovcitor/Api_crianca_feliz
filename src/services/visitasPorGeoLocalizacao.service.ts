@@ -3,10 +3,15 @@ import type { VisitCreateDTO } from "../dtos/VisitCreateDTO";
 import type { VisitEndDTO } from "../dtos/VisitEndDTO";
 import type { VisitUpdateDTO } from "../dtos/VisitUpdateDTO";
 import type { VisitStartDTO } from "../dtos/VisitStartDTO";
+import { cacheService } from "./cache.service";
+import { CacheKeyGenerator } from "../utils/cacheKeyGenerator.utils";
 const prisma = new PrismaClient();
 export const visitasPorGeoLocalizacaoService = {
   getAll: async (visitadorId: number): Promise<VisitaPorGeolocalizacao[]> => {
-    return prisma.visitaPorGeolocalizacao.findMany({
+    const cacheKey = CacheKeyGenerator.visitorVisits(visitadorId);
+    const cached = await cacheService.get<VisitaPorGeolocalizacao[]>(cacheKey);
+    if (cached) return cached;
+    const visits = await prisma.visitaPorGeolocalizacao.findMany({
       where: { visitorId: visitadorId },
       include: {
         visitor: true,
@@ -14,6 +19,8 @@ export const visitasPorGeoLocalizacaoService = {
         caregiver: true,
       },
     });
+    await cacheService.set(cacheKey, visits, 3600);
+    return visits;
   },
   getById: async (id: number): Promise<VisitaPorGeolocalizacao | null> => {
     return prisma.visitaPorGeolocalizacao.findUnique({
@@ -76,19 +83,36 @@ export const visitasPorGeoLocalizacaoService = {
   visitasMarcadasChild: async (
     childId: number
   ): Promise<VisitaPorGeolocalizacao[]> => {
-    return prisma.visitaPorGeolocalizacao.findMany({
+    const cacheKey = CacheKeyGenerator.childVisits(childId);
+    const cached = await cacheService.get<VisitaPorGeolocalizacao[]>(cacheKey);
+    if (cached) {
+      console.log(
+        "✅ Cache hit - Retornando",
+        cached.length,
+        "visitas do cache"
+      );
+      return cached;
+    }
+
+    console.log(
+      "❌ Cache miss - buscando visitas da criança do banco:",
+      childId
+    );
+    const visitas = await prisma.visitaPorGeolocalizacao.findMany({
       where: { childId: childId },
       include: {
         visitor: true,
         child: true,
       },
     });
+    await cacheService.set(cacheKey, visitas, 3600);
+    return visitas;
   },
   update: async (
     id: number,
     data: VisitUpdateDTO
   ): Promise<VisitaPorGeolocalizacao> => {
-    return prisma.visitaPorGeolocalizacao.update({
+    const visita = await prisma.visitaPorGeolocalizacao.update({
       where: { id },
       data: {
         isFakeVisit: data.isFakeVisit,
@@ -96,5 +120,8 @@ export const visitasPorGeoLocalizacaoService = {
         invalidationReason: data.invalidationReason,
       },
     });
+    const cacheKey = CacheKeyGenerator.childVisits(Number(visita.childId));
+    await cacheService.delete(cacheKey);
+    return visita;
   },
 };

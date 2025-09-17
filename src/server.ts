@@ -22,6 +22,7 @@ import supervisorRoutes from "./routes/supervisor.routes";
 import faltasRoutes from "./routes/faltas.routes";
 import userRoutes from "./routes/user.routes";
 import planosDeVisitaRouter from "./routes/planos.routes";
+import modelosRouter from "./routes/modeloPlanoDeVisitas.routes";
 
 // 2. CONFIGURAÇÃO DO DOTENV
 // Executado uma vez no início da aplicação.
@@ -42,11 +43,11 @@ class Server {
       "https://primeirainfanciasuas.socialquixada.com.br",
       "https://www.primeirainfanciasuas.socialquixada.com.br",
       "https://172.31.48.1:4173",
-      "https://192.168.1.36:4173",
+      "https://localhost:5173",
       "http://localhost:3000",
       "http://localhost:8100",
       `http://localhost:4173`,
-      "http://192.168.1.56:3000",
+      "http://localhost:5173",
       "https://app-mobile-pcfv2-eight.vercel.app",
       "https://mobilepcf.socialquixada.com.br",
     ];
@@ -120,7 +121,7 @@ class Server {
     apiBase.use("/planos", planosDeVisitaRouter);
     apiBase.use("/visitasporgeolo", visitasGeoRoutes);
     apiBase.use("/supervisor", supervisorRoutes);
-
+    apiBase.use("/modelos", modelosRouter);
     apiBase.use("/users", userRoutes);
     apiBase.use("/faltas", faltasRoutes);
 

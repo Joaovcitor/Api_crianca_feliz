@@ -3,10 +3,12 @@ import { visitasPorGeoLocalizacaoService } from "../services/visitasPorGeoLocali
 import type { VisitCreateDTO } from "../dtos/VisitCreateDTO";
 import type { VisitStartDTO } from "../dtos/VisitStartDTO";
 import type { VisitEndDTO } from "../dtos/VisitEndDTO";
+import type { VisitUpdateDTO } from "../dtos/VisitUpdateDTO";
 
 export const VisitasPorGeolocalizacaoController = {
   async getAll(req: Request, res: Response): Promise<Response> {
     const visitadorId = req.user?.id;
+
     if (!visitadorId)
       return res.status(401).json({ errors: "Você deve estar autenticado!" });
 
@@ -86,6 +88,20 @@ export const VisitasPorGeolocalizacaoController = {
         await visitasPorGeoLocalizacaoService.visitasMarcadasChild(childId);
       return res.status(200).json(visitas);
     } catch (e) {
+      console.log(e);
+      return res.status(500).json({ errors: "Erro interno do servidor!" });
+    }
+  },
+  async update(req: Request, res: Response): Promise<Response> {
+    const id = parseInt(req.params.id);
+    const data: VisitUpdateDTO = req.body;
+    console.log(data);
+    try {
+      await visitasPorGeoLocalizacaoService.update(id, data);
+      return res
+        .status(200)
+        .json({ message: "Visita atualizada com sucesso!" });
+    } catch (e: any) {
       console.log(e);
       return res.status(500).json({ errors: "Erro interno do servidor!" });
     }

@@ -31,6 +31,11 @@ visitasGeoRoutes.patch(
   isAuthenticated,
   VisitasPorGeolocalizacaoController.finalizarVisita
 );
+visitasGeoRoutes.patch(
+  "/atualizar-visita/:id",
+  isAuthenticated,
+  VisitasPorGeolocalizacaoController.update
+);
 visitasGeoRoutes.get(
   "/visitas-marcadas/:id",
   isAuthenticated,

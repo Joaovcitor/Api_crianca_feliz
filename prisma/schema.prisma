@@ -140,6 +140,15 @@ model PlanoDeVisitas {
   @@map("PlanosDeVisitas")
 }
 
+model ModeloPlanoDeVisitas {
+  id Int @id @default(autoincrement())
+  faixaEtaria String @map("faixa_etaria")
+  objetivo String @map("objetivo")
+  etapa1 String
+  etapa2 String
+  etapa3 String
+}
+
 model SequelizeMeta {
   name String @id @db.VarChar(255)
 }
