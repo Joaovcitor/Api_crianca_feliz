@@ -3,6 +3,7 @@ import { VisitadoresController } from "../controllers/visitadores.controller";
 import { isAuthenticated } from "../middlewares/auth.middleware";
 const visitadoresRoute = Router();
 visitadoresRoute.get("/", isAuthenticated, VisitadoresController.getAll);
+visitadoresRoute.get("/:id", isAuthenticated, VisitadoresController.getById);
 visitadoresRoute.patch(
   "/desativar/:id",
   isAuthenticated,
@@ -12,6 +13,11 @@ visitadoresRoute.patch(
   "/validar/:id",
   isAuthenticated,
   VisitadoresController.validarConta
+);
+visitadoresRoute.patch(
+  "/mudar-supervisor/:id",
+  isAuthenticated,
+  VisitadoresController.atualizarVisitadorParaOutroSupervisor
 );
 
 export default visitadoresRoute;

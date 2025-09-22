@@ -67,4 +67,23 @@ export const VisitadoresController = {
       return res.status(500).json({ errors: "Erro interno do servidor!" });
     }
   },
+  async atualizarVisitadorParaOutroSupervisor(req: Request, res: Response): Promise<Response> {
+    const visitadorId = parseInt(req.params.id, 10);
+    const supervisorId = parseInt(req.body.supervisorId, 10);
+    if (!visitadorId) {
+      return res.status(400).json({ errors: "ID do visitador é obrigatório" });
+    }
+    if (!supervisorId) {
+      return res.status(400).json({ errors: "ID do supervisor é obrigatório" });
+    }
+    try {
+      const visitador = await VisitadoresService.atualizarVisitadorParaOutroSupervisor(visitadorId, supervisorId);
+      return res
+        .status(200)
+        .json({ message: "Visitador atualizado com sucesso", visitador });
+    } catch (e: unknown) {
+      console.log(e);
+      return res.status(500).json({ errors: "Erro interno do servidor!" });
+    }
+  },
 };

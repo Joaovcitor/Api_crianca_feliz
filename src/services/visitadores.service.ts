@@ -78,4 +78,19 @@ export const VisitadoresService = {
     });
     return visitadores;
   },
+  atualizarVisitadorParaOutroSupervisor: async (
+    visitadorId: number,
+    supervisorId: number
+  ): Promise<User> => {
+    const visitador = await prisma.user.findUnique({
+      where: { id: visitadorId },
+    });
+    if (!visitador) {
+      throw new Error("Visitador não encontrado");
+    }
+    return prisma.user.update({
+      where: { id: visitadorId },
+      data: { supervisorId: supervisorId },
+    });
+  },
 };

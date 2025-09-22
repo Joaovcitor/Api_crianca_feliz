@@ -23,6 +23,8 @@ import faltasRoutes from "./routes/faltas.routes";
 import userRoutes from "./routes/user.routes";
 import planosDeVisitaRouter from "./routes/planos.routes";
 import modelosRouter from "./routes/modeloPlanoDeVisitas.routes";
+import coordenadorRouter from "./routes/coordenador.routes";
+import visitadoresRoute from "./routes/visitadores.routes";
 
 // 2. CONFIGURAÇÃO DO DOTENV
 // Executado uma vez no início da aplicação.
@@ -124,6 +126,8 @@ class Server {
     apiBase.use("/modelos", modelosRouter);
     apiBase.use("/users", userRoutes);
     apiBase.use("/faltas", faltasRoutes);
+    apiBase.use("/visitadores", visitadoresRoute);
+    apiBase.use("/coordenador", coordenadorRouter);
 
     this.app.use("/apiv1", apiBase);
   }

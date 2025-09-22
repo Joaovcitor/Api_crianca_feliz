@@ -54,4 +54,16 @@ export const ChildController = {
       return res.status(500).json({ errors: "Erro interno do servidor!" });
     }
   },
+  async listarCriancasParaCoordenador(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    try {
+      const criancas = await ChildService.listarCriancasParaCoordenador();
+      return res.status(200).json(criancas);
+    } catch (e: unknown) {
+      console.log(e);
+      return res.status(500).json({ errors: "Erro interno do servidor!" });
+    }
+  },
 };

@@ -1,5 +1,6 @@
 import { PrismaClient, Child } from "@prisma/client";
 import { ChildCreateDTO } from "../dtos/ChildCreateDTO";
+import type { ChildUpdateDTO } from "../dtos/ChildUpdateDTO";
 const prisma = new PrismaClient();
 export const ChildService = {
   getAll: async (visitadorId: number): Promise<Child[]> => {
@@ -25,6 +26,15 @@ export const ChildService = {
     if (child.visitorId !== visitadorId)
       throw new Error("Essa criança não pertence a você!");
     return child;
+  },
+  update: async (id: number, data: ChildUpdateDTO): Promise<Child> => {
+    if (!id) throw new Error("Id é necessário.");
+    const child = await prisma.child.findUnique({ where: { id } });
+    if (!child) throw new Error("Criança não encontrada!");
+    return prisma.child.update({
+      where: { id },
+      data,
+    });
   },
   create: async (
     data: ChildCreateDTO,
@@ -60,6 +70,15 @@ export const ChildService = {
     return prisma.child.update({
       where: { id: childId },
       data: { isPending: false },
+    });
+  },
+  listarCriancasParaCoordenador: async (): Promise<Child[]> => {
+    return prisma.child.findMany({
+      where: { isPending: true },
+      include: {
+        caregiver: true,
+        visitor: true,
+      },
     });
   },
 };

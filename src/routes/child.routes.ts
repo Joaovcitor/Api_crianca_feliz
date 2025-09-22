@@ -6,4 +6,9 @@ const childRouter = Router();
 childRouter.get("/", isAuthenticated, ChildController.getAll);
 childRouter.get("/:id", isAuthenticated, ChildController.getById);
 childRouter.post("/:id", isAuthenticated, ChildController.create);
+childRouter.get(
+  "/coordenador",
+  isAuthenticated,
+  ChildController.listarCriancasParaCoordenador
+);
 export default childRouter;

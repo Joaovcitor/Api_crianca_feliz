@@ -29,4 +29,18 @@ export const CoordenadorService = {
       },
     });
   },
+  getSupervisorById: async (supervisorId: number): Promise<User> => {
+    const supervisor = await prisma.user.findUnique({
+      where: {
+        id: supervisorId,
+      },
+      include: {
+        supervised: true,
+      },
+    });
+    if (!supervisor) {
+      throw new Error("Supervisor não encontrado!");
+    }
+    return supervisor;
+  },
 };
