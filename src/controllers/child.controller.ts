@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { ChildService } from "../services/child.service";
 import { ChildCreateDTO } from "../dtos/ChildCreateDTO";
+import type { ChildUpdateDTO } from "../dtos/ChildUpdateDTO";
 
 export const ChildController = {
   async getAll(req: Request, res: Response): Promise<Response> {
@@ -61,6 +62,39 @@ export const ChildController = {
     try {
       const criancas = await ChildService.listarCriancasParaCoordenador();
       return res.status(200).json(criancas);
+    } catch (e: unknown) {
+      console.log(e);
+      return res.status(500).json({ errors: "Erro interno do servidor!" });
+    }
+  },
+  async update(req: Request, res: Response): Promise<Response> {
+    const id = parseInt(req.params.id, 10);
+    const { name, born, nis }: ChildUpdateDTO = req.body;
+    const visitadorId = req.user?.id;
+    if (!visitadorId)
+      return res
+        .status(401)
+        .json({ errors: "Você precisa estar autenticado!" });
+    try {
+      await ChildService.update(id, { name, born, nis });
+      return res
+        .status(200)
+        .json({ message: "Criança atualizada com sucesso!" });
+    } catch (e: unknown) {
+      console.log(e);
+      return res.status(500).json({ errors: "Erro interno do servidor!" });
+    }
+  },
+  async delete(req: Request, res: Response): Promise<Response> {
+    const id = parseInt(req.params.id, 10);
+    const visitadorId = req.user?.id;
+    if (!visitadorId)
+      return res
+        .status(401)
+        .json({ errors: "Você precisa estar autenticado!" });
+    try {
+      await ChildService.delete(id);
+      return res.status(200).json({ message: "Criança excluída com sucesso!" });
     } catch (e: unknown) {
       console.log(e);
       return res.status(500).json({ errors: "Erro interno do servidor!" });

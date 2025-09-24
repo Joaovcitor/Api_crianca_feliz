@@ -18,13 +18,14 @@ export const ChildService = {
 
     return child;
   },
-  getById: async (id: number, visitadorId: number): Promise<Child> => {
+  getById: async (id: number, userId: number): Promise<Child> => {
     if (!id) throw new Error("Id é necessário.");
+    const user = await prisma.user.findUnique({ where: { id: userId } });
 
     const child = await prisma.child.findUnique({ where: { id } });
     if (!child) throw new Error("Criança não encontrada!");
-    if (child.visitorId !== visitadorId)
-      throw new Error("Essa criança não pertence a você!");
+    if (user?.role !== "coordenador")
+      throw new Error("Você não tem autorização para usar esse recurso!");
     return child;
   },
   update: async (id: number, data: ChildUpdateDTO): Promise<Child> => {
@@ -78,7 +79,21 @@ export const ChildService = {
       include: {
         caregiver: true,
         visitor: true,
+        visitPlans: true,
+        geoLocatedVisits: true,
       },
+    });
+  },
+  delete: async (id: number): Promise<Child> => {
+    if (!id) {
+      throw new Error("ID inválido!");
+    }
+    const child = await prisma.child.findUnique({ where: { id: id } });
+    if (!child) {
+      throw new Error("Criança não encontrada!");
+    }
+    return prisma.child.delete({
+      where: { id: id },
     });
   },
 };
