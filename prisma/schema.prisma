@@ -186,6 +186,7 @@ model User {
   restrictionMakePlain      Boolean?   @default(false)
   restrictLoginVisitPending Boolean?   @default(false)
   earlyAccess               Boolean?   @default(false) @map("early_access")
+  wrongAttempts             Int?       @default(0)
   supervisorId              Int?
   coordenadorId             Int?
   createdAt                 DateTime   @default(now()) @db.Timestamptz(6)

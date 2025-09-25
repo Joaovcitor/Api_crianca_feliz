@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { UserController } from "../controllers/user.controller";
 import { isAuthenticated } from "../middlewares/auth.middleware";
+import { verifyRole } from "../middlewares/verifyRole.middleware";
 
 const userRoutes = Router();
 userRoutes.get("/", isAuthenticated, UserController.getAll);
@@ -17,5 +18,18 @@ userRoutes.post(
 );
 userRoutes.post("/criar-coordenador", UserController.createCoordenador);
 userRoutes.put("/:id", isAuthenticated, UserController.update);
-userRoutes.delete("/:id", isAuthenticated, UserController.delete);
+userRoutes.delete(
+  "/:id",
+  isAuthenticated,
+  verifyRole("coordenador"),
+  UserController.delete
+);
+userRoutes.patch(
+  "/:id/desativar",
+  isAuthenticated,
+  verifyRole("coordenador"),
+  UserController.desativarConta
+);
+userRoutes.patch("/:id/ativar", isAuthenticated, UserController.ativarConta);
+
 export default userRoutes;

@@ -171,31 +171,35 @@ export const UserService = {
       },
     });
   },
-  updatePassword: async (
-    id: number,
-    data: UserUpdatePasswordDTO
-  ): Promise<User> => {
-    const existingUser = await prisma.user.findUnique({ where: { id } });
-    if (!existingUser) {
+  desativarConta: async (id: number): Promise<void> => {
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) {
       throw new Error("Usuário não encontrado.");
     }
-    return prisma.user.update({
+    if (!user.isActive) {
+      throw new Error("Usuário já está desativado.");
+    }
+    await prisma.user.update({
       where: { id },
-      data: { password: await hashPassword(data.password) },
+      data: {
+        isActive: false,
+      },
     });
   },
-  updateEmail: async (id: number, data: UserUpdateEmailDTO): Promise<User> => {
-    const existingUser = await prisma.user.findUnique({ where: { id } });
-    if (!existingUser) {
+  ativarConta: async (id: number): Promise<void> => {
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) {
       throw new Error("Usuário não encontrado.");
     }
-
-    if (existingUser.email === data.email) {
-      throw new Error("Já existe um usuário com esse email.");
+    if (user.isActive) {
+      throw new Error("Usuário já está ativado.");
     }
-    return prisma.user.update({
+    await prisma.user.update({
       where: { id },
-      data: { email: data.email },
+      data: {
+        isActive: true,
+        wrongAttempts: 0,
+      },
     });
   },
   update: async (id: number, data: UserUpdateData): Promise<User> => {

@@ -167,4 +167,22 @@ export const UserController = {
       return res.status(500).json({ message: error.message });
     }
   },
+  async desativarConta(req: Request, res: Response): Promise<Response> {
+    try {
+      const id = parseInt(req.params.id, 10);
+      await UserService.desativarConta(id);
+      return res.status(204).send();
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+  async ativarConta(req: Request, res: Response): Promise<Response> {
+    try {
+      const id = parseInt(req.params.id, 10);
+      await UserService.ativarConta(id);
+      return res.status(204).send();
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
 };

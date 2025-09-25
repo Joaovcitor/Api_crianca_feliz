@@ -24,8 +24,8 @@ export const ChildService = {
 
     const child = await prisma.child.findUnique({ where: { id } });
     if (!child) throw new Error("Criança não encontrada!");
-    if (user?.role !== "coordenador")
-      throw new Error("Você não tem autorização para usar esse recurso!");
+    // if (user?.role !== "coordenador")
+    //   throw new Error("Você não tem autorização para usar esse recurso!");
     return child;
   },
   update: async (id: number, data: ChildUpdateDTO): Promise<Child> => {
