@@ -1,7 +1,3 @@
-// src/server.ts
-
-// 1. IMPORTAÇÕES DE MÓDULOS
-// Usamos 'import' para todos os módulos. Isso é mais moderno e seguro em termos de tipos.
 import dotenv from "dotenv";
 import express, { Application, Request, Response, NextFunction } from "express";
 import session from "express-session";
@@ -12,22 +8,9 @@ import helmet from "helmet";
 import path from "path";
 import os from "os";
 
-import caregiverRouter from "./routes/caregiver.routes";
-import childRouter from "./routes/child.routes";
-import homeRouter from "./routes/home.routes";
-import authRoute from "./routes/auth.routes";
-import visitasGeoRoutes from "./routes/visitasPorGeoLocalizacao.routes";
-import supervisorRoutes from "./routes/supervisor.routes";
+import routesGlobal from "./routes/index";
+import listDomains from "./config/whiteList";
 
-import faltasRoutes from "./routes/faltas.routes";
-import userRoutes from "./routes/user.routes";
-import planosDeVisitaRouter from "./routes/planos.routes";
-import modelosRouter from "./routes/modeloPlanoDeVisitas.routes";
-import coordenadorRouter from "./routes/coordenador.routes";
-import visitadoresRoute from "./routes/visitadores.routes";
-
-// 2. CONFIGURAÇÃO DO DOTENV
-// Executado uma vez no início da aplicação.
 dotenv.config({
   path:
     process.env.NODE_ENV === "production"
@@ -41,18 +24,7 @@ class Server {
 
   constructor() {
     this.app = express();
-    this.whiteList = [
-      "https://primeirainfanciasuas.socialquixada.com.br",
-      "https://www.primeirainfanciasuas.socialquixada.com.br",
-      "https://172.31.48.1:4173",
-      "https://localhost:5173",
-      "http://localhost:3000",
-      "http://localhost:8100",
-      `http://localhost:4173`,
-      "http://localhost:5173",
-      "https://app-mobile-pcfv2-eight.vercel.app",
-      "https://mobilepcf.socialquixada.com.br",
-    ];
+    this.whiteList = listDomains;
 
     this.configureMiddlewares();
     this.configureRoutes();
@@ -84,7 +56,6 @@ class Server {
       cookieSettings.secure = true;
       cookieSettings.sameSite = "none";
     } else {
-      // Em desenvolvimento, permite cookies em HTTP e mesma origem
       cookieSettings.secure = false;
       cookieSettings.sameSite = "lax";
     }
@@ -114,22 +85,7 @@ class Server {
   }
 
   private configureRoutes(): void {
-    const apiBase = express.Router();
-
-    apiBase.use("/", homeRouter);
-    apiBase.use("/cuidador", caregiverRouter);
-    apiBase.use("/crianca", childRouter);
-    apiBase.use("/login", authRoute);
-    apiBase.use("/planos", planosDeVisitaRouter);
-    apiBase.use("/visitasporgeolo", visitasGeoRoutes);
-    apiBase.use("/supervisor", supervisorRoutes);
-    apiBase.use("/modelos", modelosRouter);
-    apiBase.use("/users", userRoutes);
-    apiBase.use("/faltas", faltasRoutes);
-    apiBase.use("/visitadores", visitadoresRoute);
-    apiBase.use("/coordenador", coordenadorRouter);
-
-    this.app.use("/apiv1", apiBase);
+    this.app.use("/apiv1", routesGlobal);
   }
 
   public startServer(): void {
