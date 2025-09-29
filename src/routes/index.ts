@@ -13,6 +13,7 @@ import planosDeVisitaRouter from "./planos.routes";
 import modelosRouter from "./modeloPlanoDeVisitas.routes";
 import coordenadorRouter from "./coordenador.routes";
 import visitadoresRoute from "./visitadores.routes";
+import timesPunchRouter from "./timePunch.routes";
 
 const routesGlobal = Router();
 
@@ -28,5 +29,6 @@ routesGlobal.use("/users", userRoutes);
 routesGlobal.use("/faltas", faltasRoutes);
 routesGlobal.use("/visitadores", visitadoresRoute);
 routesGlobal.use("/coordenador", coordenadorRouter);
+routesGlobal.use("/time-punch", timesPunchRouter);
 
 export default routesGlobal;

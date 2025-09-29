@@ -67,7 +67,7 @@ model Child {
   gender            ChildGender?      @map("sexo")
   isBpc             Boolean?          @default(true)
 
-  caregiver         Caregiver?        @relation(fields: [caregiverId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  caregiver         Caregiver?        @relation(fields: [caregiverId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   visitor           User?             @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
  
@@ -131,8 +131,8 @@ model PlanoDeVisitas {
   updatedAt                  DateTime                       @updatedAt @db.Timestamptz(6)
   caregiverId                Int?                           @map("CaregiverId")
 
-  caregiver                  Caregiver?                     @relation(fields: [caregiverId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  child                      Child?                         @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  caregiver                  Caregiver?                     @relation(fields: [caregiverId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  child                      Child?                         @relation(fields: [childId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   visitor                    User?                          @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   
   geoLocatedVisits           VisitaPorGeolocalizacao[]
@@ -165,8 +165,8 @@ model TabelaDeVisitas {
   updatedAt    DateTime              @updatedAt @db.Timestamptz(6)
   caregiverId  Int?
 
-  caregiver    Caregiver?            @relation(fields: [caregiverId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  child        Child?                @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  caregiver    Caregiver?            @relation(fields: [caregiverId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  child        Child?                @relation(fields: [childId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   visitor      User?                 @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("TabelasDeVisitas")
@@ -218,7 +218,7 @@ model User {
   planosDeVisitas           PlanoDeVisitas[]
   tabelasDeVisitas          TabelaDeVisitas[]
   visitasPorGeolocalizacaos VisitaPorGeolocalizacao[]
-
+  timePunches              TimePunch[]
   @@map("Users")
 }
 
@@ -248,10 +248,10 @@ model VisitaPorGeolocalizacao {
   updatedAt                DateTime   @updatedAt @db.Timestamptz(6)
   caregiverId              Int?
 
-  caregiver                Caregiver?      @relation(fields: [caregiverId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  child                    Child?           @relation(fields: [childId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitPlan                PlanoDeVisitas?  @relation(fields: [planId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  visitor                  User?            @relation(fields: [visitorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  caregiver                Caregiver?      @relation(fields: [caregiverId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  child                    Child?           @relation(fields: [childId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  visitPlan                PlanoDeVisitas?  @relation(fields: [planId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  visitor                  User?            @relation(fields: [visitorId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("VisitasPorGeolocalizacaos")
 }
@@ -273,6 +273,18 @@ model Formulario {
   @@map("formularios")
 }
 
+model TimePunch {
+  id        String    @id @default(cuid())
+  timestamp DateTime  @default(now()) // O momento exato em que o ponto foi registrado
+  latitude  Float     // A latitude capturada no momento do ponto
+  longitude Float     // A longitude capturada no momento do ponto
+  type      PunchType
+  notes     String?
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  @@map("time_punches")
+}
+
 
 // -------------------
 // --- Enums
@@ -280,6 +292,15 @@ model Formulario {
 enum TiposFormularios {
   tipo5
   tipo7
+}
+enum PunchType {
+  ENTRADA_MANHA // Ponto esperado às 7:30
+  MEIO_MANHA    // Ponto esperado às 9:30
+  SAIDA_MANHA   // Ponto esperado às 11:30
+  ENTRADA_TARDE // Ponto esperado às 13:30
+  MEIO_TARDE    // Ponto esperado às 15:30
+  SAIDA_TARDE   // Ponto esperado às 17:30
+  EXTRA         // Para qualquer ponto fora dos horários previstos
 }
 enum ChamadoType {
   bug
