@@ -1,3 +1,4 @@
+import "express-async-errors";
 import dotenv from "dotenv";
 import express, { Application, Request, Response, NextFunction } from "express";
 import session from "express-session";
@@ -7,9 +8,9 @@ import cors, { CorsOptions } from "cors";
 import helmet from "helmet";
 import path from "path";
 import os from "os";
-
-import routesGlobal from "./routes/index";
-import listDomains from "./config/whiteList";
+import { errorHandler } from "./core/middlewares/errorHandler";
+import routesGlobal from "./core/config/routesGlobal";
+import listDomains from "./core/config/whiteList";
 
 dotenv.config({
   path:
@@ -82,6 +83,7 @@ class Server {
     this.app.use(express.static("public"));
     this.app.use(express.json());
     this.app.use(cookieParser());
+    this.app.use(errorHandler);
   }
 
   private configureRoutes(): void {

@@ -37,6 +37,7 @@ model Caregiver {
   visitPlans        PlanoDeVisitas[]
   visitTables       TabelaDeVisitas[]
   geoLocatedVisits  VisitaPorGeolocalizacao[]
+  registrosDeFormularios       RegistroDeFormularios[]
 
   @@map("Caregivers")
 }
@@ -74,7 +75,7 @@ model Child {
   visitPlans        PlanoDeVisitas[]
   visitTables       TabelaDeVisitas[]
   geoLocatedVisits  VisitaPorGeolocalizacao[]
-  formularios       Formulario[]
+  registrosDeFormularios       RegistroDeFormularios[]
 
   @@map("Child")
 }
@@ -207,7 +208,8 @@ model User {
 
   children                  Child[]
   
-   formularios   Formulario[]
+  registrosDeFormularios   RegistroDeFormularios[]
+  posts                     Post[]
 
   faltasRegistradas         Falta[]   @relation("FaltasRegistradas")
   faltasUsuario             Falta[]   @relation("FaltasUsuario")
@@ -219,6 +221,7 @@ model User {
   tabelasDeVisitas          TabelaDeVisitas[]
   visitasPorGeolocalizacaos VisitaPorGeolocalizacao[]
   timePunches              TimePunch[]
+  modelosDeFormularios      ModelosDeFormularios[]
   @@map("Users")
 }
 
@@ -256,23 +259,35 @@ model VisitaPorGeolocalizacao {
   @@map("VisitasPorGeolocalizacaos")
 }
 
-
-
-model Formulario {
+model ModelosDeFormularios {
   id          Int      @id @default(autoincrement())
   tipo        TiposFormularios 
-  etapa       Int   
-  childId     Int
-  visitorId   Int      @map("visitadorId")
-  respostas   Json
+  etapa       Int
+  estrutura   Json?     // Ex: [{"label": "Nome", "type": "text"}, ...]
+  userId Int
+  user User @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime @updatedAt @db.Timestamptz(6)
-  child       Child    @relation(fields: [childId], references: [id], onDelete: Cascade) // Usar Cascade pode ser útil aqui
-  visitor     User     @relation(fields: [visitorId], references: [id], onDelete: NoAction)
-
-  @@map("formularios")
+  registros RegistroDeFormularios[]
+  @@map("modelosDeFormularios")
 }
 
+model RegistroDeFormularios {
+  id        Int       @id @default(autoincrement())
+  modeloId  Int       @map("modeloId")
+  respostas Json
+  childId   Int?      @map("childId")
+  caregiverId Int?     @map("caregiverId")
+  visitorId Int       @map("visitadorId")
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @updatedAt @db.Timestamptz(6)
+  modelo    ModelosDeFormularios @relation(fields: [modeloId], references: [id], onDelete: Cascade)
+  visitor   User      @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  child     Child?    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  caregiver Caregiver? @relation(fields: [caregiverId], references: [id], onDelete: Cascade)
+}
+
+// DEPOIS IREI DELETAR ESSE MODEL, CRIAREI UMA API A PARTE PARA ESSA FUNCIONALIDADE
 model TimePunch {
   id        String    @id @default(cuid())
   timestamp DateTime  @default(now()) // O momento exato em que o ponto foi registrado
@@ -283,6 +298,18 @@ model TimePunch {
   userId    Int
   user      User      @relation(fields: [userId], references: [id])
   @@map("time_punches")
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   Json
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("posts")
 }
 
 
@@ -370,6 +397,7 @@ enum UserRole {
   visitador
   supervisor
   coordenador
+  rh
 
   @@map("enum_Users_role")
 }
