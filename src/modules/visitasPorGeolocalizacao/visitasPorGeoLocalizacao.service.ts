@@ -105,4 +105,13 @@ export const visitasPorGeoLocalizacaoService = {
     await cacheService.delete(cacheKey);
     return visita;
   },
+  getAllForCoordenador: async (): Promise<VisitaPorGeolocalizacao[]> => {
+    return prisma.visitaPorGeolocalizacao.findMany({
+      include: {
+        visitor: true,
+        child: true,
+        caregiver: true,
+      },
+    });
+  },
 };

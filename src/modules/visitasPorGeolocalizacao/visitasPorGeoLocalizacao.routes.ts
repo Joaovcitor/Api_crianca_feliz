@@ -36,5 +36,10 @@ visitasGeoRoutes.get(
   isAuthenticated,
   VisitasPorGeolocalizacaoController.visitasMarcadasChild
 );
+visitasGeoRoutes.get(
+  "/coordenador/all",
+  isAuthenticated,
+  VisitasPorGeolocalizacaoController.getAllForCoordenador
+);
 
 export default visitasGeoRoutes;

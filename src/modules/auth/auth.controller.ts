@@ -23,6 +23,15 @@ export const authController = {
     const result = await authService.updateEmail(email, id);
     return sendSuccess(res, result);
   },
+  updatePassword: async (req: Request, res: Response) => {
+    const { password } = req.body;
+    const id = req.user?.id;
+    if (!id) {
+      throw new UnauthorizedError("Você precisa estar autenticado!");
+    }
+    const result = await authService.updatePassword(password, id);
+    return sendSuccess(res, result);
+  },
   sendResetPasswordEmail: async (req: Request, res: Response) => {
     const { email } = req.body;
     await authService.sendResetPasswordEmail(email);

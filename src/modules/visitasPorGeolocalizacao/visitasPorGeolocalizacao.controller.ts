@@ -91,4 +91,14 @@ export const VisitasPorGeolocalizacaoController = {
       return res.status(500).json({ errors: "Erro interno do servidor!" });
     }
   },
+  async getAllForCoordenador(req: Request, res: Response): Promise<Response> {
+    try {
+      const visitas =
+        await visitasPorGeoLocalizacaoService.getAllForCoordenador();
+      return res.status(200).json(visitas);
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({ errors: "Erro interno do servidor!" });
+    }
+  },
 };
