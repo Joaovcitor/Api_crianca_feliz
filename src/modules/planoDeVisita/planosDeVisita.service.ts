@@ -130,4 +130,59 @@ export const PlanosDeVisitaService = {
       },
     });
   },
+  getAllPlanosPregnant: async ({
+    visitadorId,
+    page = 1,
+    pageSize = 10,
+    caregiverId,
+  }: {
+    visitadorId: number;
+    page?: number;
+    pageSize?: number;
+    caregiverId: number;
+  }): Promise<{
+    data: PlanoDeVisitas[];
+    meta: {
+      total: number;
+      page: number;
+      pageSize: number;
+      totalPages: number;
+    };
+  }> => {
+    const skip = (page - 1) * pageSize;
+    const [total, planos] = await prisma.$transaction([
+      prisma.planoDeVisitas.count({
+        where: {
+          visitorId: visitadorId,
+          caregiverId: caregiverId,
+        },
+      }),
+      prisma.planoDeVisitas.findMany({
+        where: {
+          visitorId: visitadorId,
+          caregiverId: caregiverId,
+        },
+        include: {
+          visitor: true,
+          child: true,
+          caregiver: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: pageSize,
+        skip: skip,
+      }),
+    ]);
+    const totalPages = Math.ceil(total / pageSize);
+    return {
+      data: planos,
+      meta: {
+        total,
+        page,
+        pageSize,
+        totalPages,
+      },
+    };
+  },
 };

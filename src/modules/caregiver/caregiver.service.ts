@@ -36,7 +36,18 @@ export const CaregiverService = {
       throw new Error("ID é obrigatório!");
     }
 
-    const caregiver = await prisma.caregiver.findUnique({ where: { id: id } });
+    const caregiver = await prisma.caregiver.findUnique({
+      where: { id: id },
+      include: {
+        children: {
+          select: {
+            name: true,
+            isBpc: true,
+            born: true,
+          },
+        },
+      },
+    });
     return caregiver;
   },
   getByLoggedInVisitorID: async (visitadorId: number): Promise<Caregiver[]> => {
@@ -88,5 +99,18 @@ export const CaregiverService = {
       },
     });
     return updatedCaregiver;
+  },
+  delete: async (id: number): Promise<Caregiver> => {
+    if (!id) {
+      throw new Error("ID é obrigatório!");
+    }
+    const caregiver = await prisma.caregiver.findUnique({ where: { id: id } });
+    if (!caregiver) {
+      throw new Error("Cuidador não encontrado!");
+    }
+    return prisma.caregiver.update({
+      where: { id: id },
+      data: { isActive: false },
+    });
   },
 };

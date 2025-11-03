@@ -29,6 +29,7 @@ model Caregiver {
   createdAt         DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt         DateTime  @updatedAt @db.Timestamptz(6)
   weekPregnant      Int?      @default(0) @map("week_pregnant")
+  isActive        Boolean?  @default(true)
 
   supervisor        User?     @relation("SupervisorCaregivers", fields: [supervisorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   visitor           User?     @relation("VisitorCaregivers", fields: [visitadorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -65,6 +66,7 @@ model Child {
   createdAt         DateTime          @default(now()) @db.Timestamptz(6)
   updatedAt         DateTime          @updatedAt @db.Timestamptz(6)
   isPending         Boolean?          @default(true)
+  isActive         Boolean?          @default(true)
   gender            ChildGender?      @map("sexo")
   isBpc             Boolean?          @default(true)
 

@@ -9,7 +9,7 @@ export const ChildService = {
     }
 
     const child = await prisma.child.findMany({
-      where: { visitorId: visitadorId },
+      where: { visitorId: visitadorId, isActive: true },
       include: {
         caregiver: true,
         visitor: true,
@@ -92,8 +92,9 @@ export const ChildService = {
     if (!child) {
       throw new Error("Criança não encontrada!");
     }
-    return prisma.child.delete({
+    return prisma.child.update({
       where: { id: id },
+      data: { isActive: false },
     });
   },
 };

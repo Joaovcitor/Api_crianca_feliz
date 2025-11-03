@@ -9,6 +9,11 @@ planosDeVisitaRouter.get(
   PlanosDeVisitaController.getAll
 );
 planosDeVisitaRouter.get(
+  "/planos-da-gestante/:id",
+  isAuthenticated,
+  PlanosDeVisitaController.getAllPlanosPregnant
+);
+planosDeVisitaRouter.get(
   "/:id",
   isAuthenticated,
   PlanosDeVisitaController.getById

@@ -22,7 +22,24 @@ export const PlanosDeVisitaController = {
       pageSize: pageSizeNum,
       childId: childId,
     });
-    console.log(planos);
+    return sendSuccess(res, planos);
+  },
+  async getAllPlanosPregnant(req: Request, res: Response) {
+    const visitadorId = req.user?.id;
+    const childId = parseInt(req.params.id, 10);
+    const { page, pageSize } = req.query;
+
+    const pageNum = page ? parseInt(page as string) : undefined;
+    const pageSizeNum = pageSize ? parseInt(pageSize as string) : undefined;
+    if (!visitadorId) {
+      throw new UnauthorizedError("Você deve estar autenticado!");
+    }
+    const planos = await PlanosDeVisitaService.getAllPlanosPregnant({
+      visitadorId: visitadorId,
+      page: pageNum,
+      pageSize: pageSizeNum,
+      caregiverId: childId,
+    });
     return sendSuccess(res, planos);
   },
   async getById(req: Request, res: Response): Promise<Response> {

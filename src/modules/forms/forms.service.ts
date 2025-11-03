@@ -7,9 +7,6 @@ export const FormsService = {
     const modeloExist = await prisma.modelosDeFormularios.findFirst({
       where: { tipo: data.tipo },
     });
-    if (modeloExist) {
-      throw new BadRequestError("Modelo de formulário já existe");
-    }
     return prisma.modelosDeFormularios.create({
       data: {
         ...data,
@@ -19,5 +16,13 @@ export const FormsService = {
   },
   getAll: async () => {
     return prisma.modelosDeFormularios.findMany();
+  },
+  getById: async (id: number) => {
+    if (!id) {
+      throw new BadRequestError("ID do formulário é obrigatório");
+    }
+    return prisma.modelosDeFormularios.findFirst({
+      where: { id },
+    });
   },
 };
