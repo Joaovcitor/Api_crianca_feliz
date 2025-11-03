@@ -17,4 +17,7 @@ export const FormsService = {
       },
     });
   },
+  getAll: async () => {
+    return prisma.modelosDeFormularios.findMany();
+  },
 };

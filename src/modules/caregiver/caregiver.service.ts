@@ -1,5 +1,9 @@
 import { PrismaClient, type Caregiver } from "@prisma/client";
 import { CaregiverCreate } from "./CaregiverCreateDTO";
+import type {
+  CaregiverUpdate,
+  CaregiverUpdatePregnant,
+} from "./CaregiverUpdateDTO";
 const prisma = new PrismaClient();
 
 export const CaregiverService = {
@@ -63,5 +67,26 @@ export const CaregiverService = {
     });
 
     return createCaregiver;
+  },
+  update: async (id: number, data: CaregiverUpdate): Promise<Caregiver> => {
+    const updatedCaregiver = await prisma.caregiver.update({
+      where: { id: id },
+      data: {
+        ...data,
+      },
+    });
+    return updatedCaregiver;
+  },
+  updatePregnant: async (
+    id: number,
+    data: CaregiverUpdatePregnant
+  ): Promise<Caregiver> => {
+    const updatedCaregiver = await prisma.caregiver.update({
+      where: { id: id },
+      data: {
+        ...data,
+      },
+    });
+    return updatedCaregiver;
   },
 };

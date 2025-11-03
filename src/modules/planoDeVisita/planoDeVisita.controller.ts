@@ -39,14 +39,17 @@ export const PlanosDeVisitaController = {
   async createPlanoForChild(req: Request, res: Response): Promise<Response> {
     const data: PlanoDeVisitaCreateDTO = req.body;
     const visitadorId = req.user?.id;
-    const childId: number = parseInt(req.params.id, 10);
+    const childId: number = req.body.childId;
+    const caregiverId: number = req.body.caregiverId;
+
     if (!visitadorId) {
       return res.status(400).json({ errors: "Você deve estar autenticado!" });
     }
     const newPlano = await PlanosDeVisitaService.createPlanoForChild(
       data,
       visitadorId,
-      childId
+      childId,
+      caregiverId
     );
     return sendSuccess(res, newPlano);
   },

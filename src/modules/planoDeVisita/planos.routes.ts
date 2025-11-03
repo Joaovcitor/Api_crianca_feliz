@@ -14,7 +14,7 @@ planosDeVisitaRouter.get(
   PlanosDeVisitaController.getById
 );
 planosDeVisitaRouter.post(
-  "/:id",
+  "/",
   isAuthenticated,
   PlanosDeVisitaController.createPlanoForChild
 );

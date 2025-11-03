@@ -44,6 +44,8 @@ export const PlanosDeVisitaService = {
         },
         include: {
           visitor: true,
+          child: true,
+          caregiver: true,
         },
         orderBy: {
           createdAt: "desc",
@@ -74,7 +76,8 @@ export const PlanosDeVisitaService = {
   createPlanoForChild: async (
     data: PlanoDeVisitaCreateDTO,
     visitadorId: number,
-    childId: number
+    childId?: number,
+    caregiverId?: number
   ): Promise<PlanoDeVisitas> => {
     const dadosParaPrisma: Prisma.PlanoDeVisitasCreateInput = {
       objective: data.objective,
@@ -85,10 +88,18 @@ export const PlanosDeVisitaService = {
       visitor: {
         connect: { id: visitadorId },
       },
-      child: {
-        connect: { id: childId },
-      },
     };
+
+    if (childId) {
+      dadosParaPrisma.child = {
+        connect: { id: childId },
+      };
+    }
+    if (caregiverId) {
+      dadosParaPrisma.caregiver = {
+        connect: { id: caregiverId },
+      };
+    }
 
     const result = await prisma.$transaction(async (tx) => {
       const plano = await tx.planoDeVisitas.create({
@@ -106,30 +117,6 @@ export const PlanosDeVisitaService = {
     });
 
     return result.plano;
-  },
-  createPlanosForPregnant: async (
-    data: PlanoDeVisitaCreateDTO,
-    visitadorId: number,
-    caregiverId: number
-  ): Promise<PlanoDeVisitas> => {
-    const dadosParaPrisma: Prisma.PlanoDeVisitasCreateInput = {
-      objective: data.objective,
-      etapa1: data.etapa1,
-      etapa2: data.etapa2,
-      etapa3: data.etapa3,
-      scheduledDay: data.scheduledDay,
-      visitor: {
-        connect: { id: visitadorId },
-      },
-      caregiver: {
-        connect: { id: caregiverId },
-      },
-    };
-
-    const plano = await prisma.planoDeVisitas.create({
-      data: dadosParaPrisma,
-    });
-    return plano;
   },
   updatePlanoPosVisita: async (
     id: number,

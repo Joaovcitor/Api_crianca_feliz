@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { FormsService } from "./forms.service";
 import { BadRequestError } from "../../core/errors/appErrors";
-import { sendSuccessMessage } from "../../core/utils/responseHandler";
+import {
+  sendSuccess,
+  sendSuccessMessage,
+} from "../../core/utils/responseHandler";
 
 class FormsController {
   async create(req: Request, res: Response) {
@@ -12,6 +15,10 @@ class FormsController {
     const data = req.body;
     await FormsService.create(data, userId);
     return sendSuccessMessage(res, "Formulário criado com sucesso");
+  }
+  async getAll(req: Request, res: Response) {
+    const forms = await FormsService.getAll();
+    return sendSuccess(res, forms, 200);
   }
 }
 
