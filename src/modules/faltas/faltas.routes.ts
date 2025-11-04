@@ -17,4 +17,9 @@ faltasRoutes.post(
   isAuthenticated,
   FaltasController.invalidarFalta
 );
+faltasRoutes.patch(
+  "/pedir-para-invalidar-falta/:id",
+  isAuthenticated,
+  FaltasController.pedirParaInvalidarFalta
+);
 export default faltasRoutes;

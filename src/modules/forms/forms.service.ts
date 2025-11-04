@@ -4,7 +4,7 @@ import type { CreateFormDto } from "./forms.dto";
 
 export const FormsService = {
   create: async (data: CreateFormDto, userId: number) => {
-    const modeloExist = await prisma.modelosDeFormularios.findFirst({
+    await prisma.modelosDeFormularios.findFirst({
       where: { tipo: data.tipo },
     });
     return prisma.modelosDeFormularios.create({

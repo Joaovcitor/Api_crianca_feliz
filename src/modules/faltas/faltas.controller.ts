@@ -8,7 +8,6 @@ export const FaltasController = {
   async getAll(req: Request, res: Response): Promise<Response> {
     try {
       const faltas = await FaltasService.getAll();
-      console.log(faltas);
       return res.status(200).json(faltas);
     } catch (e: any) {
       console.log(e);

@@ -26,7 +26,12 @@ export const FaltasService = {
     return await prisma.falta.findUnique({
       where: { id },
       include: {
-        user: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
       },
     });
   },
