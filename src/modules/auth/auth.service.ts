@@ -130,7 +130,6 @@ export const authService = {
       expiresIn: "8h",
     });
     const { password: _, ...userWithoutPassword } = user;
-    console.log(userWithoutPassword);
     return {
       token,
       user: userWithoutPassword,

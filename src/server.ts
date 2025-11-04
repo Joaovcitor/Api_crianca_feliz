@@ -1,16 +1,14 @@
 import "express-async-errors";
 import dotenv from "dotenv";
-import express, { Application, Request, Response, NextFunction } from "express";
-import session from "express-session";
-import sessionFileStore from "session-file-store";
-import cookieParser from "cookie-parser";
+import express, { Application } from "express";
+import corsOptions from "./core/config/corsConfig";
 import cors, { CorsOptions } from "cors";
 import helmet from "helmet";
-import path from "path";
-import os from "os";
 import { errorHandler } from "./core/middlewares/errorHandler";
 import routesGlobal from "./core/config/routesGlobal";
 import listDomains from "./core/config/whiteList";
+import { sessionConfig } from "./core/config/sessionConfig";
+import cookieParser from "cookie-parser";
 
 dotenv.config({
   path:
@@ -25,76 +23,27 @@ class Server {
 
   constructor() {
     this.app = express();
-    this.whiteList = [
-      "https://primeirainfanciasuas.socialquixada.com.br",
-      "https://www.primeirainfanciasuas.socialquixada.com.br",
-      "https://172.31.48.1:4173",
-      "https://localhost:5173",
-      "http://localhost:3000",
-      "http://localhost:8100",
-      `http://localhost:4173`,
-      "http://localhost:5173",
-      "https://app-mobile-pcfv2-eight.vercel.app",
-      "https://mobilepcf.socialquixada.com.br",
-    ];
-
+    this.whiteList = listDomains;
     this.configureMiddlewares();
     this.configureRoutes();
+    this.app.use(errorHandler);
     this.startServer();
   }
 
   private configureMiddlewares(): void {
-    const FileStore = sessionFileStore(session);
-
-    const corsOptions: CorsOptions = {
-      origin: (origin, callback) => {
-        if (!origin || this.whiteList.indexOf(origin) !== -1) {
-          callback(null, true);
-        } else {
-          callback(new Error("Not allowed by CORS"));
-        }
-      },
-      credentials: true,
-    };
-
-    const cookieSettings: session.CookieOptions = {
-      maxAge: 28800000, // 8 horas
-      httpOnly: true,
-    };
-
-    // Se estiver em produção, aplica as regras de segurança máxima
     if (process.env.NODE_ENV === "production") {
-      this.app.set("trust proxy", 1); // Confia no proxy (ex: Nginx, Heroku, etc.)
-      cookieSettings.secure = true;
-      cookieSettings.sameSite = "none";
-    } else {
-      cookieSettings.secure = false;
-      cookieSettings.sameSite = "lax";
+      this.app.set("trust proxy", 1);
     }
 
     this.app.use(cors(corsOptions));
     this.app.use(helmet());
 
+    this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
 
-    this.app.use(
-      session({
-        name: "session",
-        secret: "akdkwodofefgneogeonmefnepddm",
-        resave: false,
-        saveUninitialized: false,
-        store: new FileStore({
-          logFn: function () {},
-          path: path.join(os.tmpdir(), "sessions"),
-        }),
-        cookie: cookieSettings,
-      })
-    );
-
     this.app.use(express.static("public"));
-    this.app.use(express.json());
     this.app.use(cookieParser());
-    this.app.use(errorHandler);
+    this.app.use(sessionConfig);
   }
 
   private configureRoutes(): void {
