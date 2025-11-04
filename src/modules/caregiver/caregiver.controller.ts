@@ -101,4 +101,28 @@ export const CaregiverController = {
       return res.status(500).json({ errors: "Erro interno do servidor!" });
     }
   },
+  async delete(req: Request, res: Response) {
+    const id = parseInt(req.params.id, 10);
+    try {
+      const deletedCaregiver = await CaregiverService.delete(id);
+      res.status(200).json(deletedCaregiver);
+    } catch (e: any) {
+      console.log(e);
+      res.status(500).json({ errors: "Erro interno do servidor!" });
+    }
+  },
+  async validarCaregiver(req: Request, res: Response) {
+    const id = parseInt(req.params.id, 10);
+    const supervisorId = req.user?.id;
+    try {
+      const validarCaregiver = await CaregiverService.validarCaregiver(
+        id,
+        supervisorId!
+      );
+      res.status(200).json(validarCaregiver);
+    } catch (e: any) {
+      console.log(e);
+      res.status(500).json({ errors: "Erro interno do servidor!" });
+    }
+  },
 };

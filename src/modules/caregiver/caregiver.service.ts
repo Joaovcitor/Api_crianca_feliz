@@ -22,6 +22,17 @@ export const CaregiverService = {
     });
     return caregivers;
   },
+  pickUpCaregiversFromTheSupervisor: async (
+    id: number
+  ): Promise<Caregiver[]> => {
+    const caregivers = await prisma.caregiver.findMany({
+      where: { supervisorId: id },
+      include: {
+        children: true,
+      },
+    });
+    return caregivers;
+  },
   getAll: async (): Promise<Caregiver[]> => {
     const caregivers = await prisma.caregiver.findMany({
       include: {
@@ -66,18 +77,29 @@ export const CaregiverService = {
     data: CaregiverCreate,
     visitadorId: number
   ): Promise<Caregiver> => {
-    const createCaregiver = await prisma.caregiver.create({
-      data: {
-        ...data,
-        visitor: {
-          connect: {
-            id: visitadorId,
+    const result = await prisma.$transaction(async (tsx) => {
+      const findUser = await tsx.user.findUnique({
+        where: { id: visitadorId },
+      });
+      const createCaregiver = await tsx.caregiver.create({
+        data: {
+          ...data,
+          visitor: {
+            connect: {
+              id: visitadorId,
+            },
+          },
+          supervisor: {
+            connect: {
+              id: findUser?.supervisorId!,
+            },
           },
         },
-      },
+      });
+      return createCaregiver;
     });
 
-    return createCaregiver;
+    return result;
   },
   update: async (id: number, data: CaregiverUpdate): Promise<Caregiver> => {
     const updatedCaregiver = await prisma.caregiver.update({
@@ -111,6 +133,19 @@ export const CaregiverService = {
     return prisma.caregiver.update({
       where: { id: id },
       data: { isActive: false },
+    });
+  },
+  validarCaregiver: async (
+    id: number,
+    supervisorId: number
+  ): Promise<Caregiver> => {
+    const caregiver = await prisma.caregiver.findUnique({ where: { id: id } });
+    if (!caregiver) {
+      throw new Error("Cuidador não encontrado!");
+    }
+    return prisma.caregiver.update({
+      where: { id: id },
+      data: { isPending: false, isActive: true, supervisorId: supervisorId },
     });
   },
 };

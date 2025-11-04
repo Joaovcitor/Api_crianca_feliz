@@ -11,11 +11,17 @@ caregiverRoute.get(
 );
 caregiverRoute.get("/:id", isAuthenticated, CaregiverController.getById);
 caregiverRoute.post("/", isAuthenticated, CaregiverController.create);
+caregiverRoute.patch(
+  "/validar/:id",
+  isAuthenticated,
+  CaregiverController.validarCaregiver
+);
 caregiverRoute.patch("/:id", isAuthenticated, CaregiverController.update);
 caregiverRoute.patch(
   "/:id/pregnant",
   isAuthenticated,
   CaregiverController.updatePregnant
 );
+caregiverRoute.delete("/:id", isAuthenticated, CaregiverController.delete);
 
 export default caregiverRoute;
