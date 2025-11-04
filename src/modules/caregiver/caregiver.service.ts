@@ -4,6 +4,7 @@ import type {
   CaregiverUpdate,
   CaregiverUpdatePregnant,
 } from "./CaregiverUpdateDTO";
+import { ConflictError } from "../../core/errors/appErrors";
 const prisma = new PrismaClient();
 
 export const CaregiverService = {
@@ -15,7 +16,7 @@ export const CaregiverService = {
     }
 
     const caregivers = await prisma.caregiver.findMany({
-      where: { visitadorId: visitadorId },
+      where: { visitadorId: visitadorId, isActive: true },
       include: {
         children: true,
       },
@@ -29,12 +30,14 @@ export const CaregiverService = {
       where: { supervisorId: id },
       include: {
         children: true,
+        visitor: true,
       },
     });
     return caregivers;
   },
   getAll: async (): Promise<Caregiver[]> => {
     const caregivers = await prisma.caregiver.findMany({
+      where: { isActive: true },
       include: {
         children: true,
         visitor: true,
@@ -63,7 +66,7 @@ export const CaregiverService = {
   },
   getByLoggedInVisitorID: async (visitadorId: number): Promise<Caregiver[]> => {
     const caregiver = await prisma.caregiver.findMany({
-      where: { visitadorId: visitadorId },
+      where: { visitadorId: visitadorId, isActive: true },
     });
 
     if (!caregiver) {
@@ -81,6 +84,12 @@ export const CaregiverService = {
       const findUser = await tsx.user.findUnique({
         where: { id: visitadorId },
       });
+      const caregiver = await tsx.caregiver.findFirst({
+        where: { cpf: data.cpf },
+      });
+      if (caregiver) {
+        throw new ConflictError("Cuidador já cadastrado!");
+      }
       const createCaregiver = await tsx.caregiver.create({
         data: {
           ...data,

@@ -22,7 +22,7 @@ childRouter.put(
 childRouter.delete(
   "/:id",
   isAuthenticated,
-  verifyRole("coordenador"),
+  verifyRole("coordenador", "supervisor"),
   ChildController.delete
 );
 

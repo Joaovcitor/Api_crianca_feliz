@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-// import { PrismaClient } from "../../generated/prisma";
 import { PrismaClient } from "@prisma/client";
+import { UnauthorizedError, AppError } from "../errors/appErrors";
 
 const prisma = new PrismaClient();
 interface JwtPayload {
@@ -15,41 +15,37 @@ export async function isAuthenticated(
 ) {
   const { jwt: token } = req.cookies;
   if (!token) {
-    return res.status(401).json({ error: "Token não fornecido" });
+    throw new UnauthorizedError("Token não fornecido");
   }
+
+  const secret = process.env.SECRET_JWT;
+  if (!secret) {
+    console.error("ERRO GRAVE: SECRET_JWT não foi definida no ambiente.");
+    throw new AppError("Erro de configuração interna do servidor.", 500);
+  }
+  let decoded: JwtPayload;
   try {
-    const secret = process.env.SECRET_JWT;
-    if (!secret) {
-      console.error("ERRO GRAVE: SECRET_JWT não foi definida no ambiente.");
-      return res
-        .status(500)
-        .json({ error: "Erro de configuração interna do servidor." });
-    }
-
-    const decoded = jwt.verify(token, secret) as JwtPayload;
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
-    });
-
-    if (!user) {
-      return res.status(401).json({ error: "Usuário do token não encontrado" });
-    }
-    req.user = user;
-    next();
+    decoded = jwt.verify(token, secret) as JwtPayload;
   } catch (error: any) {
     if (error.name === "TokenExpiredError") {
-      return res
-        .status(401)
-        .json({ error: "Token expirado. Por favor, faça login novamente." });
+      throw new UnauthorizedError(
+        "Token expirado. Por favor, faça login novamente."
+      );
     }
     if (error.name === "JsonWebTokenError") {
-      return res
-        .status(401)
-        .json({ error: "Token inválido (assinatura ou formato incorreto)." });
+      throw new UnauthorizedError(
+        "Token inválido (assinatura ou formato incorreto)."
+      );
     }
-    console.error("Erro inesperado no middleware:", error);
-    return res
-      .status(500)
-      .json({ error: "Erro interno no servidor de autenticação." });
+    throw error;
   }
+  const user = await prisma.user.findUnique({
+    where: { id: decoded.id },
+  });
+
+  if (!user) {
+    throw new UnauthorizedError("Usuário do token não encontrado");
+  }
+  req.user = user;
+  next();
 }

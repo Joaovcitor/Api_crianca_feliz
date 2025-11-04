@@ -16,6 +16,7 @@ export function errorHandler(
   console.error("Erro inesperado: ", error);
 
   return res.status(500).json({
+    success: false,
     message: "Internal server error",
   });
 }

@@ -1,11 +1,12 @@
 import { PrismaClient, Child } from "@prisma/client";
 import { ChildCreateDTO } from "./ChildCreateDTO";
 import type { ChildUpdateDTO } from "./ChildUpdateDTO";
+import { NotFoundError, UnauthorizedError } from "../../core/errors/appErrors";
 const prisma = new PrismaClient();
 export const ChildService = {
   getAll: async (visitadorId: number): Promise<Child[]> => {
     if (!visitadorId) {
-      throw new Error("Você precisa estar autenticado!");
+      throw new UnauthorizedError("Você precisa estar autenticado!");
     }
 
     const child = await prisma.child.findMany({
@@ -23,7 +24,7 @@ export const ChildService = {
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
     const child = await prisma.child.findUnique({ where: { id } });
-    if (!child) throw new Error("Criança não encontrada!");
+    if (!child) throw new NotFoundError("Criança não encontrada!");
     // if (user?.role !== "coordenador")
     //   throw new Error("Você não tem autorização para usar esse recurso!");
     return child;
@@ -31,7 +32,7 @@ export const ChildService = {
   update: async (id: number, data: ChildUpdateDTO): Promise<Child> => {
     if (!id) throw new Error("Id é necessário.");
     const child = await prisma.child.findUnique({ where: { id } });
-    if (!child) throw new Error("Criança não encontrada!");
+    if (!child) throw new NotFoundError("Criança não encontrada!");
     return prisma.child.update({
       where: { id },
       data,
@@ -66,7 +67,7 @@ export const ChildService = {
     if (!childId) throw new Error("ID da criança é necessário!");
 
     const child = await prisma.child.findUnique({ where: { id: childId } });
-    if (!child) throw new Error("Criança não encontrada!");
+    if (!child) throw new NotFoundError("Criança não encontrada!");
 
     return prisma.child.update({
       where: { id: childId },
@@ -90,7 +91,7 @@ export const ChildService = {
     }
     const child = await prisma.child.findUnique({ where: { id: id } });
     if (!child) {
-      throw new Error("Criança não encontrada!");
+      throw new NotFoundError("Criança não encontrada!");
     }
     return prisma.child.update({
       where: { id: id },

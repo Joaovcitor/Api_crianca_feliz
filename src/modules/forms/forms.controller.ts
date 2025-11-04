@@ -20,6 +20,30 @@ class FormsController {
     const forms = await FormsService.getAll();
     return sendSuccess(res, forms, 200);
   }
+  async registrarForm(req: Request, res: Response) {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new BadRequestError("Usuário não autenticado");
+    }
+    const { formId, respostas, childId, caregiverId } = req.body;
+    await FormsService.registrarForm(
+      formId,
+      respostas,
+      Number(userId),
+      Number(childId),
+      caregiverId
+    );
+    return sendSuccessMessage(res, "Formulário registrado com sucesso");
+  }
+  async getFormsChild(req: Request, res: Response) {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new BadRequestError("Usuário não autenticado");
+    }
+    const childId = parseInt(req.params.id);
+    const forms = await FormsService.getFormsChild(Number(childId));
+    return sendSuccess(res, forms, 200);
+  }
 }
 
 export default new FormsController();

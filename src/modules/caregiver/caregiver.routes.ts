@@ -9,6 +9,11 @@ caregiverRoute.get(
   isAuthenticated,
   CaregiverController.caregiversDoVisitador
 );
+caregiverRoute.get(
+  "/meus-cuidadores-supervisor",
+  isAuthenticated,
+  CaregiverController.pickUpCaregiversFromTheSupervisor
+);
 caregiverRoute.get("/:id", isAuthenticated, CaregiverController.getById);
 caregiverRoute.post("/", isAuthenticated, CaregiverController.create);
 caregiverRoute.patch(
