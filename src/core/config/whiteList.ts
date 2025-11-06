@@ -1,7 +1,7 @@
 const listDomains: string[] = [
   "https://primeirainfanciasuas.socialquixada.com.br",
   "https://www.primeirainfanciasuas.socialquixada.com.br",
-  "https://172.31.48.1:4173",
+  "https://apppcf.socialquixada.com.br",
   "https://localhost:5173",
   "http://localhost:3000",
   "http://localhost:8100",
