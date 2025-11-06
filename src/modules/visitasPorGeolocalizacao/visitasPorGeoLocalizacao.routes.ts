@@ -37,6 +37,12 @@ visitasGeoRoutes.get(
   VisitasPorGeolocalizacaoController.visitasMarcadasChild
 );
 visitasGeoRoutes.get(
+  "/visitas-marcadas-pregnant/:id",
+  isAuthenticated,
+  VisitasPorGeolocalizacaoController.visitasMarcadasPregnant
+);
+
+visitasGeoRoutes.get(
   "/coordenador/all",
   isAuthenticated,
   VisitasPorGeolocalizacaoController.getAllForCoordenador

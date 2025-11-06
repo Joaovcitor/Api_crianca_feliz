@@ -2,7 +2,7 @@ import { Request, type Response } from "express";
 import { visitasPorGeoLocalizacaoService } from "./visitasPorGeoLocalizacao.service";
 import type { VisitCreateDTO } from "./VisitCreateDTO";
 import type { VisitStartDTO } from "./VisitStartDTO";
-import type { VisitEndDTO } from "./VisitEndDTO";
+import type { ObservacaoPlanoVisita, VisitEndDTO } from "./VisitEndDTO";
 import type { VisitUpdateDTO } from "./VisitUpdateDTO";
 
 export const VisitasPorGeolocalizacaoController = {
@@ -46,6 +46,7 @@ export const VisitasPorGeolocalizacaoController = {
   async finalizarVisita(req: Request, res: Response): Promise<Response> {
     const id = parseInt(req.params.id);
     const data: VisitEndDTO = req.body;
+    const observacao: ObservacaoPlanoVisita = req.body;
 
     if (isNaN(id)) {
       return res.status(400).json({ errors: "ID inválido!" });
@@ -54,7 +55,8 @@ export const VisitasPorGeolocalizacaoController = {
     try {
       const visita = await visitasPorGeoLocalizacaoService.finalizarVisita(
         id,
-        data
+        data,
+        observacao
       );
       return res.status(200).json(visita);
     } catch (e: any) {
@@ -71,6 +73,26 @@ export const VisitasPorGeolocalizacaoController = {
     try {
       const visitas =
         await visitasPorGeoLocalizacaoService.visitasMarcadasChild(childId);
+      return res.status(200).json(visitas);
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({ errors: "Erro interno do servidor!" });
+    }
+  },
+  async visitasMarcadasPregnant(
+    req: Request,
+    res: Response
+  ): Promise<Response> {
+    const pregnantId = parseInt(req.params.id);
+    if (isNaN(pregnantId)) {
+      return res.status(400).json({ errors: "ID inválido!" });
+    }
+
+    try {
+      const visitas =
+        await visitasPorGeoLocalizacaoService.visitasMarcadasPregnant(
+          pregnantId
+        );
       return res.status(200).json(visitas);
     } catch (e) {
       console.log(e);

@@ -18,9 +18,17 @@ export const UserService = {
     const includeOptions: Prisma.UserInclude = {
       coordinator: true,
       supervisor: true,
-      children: true,
+      children: {
+        where: {
+          isActive: true,
+        },
+      },
       coordinated: true,
-      visitorCaregivers: true,
+      visitorCaregivers: {
+        where: {
+          isActive: true,
+        },
+      },
     };
     const hasDateFilter = filters?.startDate || filters?.endDate;
 
@@ -57,8 +65,17 @@ export const UserService = {
     const includeOptions: Prisma.UserInclude = {
       coordinator: true,
       supervisor: true,
-      children: true,
+      children: {
+        where: {
+          isActive: true,
+        },
+      },
       coordinated: true,
+      visitorCaregivers: {
+        where: {
+          isActive: true,
+        },
+      },
     };
     const hasDateFilter = filters?.startDate || filters?.endDate;
 

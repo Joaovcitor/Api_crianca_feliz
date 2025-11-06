@@ -1,10 +1,11 @@
 import { PrismaClient, type VisitaPorGeolocalizacao } from "@prisma/client";
 import type { VisitCreateDTO } from "./VisitCreateDTO";
-import type { VisitEndDTO } from "./VisitEndDTO";
+import type { ObservacaoPlanoVisita, VisitEndDTO } from "./VisitEndDTO";
 import type { VisitUpdateDTO } from "./VisitUpdateDTO";
 import type { VisitStartDTO } from "./VisitStartDTO";
 import { cacheService } from "../../services/cache.service";
 import { CacheKeyGenerator } from "../../core/utils/cacheKeyGenerator.utils";
+import { BadRequestError } from "../../core/errors/appErrors";
 const prisma = new PrismaClient();
 export const visitasPorGeoLocalizacaoService = {
   getAll: async (visitadorId: number): Promise<VisitaPorGeolocalizacao[]> => {
@@ -29,6 +30,7 @@ export const visitasPorGeoLocalizacaoService = {
         visitor: true,
         child: true,
         caregiver: true,
+        visitPlan: true,
       },
     });
   },
@@ -47,19 +49,42 @@ export const visitasPorGeoLocalizacaoService = {
   },
   finalizarVisita: async (
     id: number,
-    data: VisitEndDTO
+    data: VisitEndDTO,
+    observacao: ObservacaoPlanoVisita
   ): Promise<VisitaPorGeolocalizacao> => {
-    return prisma.visitaPorGeolocalizacao.update({
-      where: { id },
-      data: {
-        finalLatitude: data.finalLatitude,
-        finalLongitude: data.finalLongitude,
-        nonRealizationReason: data.nonRealizationReason,
-        isBeneficiaryHome: data.isBeneficiaryHome,
-        isFinished: true,
-        isVisitInProgress: false,
-      },
+    const result = await prisma.$transaction(async (tsx) => {
+      const visita = await tsx.visitaPorGeolocalizacao.findUnique({
+        where: { id },
+      });
+      if (!visita) {
+        throw new BadRequestError("Visita não encontrada!");
+      }
+      if (!observacao.observacao) {
+        throw new BadRequestError("Observação é obrigatória!");
+      }
+      const planoDeVisita = await tsx.planoDeVisitas.update({
+        where: { id: visita?.planId! },
+        data: {
+          observation: observacao.observacao,
+        },
+      });
+      if (!planoDeVisita) {
+        throw new BadRequestError("Plano de visita não encontrado!");
+      }
+
+      return await tsx.visitaPorGeolocalizacao.update({
+        where: { id },
+        data: {
+          finalLatitude: data.finalLatitude,
+          finalLongitude: data.finalLongitude,
+          nonRealizationReason: data.nonRealizationReason,
+          isBeneficiaryHome: data.isBeneficiaryHome,
+          isFinished: true,
+          isVisitInProgress: false,
+        },
+      });
     });
+    return result;
   },
   visitasMarcadasChild: async (
     childId: number
@@ -87,6 +112,34 @@ export const visitasPorGeoLocalizacaoService = {
       },
     });
     await cacheService.set(cacheKey, visitas, 3600);
+    return visitas;
+  },
+  visitasMarcadasPregnant: async (
+    pregnantId: number
+  ): Promise<VisitaPorGeolocalizacao[]> => {
+    // const cacheKey = CacheKeyGenerator.childVisits(pregnantId);
+    // const cached = await cacheService.get<VisitaPorGeolocalizacao[]>(cacheKey);
+    // if (cached) {
+    //   console.log(
+    //     "✅ Cache hit - Retornando",
+    //     cached.length,
+    //     "visitas do cache"
+    //   );
+    //   return cached;
+    // }
+
+    // console.log(
+    //   "❌ Cache miss - buscando visitas da criança do banco:",
+    //   childId
+    // );
+    const visitas = await prisma.visitaPorGeolocalizacao.findMany({
+      where: { caregiverId: pregnantId },
+      include: {
+        visitor: true,
+        caregiver: true,
+      },
+    });
+    // await cacheService.set(cacheKey, visitas, 3600);
     return visitas;
   },
   update: async (

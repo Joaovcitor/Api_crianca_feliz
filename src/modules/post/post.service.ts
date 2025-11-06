@@ -14,7 +14,11 @@ export const PostService = {
     return post;
   },
   getAll: async (): Promise<Post[]> => {
-    const posts = await prisma.post.findMany();
+    const posts = await prisma.post.findMany({
+      include: {
+        author: true,
+      },
+    });
     return posts;
   },
   getById: async (id: number): Promise<Post | null> => {

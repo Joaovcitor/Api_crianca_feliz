@@ -14,6 +14,7 @@ export const ChildService = {
       include: {
         caregiver: true,
         visitor: true,
+        visitPlans: true,
       },
     });
 

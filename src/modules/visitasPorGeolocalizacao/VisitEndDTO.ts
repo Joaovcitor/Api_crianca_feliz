@@ -4,3 +4,7 @@ export type VisitEndDTO = {
   nonRealizationReason?: string;
   isBeneficiaryHome?: boolean;
 };
+
+export type ObservacaoPlanoVisita = {
+  observacao: string;
+};

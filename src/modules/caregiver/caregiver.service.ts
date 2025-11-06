@@ -19,6 +19,7 @@ export const CaregiverService = {
       where: { visitadorId: visitadorId, isActive: true },
       include: {
         children: true,
+        visitPlans: true,
       },
     });
     return caregivers;
