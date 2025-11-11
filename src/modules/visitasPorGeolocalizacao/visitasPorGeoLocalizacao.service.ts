@@ -105,7 +105,7 @@ export const visitasPorGeoLocalizacaoService = {
       childId
     );
     const visitas = await prisma.visitaPorGeolocalizacao.findMany({
-      where: { childId: childId },
+      where: { childId: childId, isFinished: false },
       include: {
         visitor: true,
         child: true,
@@ -133,7 +133,7 @@ export const visitasPorGeoLocalizacaoService = {
     //   childId
     // );
     const visitas = await prisma.visitaPorGeolocalizacao.findMany({
-      where: { caregiverId: pregnantId },
+      where: { caregiverId: pregnantId, isFinished: false },
       include: {
         visitor: true,
         caregiver: true,

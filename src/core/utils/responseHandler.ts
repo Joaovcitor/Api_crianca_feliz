@@ -16,6 +16,14 @@ export function sendSuccess<T>(
   return res.status(statusCode).json(response);
 }
 
+export function sendErrorInternalServer<T>(
+  res: Response,
+  data: T,
+  statusCode?: number | 500
+) {
+  return sendSuccess(res, data, statusCode);
+}
+
 export function sendCreated<T>(res: Response, data: T) {
   return sendSuccess(res, data, 201);
 }

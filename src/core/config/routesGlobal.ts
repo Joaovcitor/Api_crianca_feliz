@@ -16,6 +16,7 @@ import timesPunchRouter from "../../modules/timePunch/timePunch.routes";
 import postRouter from "../../modules/post/post.route";
 import formsRoutes from "../../modules/forms/forms.routes";
 import rhRouter from "../../modules/rh/rh.routes";
+import healthRouter from "./routeHealth";
 const routesGlobal = Router();
 
 routesGlobal.use("/", homeRouter);
@@ -34,5 +35,6 @@ routesGlobal.use("/time-punch", timesPunchRouter);
 routesGlobal.use("/post", postRouter);
 routesGlobal.use("/forms", formsRoutes);
 routesGlobal.use("/rh", rhRouter);
+routesGlobal.use("/health", healthRouter);
 
 export default routesGlobal;

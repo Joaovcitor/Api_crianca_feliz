@@ -29,6 +29,11 @@ export const UserService = {
           isActive: true,
         },
       },
+      visitasPorGeolocalizacaos: {
+        select: {
+          isFinished: true,
+        },
+      },
     };
     const hasDateFilter = filters?.startDate || filters?.endDate;
 
@@ -74,6 +79,12 @@ export const UserService = {
       visitorCaregivers: {
         where: {
           isActive: true,
+        },
+      },
+      visitasPorGeolocalizacaos: {
+        select: {
+          isFinished: true,
+          isFakeVisit: true,
         },
       },
     };
