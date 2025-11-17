@@ -125,6 +125,10 @@ export const PlanosDeVisitaService = {
     return prisma.planoDeVisitas.update({
       where: { id },
       data: {
+        objective: data.objective,
+        etapa1: data.etapa1,
+        etapa2: data.etapa2,
+        etapa3: data.etapa3,
         observation: data.observation,
         realizationStatus: data.realizationStatus as PlanoVisitaRealizacao,
       },
